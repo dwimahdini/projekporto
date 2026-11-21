@@ -1,6 +1,45 @@
+/* General Sans (display) via Fontshare — @import harus di baris
+   paling atas supaya tidak kena lint no-page-custom-font. */
+@import url("https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Genesis (docs/GENESIS.md): General Sans untuk judul dengan
+   tracking rapat, DM Sans untuk isi. Tanpa gradasi dekoratif,
+   tanpa shadow pada elemen statis. */
+@layer base {
+  body {
+    @apply bg-paper text-ink;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-bold tracking-[-0.03em];
+  }
+  ::selection {
+    background: rgba(99, 102, 241, 0.18);
+  }
+  /* Focus ring indigo 3px, bukan shadow. */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    border-color: #6366f1;
+  }
+  /* Tombol utama: naik 1px + glow indigo saat hover. */
+  .btn-primary {
+    @apply rounded-md bg-brand-500 font-medium text-white transition duration-200 hover:-translate-y-px hover:bg-brand-600 hover:shadow-[0_4px_12px_rgba(99,102,241,0.35)] disabled:translate-y-0 disabled:opacity-50;
+  }
+  /* Kartu: permukaan putih, border 1px, radius 12px,
+     naik 2px + shadow halus saat hover. */
+  .card {
+    @apply rounded-xl border border-line bg-white transition duration-200;
+  }
+  .card-hover:hover {
+    @apply -translate-y-0.5 shadow-[0_8px_30px_rgba(0,0,0,0.08)];
+  }
+}
 
 /* Hormati prefers-reduced-motion untuk semua animasi CSS:
    transisi dan animasi dipendekkan sampai tidak terasa. */

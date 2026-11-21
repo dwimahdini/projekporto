@@ -12,7 +12,7 @@ export function LogoutButton() {
         await supabase.auth.signOut();
         window.location.reload();
       }}
-      className="min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium"
+      className="min-h-[44px] rounded-md border px-3 py-2 text-sm font-medium"
     >
       Keluar
     </button>
@@ -62,15 +62,15 @@ export default function AdminLogin() {
   return (
     <main className="mx-auto max-w-md px-4 py-16">
       <h1 className="text-2xl font-bold">Login admin</h1>
-      <p className="mt-2 text-sm text-gray-600">Halaman ini hanya untuk admin. Akun admin dibuat di Supabase Auth dengan role admin di tabel profiles.</p>
+      <p className="mt-2 text-sm text-muted">Halaman ini hanya untuk admin. Akun admin dibuat di Supabase Auth dengan role admin di tabel profiles.</p>
       <label className="mt-6 block text-sm font-medium">Email
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 block min-h-[48px] w-full rounded-xl border px-3 py-2" />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 block min-h-[48px] w-full rounded-md border px-3 py-2" />
       </label>
       <label className="mt-3 block text-sm font-medium">Password
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") login(); }} className="mt-1 block min-h-[48px] w-full rounded-xl border px-3 py-2" />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") login(); }} className="mt-1 block min-h-[48px] w-full rounded-md border px-3 py-2" />
       </label>
-      {error ? <p className="mt-3 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
-      <button type="button" onClick={login} disabled={busy} className="mt-4 min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white disabled:opacity-50">
+      {error ? <p className="mt-3 rounded-xl bg-red-50 p-3 text-sm text-danger">{error}</p> : null}
+      <button type="button" onClick={login} disabled={busy} className="mt-4 min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white disabled:opacity-50">
         {busy ? "Masuk…" : "Masuk"}
       </button>
     </main>
@@ -104,7 +104,7 @@ export function ActivateButton({ orderId, subdomain }: { orderId: string; subdom
     else setDone(true);
   }
 
-  if (done) return <span className="text-sm font-medium text-green-700">✓ Aktif — email pemberitahuan dikirim (sekali).</span>;
+  if (done) return <span className="text-sm font-medium text-success">✓ Aktif — email pemberitahuan dikirim (sekali).</span>;
 
   return (
     <span className="flex flex-col gap-2">
@@ -123,8 +123,8 @@ export function ActivateButton({ orderId, subdomain }: { orderId: string; subdom
       <button type="button" onClick={activate} disabled={busy || !allChecked} className="min-h-[48px] rounded-xl bg-green-600 px-4 py-2 font-semibold text-white disabled:opacity-50">
         {busy ? "Mengaktifkan…" : `Tandai domain aktif (${subdomain}.portofolio.my.id)`}
       </button>
-      {!allChecked ? <span className="text-xs text-gray-500">Centang ketiga langkah di atas dulu.</span> : null}
-      {error ? <span className="text-sm text-red-600">{error}</span> : null}
+      {!allChecked ? <span className="text-xs text-muted">Centang ketiga langkah di atas dulu.</span> : null}
+      {error ? <span className="text-sm text-danger">{error}</span> : null}
     </span>
   );
 }

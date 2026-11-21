@@ -34,7 +34,7 @@ export default function HapusPage({ params }: { params: { token: string } }) {
     return (
       <main className="mx-auto max-w-xl px-4 py-16">
         <h1 className="text-2xl font-bold">Link tidak valid</h1>
-        <p className="mt-2 text-gray-600">Buka link konfirmasi dari email kamu. Kalau sudah kedaluwarsa, minta link baru dari dashboard pesanan.</p>
+        <p className="mt-2 text-muted">Buka link konfirmasi dari email kamu. Kalau sudah kedaluwarsa, minta link baru dari dashboard pesanan.</p>
       </main>
     );
   }
@@ -43,8 +43,8 @@ export default function HapusPage({ params }: { params: { token: string } }) {
     return (
       <main className="mx-auto max-w-xl px-4 py-16">
         <h1 className="text-2xl font-bold">Data kamu sudah dihapus</h1>
-        <p className="mt-2 text-gray-600">Semua data portofolio, termasuk biodata dan riwayat pembayaran, sudah dihapus secara permanen. Subdomain kamu sekarang bebas dipakai orang lain.</p>
-        <a href="/" className="mt-6 inline-block rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white">Kembali ke beranda</a>
+        <p className="mt-2 text-muted">Semua data portofolio, termasuk biodata dan riwayat pembayaran, sudah dihapus secara permanen. Subdomain kamu sekarang bebas dipakai orang lain.</p>
+        <a href="/" className="mt-6 inline-block btn-primary px-4 py-3 font-semibold text-white">Kembali ke beranda</a>
       </main>
     );
   }
@@ -55,7 +55,7 @@ export default function HapusPage({ params }: { params: { token: string } }) {
       <p className="mt-4 text-gray-700">
         Ini <strong>permanen dan tidak bisa dibatalkan</strong>: biodata, pendidikan, pengalaman, proyek, foto, dan riwayat pembayaran akan dihapus. Kalau situs kamu sudah aktif, situs itu juga akan hilang.
       </p>
-      {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-danger">{error}</p> : null}
       <button
         type="button"
         onClick={confirmDelete}
@@ -64,7 +64,7 @@ export default function HapusPage({ params }: { params: { token: string } }) {
       >
         {busy ? "Menghapus…" : "Ya, hapus semua data saya secara permanen"}
       </button>
-      <a href={`/pesanan/${params.token}`} className="mt-3 block rounded-xl border px-4 py-3 text-center font-medium">
+      <a href={`/pesanan/${params.token}`} className="mt-3 block rounded-md border px-4 py-3 text-center font-medium">
         Batal — kembali ke pesanan
       </a>
     </main>

@@ -44,11 +44,14 @@ export default function CreateOrderForm({ templates }: { templates: { id: string
     }
   }
 
-  const inputCls = "mt-1 block w-full min-h-[48px] rounded-xl border px-3 py-2 text-base";
+  // Genesis: input radius 6px, border #E8E8EC, fokus ring indigo.
+  // Tinggi dipertahankan 48px supaya tetap nyaman disentuh.
+  const inputCls =
+    "mt-1 block w-full min-h-[48px] rounded-md border border-line bg-white px-3.5 py-2.5 text-[14px] text-ink placeholder:text-faint focus:border-brand-500";
 
   return (
-    <form onSubmit={submit} className="mt-8 space-y-4 rounded-2xl border bg-white p-4 shadow-sm sm:p-6">
-      <h2 className="text-xl font-bold">Mulai pesan portofolio</h2>
+    <form onSubmit={submit} className="card mt-10 space-y-5 p-6 sm:p-8">
+      <h2 className="text-3xl tracking-[-0.03em]">Mulai pesan portofolio</h2>
       <div>
         <label className="text-sm font-medium" htmlFor="email">Email kamu</label>
         <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="nama@email.com" className={inputCls} />
@@ -57,9 +60,9 @@ export default function CreateOrderForm({ templates }: { templates: { id: string
         <label className="text-sm font-medium" htmlFor="subdomain">Subdomain yang kamu mau</label>
         <div className="flex items-center gap-2">
           <input id="subdomain" required value={subdomain} onChange={(e) => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} placeholder="namamu" className={inputCls} />
-          <span className="shrink-0 text-sm text-gray-500">.portofolio.my.id</span>
+          <span className="shrink-0 text-sm text-muted">.portofolio.my.id</span>
         </div>
-        <p className="mt-1 text-xs text-gray-500">Huruf kecil, angka, dan strip. Minimal 3 karakter.</p>
+        <p className="mt-1 text-xs text-muted">Huruf kecil, angka, dan strip. Minimal 3 karakter.</p>
       </div>
       <div>
         <label className="text-sm font-medium" htmlFor="template">Pilih template</label>
@@ -69,19 +72,19 @@ export default function CreateOrderForm({ templates }: { templates: { id: string
           ))}
         </select>
       </div>
-      <label className="flex min-h-[48px] items-start gap-3 rounded-xl border px-3 py-2 text-sm">
-        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 h-5 w-5 shrink-0" />
-        <span>Saya menyetujui <a className="text-blue-600 underline" href="/kebijakan-privasi">Kebijakan Privasi</a> dan <a className="text-blue-600 underline" href="/syarat-layanan">Syarat Layanan</a>. Saya paham data saya dipakai untuk membuat portofolio ini.</span>
+      <label className="flex min-h-[48px] items-start gap-3 rounded-md border border-line px-3.5 py-2.5 text-sm">
+        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 h-5 w-5 shrink-0 rounded-full accent-brand-500" />
+        <span>Saya menyetujui <a className="font-medium text-brand-500 underline underline-offset-4 hover:text-brand-600" href="/kebijakan-privasi">Kebijakan Privasi</a> dan <a className="font-medium text-brand-500 underline underline-offset-4 hover:text-brand-600" href="/syarat-layanan">Syarat Layanan</a>. Saya paham data saya dipakai untuk membuat portofolio ini.</span>
       </label>
       <TurnstileWidget onToken={setTurnstileToken} />
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
-      {done ? <p className="text-sm text-green-700">{done}</p> : null}
+      {error ? <p className="text-sm text-danger">{error}</p> : null}
+      {done ? <p className="text-sm text-success">{done}</p> : null}
       {devLink ? (
         <p className="break-all rounded-xl bg-yellow-50 p-3 text-sm">
-          Mode development — buka link pesananmu: <a className="text-blue-600 underline" href={devLink}>{devLink}</a>
+          Mode development — buka link pesananmu: <a className="font-medium text-brand-500 underline underline-offset-4 hover:text-brand-600" href={devLink}>{devLink}</a>
         </p>
       ) : null}
-      <button type="submit" disabled={busy} className="min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 text-base font-semibold text-white disabled:opacity-50">
+      <button type="submit" disabled={busy} className="btn-primary min-h-[52px] w-full px-4 py-3 text-base">
         {busy ? "Membuat pesanan…" : "Buat pesanan & kirim link ke email"}
       </button>
     </form>

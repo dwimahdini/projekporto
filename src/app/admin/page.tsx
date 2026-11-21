@@ -76,17 +76,17 @@ export default async function AdminPage({
           ⚠️ BAHAYA: MODE MOCK MENYALA DI PRODUCTION — pembayaran simulasi aktif di situs live. Matikan segera: hapus ALLOW_MOCK_PAYMENT atau set PAYMENT_PROVIDER=midtrans.
         </p>
       ) : (
-        <p className="mt-4 rounded-xl border p-3 text-sm text-gray-600">
+        <p className="mt-4 rounded-md border p-3 text-sm text-muted">
           Provider pembayaran aktif: <strong>{provider}</strong>{provider === "mock" ? " (simulasi — hanya untuk testing, bukan production)" : ""}.
         </p>
       )}
 
       <h2 className="mt-8 text-xl font-bold">Menunggu domain ({(waiting ?? []).length})</h2>
-      <p className="mt-1 text-sm text-gray-600">
+      <p className="mt-1 text-sm text-muted">
         Order di bawah ini sudah lunas dan menunggu kamu menambahkan domainnya secara manual di Vercel (Project &gt; Domains) dan CNAME di Cloudflare ke cname.vercel-dns.com (DNS only). Setelah domain ditambahkan, tekan &ldquo;Tandai domain aktif&rdquo; — situs baru tampil dan email pemberitahuan terkirim ke klien (sekali saja).
       </p>
       {(waiting ?? []).length === 0 ? (
-        <p className="mt-4 rounded-2xl border p-4 text-gray-600">Tidak ada order yang menunggu domain.</p>
+        <p className="mt-4 rounded-2xl border p-4 text-muted">Tidak ada order yang menunggu domain.</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {(waiting ?? []).map((o) => {
@@ -94,16 +94,16 @@ export default async function AdminPage({
             return (
               <li key={o.id as string} className="rounded-2xl border p-4">
                 <p className="font-bold">{o.subdomain as string}.portofolio.my.id</p>
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-sm text-muted">
                   {nameByOrder.get(o.id as string) ?? "-"} · {o.email as string} · Template {o.template_id as string} · Rp{Number(o.price_snapshot ?? 0).toLocaleString("id-ID")}
                 </p>
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-sm text-muted">
                   Tanggal bayar: {paidAt ? new Date(paidAt).toLocaleDateString("id-ID") : "—"} · Status domain: {o.domain_status as string}
                 </p>
                 <div className="mt-3">
                   <ActivateButton orderId={o.id as string} subdomain={o.subdomain as string} />
                 </div>
-                <a href={`/admin/orders/${o.id}`} className="mt-2 inline-block text-sm text-blue-600 underline">Lihat detail pesanan</a>
+                <a href={`/admin/orders/${o.id}`} className="mt-2 inline-block text-sm text-brand-500 underline">Lihat detail pesanan</a>
               </li>
             );
           })}
@@ -112,7 +112,7 @@ export default async function AdminPage({
 
       <h2 className="mt-10 text-xl font-bold">Semua pesanan</h2>
       <form method="get" className="mt-4 flex flex-wrap gap-2">
-        <select name="status" defaultValue={statusFilter} className="min-h-[48px] rounded-xl border px-3 py-2">
+        <select name="status" defaultValue={statusFilter} className="min-h-[48px] rounded-md border px-3 py-2">
           <option value="">Semua status</option>
           {STATUSES.map((s) => (
             <option key={s} value={s}>{s}</option>
@@ -122,25 +122,25 @@ export default async function AdminPage({
           name="q"
           defaultValue={q}
           placeholder="Cari subdomain atau email"
-          className="min-h-[48px] flex-1 rounded-xl border px-3 py-2"
+          className="min-h-[48px] flex-1 rounded-md border px-3 py-2"
         />
-        <button type="submit" className="min-h-[48px] rounded-xl bg-blue-600 px-4 py-2 font-semibold text-white">Cari</button>
+        <button type="submit" className="min-h-[48px] btn-primary px-4 py-2 font-semibold text-white">Cari</button>
       </form>
       <ul className="mt-4 space-y-2">
         {(orders ?? []).map((o) => (
-          <li key={o.id as string} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border px-3 py-2 text-sm">
+          <li key={o.id as string} className="flex flex-wrap items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm">
             <span>
               <strong>{o.subdomain as string}.portofolio.my.id</strong> · {o.email as string} · {o.status as string} · Rp{Number(o.price_snapshot ?? 0).toLocaleString("id-ID")}
             </span>
-            <a href={`/admin/orders/${o.id}`} className="text-blue-600 underline">Detail</a>
+            <a href={`/admin/orders/${o.id}`} className="text-brand-500 underline">Detail</a>
           </li>
         ))}
-        {(orders ?? []).length === 0 ? <li className="text-gray-600">Tidak ada pesanan yang cocok.</li> : null}
+        {(orders ?? []).length === 0 ? <li className="text-muted">Tidak ada pesanan yang cocok.</li> : null}
       </ul>
       <div className="mt-4 flex items-center gap-3 text-sm">
         <span>Halaman {page} dari {totalPages}</span>
-        {page > 1 ? <a className="rounded-xl border px-3 py-2" href={`/admin?status=${statusFilter}&q=${encodeURIComponent(q)}&page=${page - 1}`}>← Sebelumnya</a> : null}
-        {page < totalPages ? <a className="rounded-xl border px-3 py-2" href={`/admin?status=${statusFilter}&q=${encodeURIComponent(q)}&page=${page + 1}`}>Berikutnya →</a> : null}
+        {page > 1 ? <a className="rounded-md border px-3 py-2" href={`/admin?status=${statusFilter}&q=${encodeURIComponent(q)}&page=${page - 1}`}>← Sebelumnya</a> : null}
+        {page < totalPages ? <a className="rounded-md border px-3 py-2" href={`/admin?status=${statusFilter}&q=${encodeURIComponent(q)}&page=${page + 1}`}>Berikutnya →</a> : null}
       </div>
     </main>
   );

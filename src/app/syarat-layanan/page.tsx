@@ -4,11 +4,11 @@
 export default function SyaratLayananPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-16">
-      <p className="rounded-xl border-2 border-yellow-500 bg-yellow-50 p-3 text-sm font-bold">
+      <p className="rounded-md border-2 border-yellow-500 bg-yellow-50 p-3 text-sm font-bold">
         Draf, perlu ditinjau ulang sebelum dipakai sungguhan.
       </p>
       <h1 className="mt-6 text-2xl font-bold">Syarat Layanan</h1>
-      <p className="mt-2 text-sm text-gray-500">Terakhir diperbarui: 21 November 2026.</p>
+      <p className="mt-2 text-sm text-muted">Terakhir diperbarui: 21 November 2026.</p>
 
       <h2 className="mt-8 text-lg font-bold">1. Ruang lingkup paket</h2>
       <p className="mt-2 text-gray-700">Paket mencakup pembuatan satu website portofolio di subdomain pilihanmu ({`{subdomain}`}.portofolio.my.id) dengan 1 dari 5 template yang tersedia, berdasarkan data yang kamu isi di form. Harga yang berlaku adalah harga yang tercatat di server saat order dibuat.</p>

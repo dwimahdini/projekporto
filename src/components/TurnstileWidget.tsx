@@ -48,7 +48,7 @@ export default function TurnstileWidget({ onToken }: { onToken: (token: string) 
   }, [siteKey]);
 
   if (!siteKey) {
-    return <p className="text-xs text-gray-500">Verifikasi keamanan dilewati di mode development (site key belum diisi).</p>;
+    return <p className="text-xs text-muted">Verifikasi keamanan dilewati di mode development (site key belum diisi).</p>;
   }
   return <div ref={ref} />;
 }

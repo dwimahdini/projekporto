@@ -79,14 +79,14 @@ export default function OrderStatusClient({ token }: { token: string }) {
     }
   }
 
-  if (error && !status) return <p className="mx-auto max-w-xl px-4 py-16 text-red-600">{error}</p>;
+  if (error && !status) return <p className="mx-auto max-w-xl px-4 py-16 text-danger">{error}</p>;
 
   const lastPayment = payments[0];
 
   return (
     <main className="mx-auto max-w-xl px-4 py-10">
       <h1 className="text-2xl font-bold">Status pesanan</h1>
-      <p className="mt-1 text-sm text-gray-600">{subdomain ? `${subdomain}.portofolio.my.id` : ""} · Rp{amount.toLocaleString("id-ID")}</p>
+      <p className="mt-1 text-sm text-muted">{subdomain ? `${subdomain}.portofolio.my.id` : ""} · Rp{amount.toLocaleString("id-ID")}</p>
 
       {status === "pending_payment" ? (
         <div className="mt-6 rounded-2xl border bg-yellow-50 p-5">
@@ -105,7 +105,7 @@ export default function OrderStatusClient({ token }: { token: string }) {
       {status === "published" ? (
         <div className="mt-6 rounded-2xl border bg-green-50 p-5">
           <p className="font-bold">🎉 Portofolio kamu sudah aktif!</p>
-          <p className="mt-1 text-sm"><a className="text-blue-600 underline" href={`https://${subdomain}.portofolio.my.id`}>{subdomain}.portofolio.my.id</a></p>
+          <p className="mt-1 text-sm"><a className="text-brand-500 underline" href={`https://${subdomain}.portofolio.my.id`}>{subdomain}.portofolio.my.id</a></p>
         </div>
       ) : null}
 
@@ -113,7 +113,7 @@ export default function OrderStatusClient({ token }: { token: string }) {
         <div className="mt-6 rounded-2xl border bg-red-50 p-5">
           <p className="font-bold">✕ Pembayaran gagal</p>
           <p className="mt-1 text-sm">Pembayaran terakhir gagal. Kamu bisa coba bayar ulang — percobaan lama sudah dibatalkan.</p>
-          <button type="button" onClick={retryPayment} disabled={busy} className="mt-4 min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white disabled:opacity-50">
+          <button type="button" onClick={retryPayment} disabled={busy} className="mt-4 min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white disabled:opacity-50">
             {busy ? "Membuat pembayaran…" : "Bayar ulang"}
           </button>
         </div>
@@ -123,7 +123,7 @@ export default function OrderStatusClient({ token }: { token: string }) {
         <div className="mt-6 rounded-2xl border bg-gray-100 p-5">
           <p className="font-bold">⏰ Pembayaran kedaluwarsa</p>
           <p className="mt-1 text-sm">Pembayaran terakhir kedaluwarsa. Buat pembayaran baru untuk lanjut.</p>
-          <button type="button" onClick={retryPayment} disabled={busy} className="mt-4 min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white disabled:opacity-50">
+          <button type="button" onClick={retryPayment} disabled={busy} className="mt-4 min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white disabled:opacity-50">
             {busy ? "Membuat pembayaran…" : "Buat pembayaran baru"}
           </button>
         </div>
@@ -133,7 +133,7 @@ export default function OrderStatusClient({ token }: { token: string }) {
         <div className="mt-6 rounded-2xl border p-5">
           <p className="font-bold">Pesanan masih draft / preview</p>
           <p className="mt-1 text-sm">Lengkapi form dan lihat pratinjau dulu sebelum bayar.</p>
-          <a href={`/pesanan/${token}`} className="mt-4 block rounded-xl border px-4 py-3 text-center font-medium">Kembali ke form pesanan</a>
+          <a href={`/pesanan/${token}`} className="mt-4 block rounded-md border px-4 py-3 text-center font-medium">Kembali ke form pesanan</a>
         </div>
       ) : null}
 
@@ -151,9 +151,9 @@ export default function OrderStatusClient({ token }: { token: string }) {
         </div>
       ) : null}
 
-      {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
-      {notice ? <p className="mt-4 rounded-xl bg-green-50 p-3 text-sm text-green-700">{notice}</p> : null}
-      <p className="mt-6 text-xs text-gray-500">Status diperbarui otomatis tiap 5 detik, berhenti saat sudah final atau tab disembunyikan.</p>
+      {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-danger">{error}</p> : null}
+      {notice ? <p className="mt-4 rounded-xl bg-green-50 p-3 text-sm text-success">{notice}</p> : null}
+      <p className="mt-6 text-xs text-muted">Status diperbarui otomatis tiap 5 detik, berhenti saat sudah final atau tab disembunyikan.</p>
     </main>
   );
 }

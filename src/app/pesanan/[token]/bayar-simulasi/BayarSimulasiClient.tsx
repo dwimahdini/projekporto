@@ -46,12 +46,12 @@ export default function BayarSimulasiClient({
       <div className="mt-6 rounded-2xl border bg-white p-5">
         <h1 className="text-xl font-bold">Ringkasan pesanan</h1>
         <dl className="mt-4 space-y-2 text-sm">
-          <div className="flex justify-between"><dt className="text-gray-500">Subdomain</dt><dd className="font-medium">{order.subdomain}.portofolio.my.id</dd></div>
-          <div className="flex justify-between"><dt className="text-gray-500">Template</dt><dd className="font-medium">{order.templateId}</dd></div>
-          <div className="flex justify-between"><dt className="text-gray-500">Harga</dt><dd className="font-bold">Rp{order.amount.toLocaleString("id-ID")}</dd></div>
-          <div className="flex justify-between"><dt className="text-gray-500">Status order</dt><dd className="font-medium">{order.status}</dd></div>
+          <div className="flex justify-between"><dt className="text-muted">Subdomain</dt><dd className="font-medium">{order.subdomain}.portofolio.my.id</dd></div>
+          <div className="flex justify-between"><dt className="text-muted">Template</dt><dd className="font-medium">{order.templateId}</dd></div>
+          <div className="flex justify-between"><dt className="text-muted">Harga</dt><dd className="font-bold">Rp{order.amount.toLocaleString("id-ID")}</dd></div>
+          <div className="flex justify-between"><dt className="text-muted">Status order</dt><dd className="font-medium">{order.status}</dd></div>
         </dl>
-        <p className="mt-3 text-xs text-gray-500">Harga di atas dari server. Kalau ada yang mengubah harga di browser, tetap diabaikan.</p>
+        <p className="mt-3 text-xs text-muted">Harga di atas dari server. Kalau ada yang mengubah harga di browser, tetap diabaikan.</p>
       </div>
 
       <div className="mt-6 space-y-3">
@@ -65,8 +65,8 @@ export default function BayarSimulasiClient({
           {busy === "expired" ? "Memproses…" : "⏰ Simulasikan kedaluwarsa"}
         </button>
       </div>
-      {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
-      <a href={`/pesanan/${token}/status`} className="mt-6 block text-center text-sm text-blue-600 underline">
+      {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-danger">{error}</p> : null}
+      <a href={`/pesanan/${token}/status`} className="mt-6 block text-center text-sm text-brand-500 underline">
         Lihat status pesanan
       </a>
     </main>

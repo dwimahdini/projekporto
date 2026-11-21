@@ -5,11 +5,11 @@ export default function KebijakanPrivasiPage() {
   const contact = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? process.env.EMAIL_FROM ?? "admin@group.portofolio.my.id";
   return (
     <main className="mx-auto max-w-2xl px-4 py-16">
-      <p className="rounded-xl border-2 border-yellow-500 bg-yellow-50 p-3 text-sm font-bold">
+      <p className="rounded-md border-2 border-yellow-500 bg-yellow-50 p-3 text-sm font-bold">
         Draf, perlu ditinjau ulang sebelum dipakai sungguhan.
       </p>
       <h1 className="mt-6 text-2xl font-bold">Kebijakan Privasi</h1>
-      <p className="mt-2 text-sm text-gray-500">Terakhir diperbarui: 21 November 2026. Draf sesuai Undang-Undang No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP).</p>
+      <p className="mt-2 text-sm text-muted">Terakhir diperbarui: 21 November 2026. Draf sesuai Undang-Undang No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP).</p>
 
       <h2 className="mt-8 text-lg font-bold">1. Data apa yang dikumpulkan</h2>
       <p className="mt-2 text-gray-700">Data yang kamu isi di form pesanan: nama lengkap, email, nomor HP, WhatsApp, tanggal lahir, jenis kelamin, kewarganegaraan, alamat lengkap, pendidikan, pengalaman kerja, proyek, skill, sertifikasi, publikasi, tautan, foto, dan preferensi tampil. Kami juga mencatat data teknis yang diperlukan untuk layanan: alamat IP, status pesanan, dan riwayat pembayaran (ID pesanan, nominal, tanggal, status).</p>

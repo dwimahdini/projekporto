@@ -133,7 +133,7 @@ export default function PreviewClient({
       <div className="sticky top-0 z-40 border-b bg-white/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-2">
           <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-bold">PRATINJAU — BELUM AKTIF</span>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-muted">
             {currentData.subdomain}.portofolio.my.id · {meta.name}
           </span>
           <div className="ml-auto flex flex-wrap items-center gap-2">
@@ -143,24 +143,24 @@ export default function PreviewClient({
               value={templateId}
               disabled={busy || !token}
               onChange={(e) => changeTemplate(e.target.value)}
-              className="min-h-[44px] rounded-xl border px-2 py-1 text-sm"
+              className="min-h-[44px] rounded-md border px-2 py-1 text-sm"
             >
               {TEMPLATE_LIST.map((t) => (
                 <option key={t.id} value={t.id}>{t.name}</option>
               ))}
             </select>
             {token ? (
-              <a href={`/pesanan/${token}`} className="min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium">
+              <a href={`/pesanan/${token}`} className="min-h-[44px] rounded-md border px-3 py-2 text-sm font-medium">
                 ← Edit data
               </a>
             ) : null}
           </div>
         </div>
         {!rendered ? (
-          <p className="mx-auto mt-2 max-w-5xl text-xs text-gray-500">Merender pratinjau… tombol pembayaran muncul setelah render selesai.</p>
+          <p className="mx-auto mt-2 max-w-5xl text-xs text-muted">Merender pratinjau… tombol pembayaran muncul setelah render selesai.</p>
         ) : null}
-        {error ? <p className="mx-auto mt-2 max-w-5xl text-sm text-red-600">{error}</p> : null}
-        {notice ? <p className="mx-auto mt-2 max-w-5xl text-sm text-green-700">{notice}</p> : null}
+        {error ? <p className="mx-auto mt-2 max-w-5xl text-sm text-danger">{error}</p> : null}
+        {notice ? <p className="mx-auto mt-2 max-w-5xl text-sm text-success">{notice}</p> : null}
       </div>
 
       {/* Area pratinjau: watermark + blokir klik kanan/salin */}
@@ -194,7 +194,7 @@ export default function PreviewClient({
       {/* Tombol bayar — HANYA setelah render selesai */}
       <div className="sticky bottom-0 z-40 border-t bg-white/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 sm:flex-row sm:justify-between">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted">
             {rendered
               ? "Pratinjau sudah selesai dirender. Kalau sudah cocok, lanjut ke pembayaran."
               : "Menunggu pratinjau selesai dirender…"}
@@ -204,18 +204,18 @@ export default function PreviewClient({
               type="button"
               onClick={proceedToPayment}
               disabled={busy || !token}
-              className="min-h-[52px] w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white disabled:opacity-50 sm:w-auto"
+              className="min-h-[52px] w-full btn-primary px-6 py-3 font-semibold text-white disabled:opacity-50 sm:w-auto"
             >
               {busy ? "Memproses…" : "Lanjut ke pembayaran →"}
             </button>
           ) : (
-            <button type="button" disabled className="min-h-[52px] w-full cursor-not-allowed rounded-xl bg-gray-300 px-6 py-3 font-semibold text-gray-500 sm:w-auto">
+            <button type="button" disabled className="min-h-[52px] w-full cursor-not-allowed rounded-md bg-gray-300 px-6 py-3 font-semibold text-muted sm:w-auto">
               Lanjut ke pembayaran →
             </button>
           )}
         </div>
         {!token && isAdmin ? (
-          <p className="mx-auto mt-2 max-w-5xl text-xs text-gray-500">Kamu membuka sebagai admin — tombol pembayaran tidak aktif di sini. Pemilik order harus membukanya lewat link token.</p>
+          <p className="mx-auto mt-2 max-w-5xl text-xs text-muted">Kamu membuka sebagai admin — tombol pembayaran tidak aktif di sini. Pemilik order harus membukanya lewat link token.</p>
         ) : null}
       </div>
     </div>

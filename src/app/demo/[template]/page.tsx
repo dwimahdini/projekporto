@@ -27,11 +27,11 @@ export default function DemoPage({ params }: { params: { template: string } }) {
               {t.name}
             </Link>
           ))}
-          <Link href="/" className="ml-auto text-sm font-medium text-blue-600 underline">
+          <Link href="/" className="ml-auto text-sm font-medium text-brand-500 underline">
             ← Pesan template ini
           </Link>
         </div>
-        <p className="mx-auto mt-2 max-w-5xl text-xs text-gray-500">{meta.description} Data contoh: Dwi Mahdini, Fullstack Web Developer.</p>
+        <p className="mx-auto mt-2 max-w-5xl text-xs text-muted">{meta.description} Data contoh: Dwi Mahdini, Fullstack Web Developer.</p>
       </nav>
       <Component data={data} />
     </div>

@@ -11,10 +11,10 @@ export default function BayarPage({ params }: { params: { token: string } }) {
         Maaf, pembayaran untuk pesanan ini belum bisa dilanjutkan saat ini. Provider pembayaran yang dipilih belum diaktifkan. Silakan kembali ke halaman status pesanan dan coba lagi nanti, atau hubungi admin.
       </p>
       <div className="mt-6 flex flex-col gap-2">
-        <a href={`/pesanan/${params.token}/status`} className="min-h-[52px] rounded-xl bg-blue-600 px-4 py-3 text-center font-semibold text-white">
+        <a href={`/pesanan/${params.token}/status`} className="min-h-[52px] btn-primary px-4 py-3 text-center font-semibold text-white">
           Lihat status pesanan
         </a>
-        <a href={`/pesanan/${params.token}`} className="min-h-[52px] rounded-xl border px-4 py-3 text-center font-medium">
+        <a href={`/pesanan/${params.token}`} className="min-h-[52px] rounded-md border px-4 py-3 text-center font-medium">
           ← Kembali ke pesanan
         </a>
       </div>

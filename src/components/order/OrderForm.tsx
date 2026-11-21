@@ -52,7 +52,7 @@ function statusLabel(status: string): string {
   return STATUS_LABELS[status] ?? status;
 }
 
-const inputCls = "mt-1 block w-full min-h-[48px] rounded-xl border px-3 py-2 text-base";
+const inputCls = "mt-1 block w-full min-h-[48px] rounded-md border px-3 py-2 text-base";
 const labelCls = "block text-sm font-medium";
 
 function emptyListItem(kind: string): Record<string, unknown> {
@@ -203,7 +203,7 @@ export default function OrderForm({ token }: { token: string }) {
   }
 
   if (loading) return <p className="px-6 py-16 text-center">Memuat pesanan…</p>;
-  if (error && !order) return <p className="mx-auto max-w-xl px-6 py-16 text-red-600">{error}</p>;
+  if (error && !order) return <p className="mx-auto max-w-xl px-6 py-16 text-danger">{error}</p>;
 
   const verified = Boolean(order?.email_verified_at);
   const progress = Math.round(((step + 1) / STEPS.length) * 100);
@@ -236,7 +236,7 @@ export default function OrderForm({ token }: { token: string }) {
     return (
       <div className="space-y-4">
         <h2 className="text-xl font-bold">{title}</h2>
-        <p className="text-sm text-gray-500">Kosongkan saja kalau belum ada. Bisa ditambah nanti sebelum bayar.</p>
+        <p className="text-sm text-muted">Kosongkan saja kalau belum ada. Bisa ditambah nanti sebelum bayar.</p>
         {items.map((item, idx) => (
           <div key={idx} className="space-y-3 rounded-2xl border p-4">
             {fields.map((f) => (
@@ -254,15 +254,15 @@ export default function OrderForm({ token }: { token: string }) {
               <input type="checkbox" checked={Boolean(item.isVisible)} onChange={(e) => updateList(kind, idx, { isVisible: e.target.checked })} className="h-5 w-5" />
               Tampilkan item ini di portofolio
             </label>
-            <button type="button" onClick={() => setLists((p) => ({ ...p, [kind]: p[kind].filter((_, i) => i !== idx) }))} className="text-sm text-red-600 underline">
+            <button type="button" onClick={() => setLists((p) => ({ ...p, [kind]: p[kind].filter((_, i) => i !== idx) }))} className="text-sm text-danger underline">
               Hapus item ini
             </button>
           </div>
         ))}
-        <button type="button" onClick={() => setLists((p) => ({ ...p, [kind]: [...p[kind], emptyListItem(kind)] }))} className="min-h-[48px] w-full rounded-xl border border-dashed px-4 py-2 font-medium">
+        <button type="button" onClick={() => setLists((p) => ({ ...p, [kind]: [...p[kind], emptyListItem(kind)] }))} className="min-h-[48px] w-full rounded-md border border-dashed px-4 py-2 font-medium">
           + Tambah {title.toLowerCase()}
         </button>
-        <button type="button" onClick={() => (advance ? nextFromList(kind, apiStep) : saveStep(apiStep, lists[kind] ?? []))} className="min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white">
+        <button type="button" onClick={() => (advance ? nextFromList(kind, apiStep) : saveStep(apiStep, lists[kind] ?? []))} className="min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white">
           {advance ? "Simpan & lanjut" : "Simpan bagian ini"}
         </button>
       </div>
@@ -276,7 +276,7 @@ export default function OrderForm({ token }: { token: string }) {
         <span>{savedAt ? `Tersimpan otomatis ✓ ${savedAt}` : "Draft tersimpan otomatis per langkah"}</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-gray-200" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-        <div className="h-full bg-blue-600 transition-all" style={{ width: `${progress}%` }} />
+        <div className="h-full bg-brand-500 transition-all" style={{ width: `${progress}%` }} />
       </div>
       <h1 className="mt-4 text-2xl font-bold">{STEPS[step]}</h1>
       {/* Dashboard klien — halaman ini adalah dashboardnya:
@@ -286,23 +286,23 @@ export default function OrderForm({ token }: { token: string }) {
       <section className="mt-4 rounded-2xl border bg-white p-4">
         <h2 className="font-bold">Dashboard pesanan</h2>
         <dl className="mt-3 space-y-1 text-sm">
-          <div className="flex justify-between gap-2"><dt className="text-gray-500">Status</dt><dd className="font-medium">{statusLabel(String(order?.status ?? ""))}</dd></div>
-          <div className="flex justify-between gap-2"><dt className="text-gray-500">Domain</dt><dd className="font-medium">{String(order?.subdomain ?? "")}.portofolio.my.id</dd></div>
-          <div className="flex justify-between gap-2"><dt className="text-gray-500">Template</dt><dd className="font-medium">{String(order?.template_id ?? "")}</dd></div>
-          <div className="flex justify-between gap-2"><dt className="text-gray-500">Harga</dt><dd className="font-medium">Rp{Number(order?.price_snapshot ?? 0).toLocaleString("id-ID")}</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-muted">Status</dt><dd className="font-medium">{statusLabel(String(order?.status ?? ""))}</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-muted">Domain</dt><dd className="font-medium">{String(order?.subdomain ?? "")}.portofolio.my.id</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-muted">Template</dt><dd className="font-medium">{String(order?.template_id ?? "")}</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-muted">Harga</dt><dd className="font-medium">Rp{Number(order?.price_snapshot ?? 0).toLocaleString("id-ID")}</dd></div>
         </dl>
         {String(order?.status ?? "") === "published" ? (
-          <p className="mt-3 text-sm">Situs kamu sudah aktif: <a className="font-medium text-blue-600 underline" href={`https://${String(order?.subdomain ?? "")}.portofolio.my.id`}>{String(order?.subdomain ?? "")}.portofolio.my.id</a></p>
+          <p className="mt-3 text-sm">Situs kamu sudah aktif: <a className="font-medium text-brand-500 underline" href={`https://${String(order?.subdomain ?? "")}.portofolio.my.id`}>{String(order?.subdomain ?? "")}.portofolio.my.id</a></p>
         ) : (
-          <p className="mt-3 text-sm text-gray-600">Situs belum aktif — {String(order?.status ?? "") === "domain_pending" ? "pembayaran lunas, admin sedang mengaktifkan domain (maks. 1x24 jam)." : "selesaikan form, pratinjau, dan pembayaran dulu."}</p>
+          <p className="mt-3 text-sm text-muted">Situs belum aktif — {String(order?.status ?? "") === "domain_pending" ? "pembayaran lunas, admin sedang mengaktifkan domain (maks. 1x24 jam)." : "selesaikan form, pratinjau, dan pembayaran dulu."}</p>
         )}
         <div className="mt-3 flex flex-wrap gap-2">
-          <a href={`/pesanan/${token}/status`} className="min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium">Lihat status</a>
-          <a href={`/pesanan/${token}/preview`} className="min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium">Pratinjau &amp; ganti template</a>
+          <a href={`/pesanan/${token}/status`} className="min-h-[44px] rounded-md border px-3 py-2 text-sm font-medium">Lihat status</a>
+          <a href={`/pesanan/${token}/preview`} className="min-h-[44px] rounded-md border px-3 py-2 text-sm font-medium">Pratinjau &amp; ganti template</a>
         </div>
         <div className="mt-4 border-t pt-3">
           <p className="text-sm font-medium">Ekspor data saya (JSON)</p>
-          <p className="mt-1 text-xs text-gray-500">Unduh seluruh data kamu. Butuh OTP email dulu (pakai tombol OTP di Langkah 1) — OTP berlaku 15 menit.</p>
+          <p className="mt-1 text-xs text-muted">Unduh seluruh data kamu. Butuh OTP email dulu (pakai tombol OTP di Langkah 1) — OTP berlaku 15 menit.</p>
           <button
             type="button"
             onClick={async () => {
@@ -327,14 +327,14 @@ export default function OrderForm({ token }: { token: string }) {
               URL.revokeObjectURL(url);
               setNotice("Data kamu sudah diunduh.");
             }}
-            className="mt-2 min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium"
+            className="mt-2 min-h-[44px] rounded-md border px-3 py-2 text-sm font-medium"
           >
             Unduh data saya (JSON)
           </button>
         </div>
         <div className="mt-4 border-t pt-3">
           <p className="text-sm font-medium">Hapus data saya</p>
-          <p className="mt-1 text-xs text-gray-500">Menghapus semua data secara permanen. Link konfirmasi dikirim ke email kamu — data tidak terhapus sebelum link itu dibuka dan dikonfirmasi.</p>
+          <p className="mt-1 text-xs text-muted">Menghapus semua data secara permanen. Link konfirmasi dikirim ke email kamu — data tidak terhapus sebelum link itu dibuka dan dikonfirmasi.</p>
           <button
             type="button"
             disabled={busy}
@@ -347,16 +347,16 @@ export default function OrderForm({ token }: { token: string }) {
               if (!res.ok) setError(data.error ?? "Gagal meminta hapus data.");
               else setNotice(data.message ?? "Link konfirmasi dikirim ke email kamu.");
             }}
-            className="mt-2 min-h-[44px] rounded-xl border border-red-300 px-3 py-2 text-sm font-medium text-red-700 disabled:opacity-50"
+            className="mt-2 min-h-[44px] rounded-md border border-red-300 px-3 py-2 text-sm font-medium text-danger disabled:opacity-50"
           >
             {busy ? "Mengirim…" : "Hapus data saya"}
           </button>
         </div>
-        {order?.draft_expires_at ? <p className="mt-3 text-xs text-gray-500">Draft kedaluwarsa {new Date(String(order.draft_expires_at)).toLocaleDateString("id-ID")}</p> : null}
+        {order?.draft_expires_at ? <p className="mt-3 text-xs text-muted">Draft kedaluwarsa {new Date(String(order.draft_expires_at)).toLocaleDateString("id-ID")}</p> : null}
       </section>
 
-      {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
-      {notice ? <p className="mt-4 rounded-xl bg-green-50 p-3 text-sm text-green-700">{notice}</p> : null}
+      {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-danger">{error}</p> : null}
+      {notice ? <p className="mt-4 rounded-xl bg-green-50 p-3 text-sm text-success">{notice}</p> : null}
 
       {step === 0 && (
         <div className="mt-6 space-y-4">
@@ -365,20 +365,20 @@ export default function OrderForm({ token }: { token: string }) {
             <p className="mt-1 text-sm">Kamu membuka halaman ini lewat link yang dikirim ke email <strong>{String(order?.email ?? "")}</strong>. Tekan tombol di bawah untuk menandai email terverifikasi. Tanpa verifikasi ini, pesanan tidak bisa lanjut ke pembayaran.</p>
           </div>
           {!verified && (
-            <button type="button" onClick={verifyEmail} disabled={busy} className="min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white disabled:opacity-50">
+            <button type="button" onClick={verifyEmail} disabled={busy} className="min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white disabled:opacity-50">
               {busy ? "Memverifikasi…" : "Verifikasi email saya"}
             </button>
           )}
           <div className="rounded-2xl border p-4">
             <h2 className="font-semibold">Ubah data pribadi? Perlu OTP</h2>
-            <p className="mt-1 text-sm text-gray-600">Kalau nanti kamu mengubah email, nomor HP, WhatsApp, alamat, atau tanggal lahir setelah data pertama terisi, sistem akan minta kode OTP 6 digit yang dikirim ke email kamu (berlaku 10 menit, maks 5 kali coba).</p>
+            <p className="mt-1 text-sm text-muted">Kalau nanti kamu mengubah email, nomor HP, WhatsApp, alamat, atau tanggal lahir setelah data pertama terisi, sistem akan minta kode OTP 6 digit yang dikirim ke email kamu (berlaku 10 menit, maks 5 kali coba).</p>
             <div className="mt-3 flex gap-2">
-              <button type="button" onClick={requestOtp} className="min-h-[48px] flex-1 rounded-xl border px-4 py-2 font-medium">Kirim kode OTP</button>
-              <input value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))} placeholder="123456" inputMode="numeric" className="min-h-[48px] w-32 rounded-xl border px-3 text-center text-lg tracking-widest" />
-              <button type="button" onClick={verifyOtp} disabled={!otpSent && otpCode.length !== 6} className="min-h-[48px] rounded-xl bg-gray-900 px-4 py-2 font-medium text-white disabled:opacity-50">Verifikasi OTP</button>
+              <button type="button" onClick={requestOtp} className="min-h-[48px] flex-1 rounded-md border px-4 py-2 font-medium">Kirim kode OTP</button>
+              <input value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))} placeholder="123456" inputMode="numeric" className="min-h-[48px] w-32 rounded-md border px-3 text-center text-lg tracking-widest" />
+              <button type="button" onClick={verifyOtp} disabled={!otpSent && otpCode.length !== 6} className="min-h-[48px] rounded-md bg-gray-900 px-4 py-2 font-medium text-white disabled:opacity-50">Verifikasi OTP</button>
             </div>
           </div>
-          <button type="button" onClick={() => setStep(1)} className="min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white">Lanjut ke identitas</button>
+          <button type="button" onClick={() => setStep(1)} className="min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white">Lanjut ke identitas</button>
         </div>
       )}
 
@@ -419,7 +419,7 @@ export default function OrderForm({ token }: { token: string }) {
           <div>
             <label className={labelCls}>Alamat lengkap</label>
             <textarea {...identityForm.register("address")} rows={2} placeholder="Jalan, nomor rumah, RT/RW" className={inputCls} />
-            <p className="mt-1 text-xs text-gray-500">Alamat tidak pernah tampil di portofolio publik, apa pun pengaturan tampilnya.</p>
+            <p className="mt-1 text-xs text-muted">Alamat tidak pernah tampil di portofolio publik, apa pun pengaturan tampilnya.</p>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className={labelCls}>Kota</label><input {...identityForm.register("city")} className={inputCls} /></div>
@@ -444,7 +444,7 @@ export default function OrderForm({ token }: { token: string }) {
             <div><label className={labelCls}>GitHub</label><input {...identityForm.register("githubUrl")} placeholder="https://…" className={inputCls} /></div>
             <div><label className={labelCls}>Instagram</label><input {...identityForm.register("instagramUrl")} placeholder="https://…" className={inputCls} /></div>
           </div>
-          <button type="submit" className="min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white">Simpan & lanjut</button>
+          <button type="submit" className="min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white">Simpan & lanjut</button>
         </form>
       )}
 
@@ -472,7 +472,7 @@ export default function OrderForm({ token }: { token: string }) {
             { key: "description", label: "Deskripsi" },
             { key: "url", label: "URL proyek" },
           ], "Proyek")}
-          <p className="mt-3 text-sm text-gray-500">Gambar proyek: upload lewat tombol di bawah, lalu tempel URL hasil upload ke kolom gambar di item proyek (atau isi langsung URL gambar yang sudah ada).</p>
+          <p className="mt-3 text-sm text-muted">Gambar proyek: upload lewat tombol di bawah, lalu tempel URL hasil upload ke kolom gambar di item proyek (atau isi langsung URL gambar yang sudah ada).</p>
           <div className="mt-3">
             <UploadField token={token} label="Gambar proyek" onUploaded={(url) => setNotice(`Gambar ter-upload: ${url}. Tempel URL ini ke kolom gambar proyek. ` + url)} />
           </div>
@@ -506,7 +506,7 @@ export default function OrderForm({ token }: { token: string }) {
               const c = await saveStep("publications", lists.publications ?? []);
               if (a && b && c) setStep(6);
             }}
-            className="min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white"
+            className="min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white"
           >
             Simpan semua & lanjut ke tampil & review
           </button>
@@ -516,7 +516,7 @@ export default function OrderForm({ token }: { token: string }) {
       {step === 6 && (
         <div className="mt-6 space-y-4">
           <h2 className="text-xl font-bold">Pilih yang tampil di portofolio</h2>
-          <p className="text-sm text-gray-600">Matikan toggle untuk data yang tidak mau kamu tampilkan. Email dan nomor HP secara default mati — nyalakan hanya kalau kamu memang mau orang lain bisa menghubungimu lewat situ.</p>
+          <p className="text-sm text-muted">Matikan toggle untuk data yang tidak mau kamu tampilkan. Email dan nomor HP secara default mati — nyalakan hanya kalau kamu memang mau orang lain bisa menghubungimu lewat situ.</p>
           <div className="space-y-2">
             {VISIBILITY_FIELDS.map((f) => (
               <VisibilityToggle key={f.key} label={f.label} checked={visibility[f.key] ?? (f.key === "email" || f.key === "phone" || f.key === "whatsapp" ? false : true)} onChange={(v) => setVisibility((prev) => ({ ...prev, [f.key]: v }))} />
@@ -528,7 +528,7 @@ export default function OrderForm({ token }: { token: string }) {
               const ok = await saveStep("visibility", visibility);
               if (ok) setNotice("Preferensi tampil tersimpan. Langkah berikutnya (Tahap 4): lihat pratinjau berwatermark, lalu lanjut ke pembayaran.");
             }}
-            className="min-h-[52px] w-full rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white"
+            className="min-h-[52px] w-full btn-primary px-4 py-3 font-semibold text-white"
           >
             Simpan preferensi
           </button>
@@ -546,11 +546,11 @@ export default function OrderForm({ token }: { token: string }) {
               }
               window.location.href = `/preview/${out.orderId}?token=${token}`;
             }}
-            className="block min-h-[52px] w-full rounded-xl border px-4 py-3 text-center font-semibold"
+            className="block min-h-[52px] w-full rounded-md border px-4 py-3 text-center font-semibold"
           >
             Lihat pratinjau
           </button>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted">
             Status email: {verified ? "terverifikasi ✓" : "belum terverifikasi — selesaikan Langkah 1 dulu"}.
             Pembayaran baru bisa dilanjutkan setelah email terverifikasi dan pratinjau selesai dirender (Tahap 4-5).
           </p>
@@ -559,10 +559,10 @@ export default function OrderForm({ token }: { token: string }) {
 
       <div className="fixed inset-x-0 bottom-0 border-t bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-2xl gap-2 px-4 py-3">
-          <button type="button" disabled={step === 0} onClick={() => setStep((s) => Math.max(s - 1, 0))} className="min-h-[48px] flex-1 rounded-xl border px-4 py-2 font-medium disabled:opacity-40">
+          <button type="button" disabled={step === 0} onClick={() => setStep((s) => Math.max(s - 1, 0))} className="min-h-[48px] flex-1 rounded-md border px-4 py-2 font-medium disabled:opacity-40">
             ← Kembali
           </button>
-          <button type="button" disabled={step >= STEPS.length - 1} onClick={() => setStep((s) => Math.min(s + 1, STEPS.length - 1))} className="min-h-[48px] flex-1 rounded-xl bg-gray-900 px-4 py-2 font-medium text-white disabled:opacity-40">
+          <button type="button" disabled={step >= STEPS.length - 1} onClick={() => setStep((s) => Math.min(s + 1, STEPS.length - 1))} className="min-h-[48px] flex-1 rounded-md bg-gray-900 px-4 py-2 font-medium text-white disabled:opacity-40">
             Lanjut →
           </button>
         </div>
