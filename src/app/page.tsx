@@ -98,7 +98,10 @@ export default async function HomePage() {
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {templates.map((t, i) => (
                 <Reveal key={t.id} delay={i * 0.06}>
-                  <a href={`/demo/${t.id}`} className="card card-hover block h-full p-5">
+                  {/* text-ink wajib: section ini text-white,
+                      tanpa ini nama template ikut putih dan
+                      hilang di atas kartu putih. */}
+                  <a href={`/demo/${t.id}`} className="card card-hover block h-full p-5 text-ink">
                     <p className="text-xs font-medium uppercase tracking-wide text-faint">Template</p>
                     <h3 className="mt-2 text-2xl">{t.name}</h3>
                     <p className="mt-3 flex items-baseline justify-between text-sm">
