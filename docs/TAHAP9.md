@@ -96,6 +96,34 @@ jalur yang bekerja (sama seperti migrasi 0001–0006).
   (Maya/Lena/Aisha/Unsplash). Landing memuat ketiga nama template
   baru dari database dan judul "Delapan template, satu harga".
 
+## Bug cache: template baru tidak tampil di landing production
+
+Gejala (21 Nov 2026 22:36–22:44 WIB): migrasi 0007 berhasil
+(DB berisi 8 template), demo `/demo/developer` dll. HTTP 200
+di production, tapi landing production hanya menampilkan
+5 template lama. Server lokal (fresh) menampilkan 8.
+
+Diagnosis: BUKAN deployment basi (alias menunjuk deployment
+terbaru, dibuktikan `vercel inspect`), BUKAN edge cache
+(`X-Vercel-Cache: MISS`, `Cache-Control: no-store`), dan BUKAN
+database (query REST dengan anon key mengembalikan 8 baris).
+Penyebabnya adalah **Data Cache Next.js**: fetch Supabase di
+server component ter-cache tanpa batas waktu, dan cache itu di
+Vercel bertahan antar-deploy. `force-dynamic` + `revalidate = 0`
+di `page.tsx` saja TIDAK cukup — keduanya tidak mematikan
+cache fetch yang sudah tersimpan.
+
+Perbaikan (commit `f42f5c0`): `src/lib/supabase/server.ts`
+memakai `global.fetch` kustom dengan `cache: "no-store"` di
+`createPublicClient` DAN `createAdminClient`. Perbaikan ini
+juga melindungi halaman publik `/s/[subdomain]` (situs klien
+harus mencerminkan edit terbaru) dan panel admin. Setelah
+redeploy, landing production menampilkan 8 template.
+
+Pelajaran: setiap bacaan server yang datanya bisa berubah
+harus no-store. Jangan mengandalkan `force-dynamic` /
+`revalidate` untuk kesegaran fetch Supabase.
+
 ## Yang belum / keputusan berikut
 
 - Tiga template MIT lain (Photographer Nils, Video Editor Kai,
