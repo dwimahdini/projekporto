@@ -34,10 +34,19 @@ export function initials(name: string | null): string {
     .join("");
 }
 
-// Animasi muncul saat scroll — halus, sekali saja, dan
-// mati total kalau user mengaktifkan prefers-reduced-motion
-// (Framer Motion menghormati pengaturan itu lewat CSS media
-// query di bawah, plus animasi ini ringan: opacity + geser 16px).
+// Animasi muncul saat komponen dipasang (mount) — halus,
+// sekali saja, dan mati total kalau user mengaktifkan
+// prefers-reduced-motion (plus animasi ini ringan:
+// opacity + geser 16px).
+//
+// PENTING: dulu ini memakai whileInView (animasi baru jalan
+// saat elemen masuk viewport). Di halaman pratinjau itu
+// membuat konten tertahan transparan belasan detik kalau
+// IntersectionObserver-nya telat jalan — halaman tampak
+// kosong padahal datanya sudah ada. Dengan animate, konten
+// selalu muncul begitu halaman selesai dimuat, tidak peduli
+// posisi scroll. Efeknya sama halusnya, tapi tidak bisa
+// macet.
 export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
   // Hormati prefers-reduced-motion: kalau user meminta
   // gerakan dikurangi, tampilkan langsung tanpa animasi.
@@ -47,8 +56,7 @@ export function Reveal({ children, delay = 0, className }: { children: ReactNode
     <motion.div
       className={className}
       initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
     >
       {children}
