@@ -50,6 +50,26 @@ export async function POST(_req: Request, { params }: { params: { token: string 
     );
   }
 
+  // Cek ulang keunikan subdomain saat masuk pending_payment
+  // (lapisan kedua setelah cek di pembuatan order + UNIQUE
+  // di database). Kalau ada order lain yang masih hidup
+  // dengan subdomain yang sama, tolak — jangan buat payment.
+  if (order.subdomain) {
+    const { data: conflict } = await supabase
+      .from("orders")
+      .select("id")
+      .eq("subdomain", order.subdomain)
+      .neq("id", order.id)
+      .not("status", "in", "(deleted,cancelled,expired)")
+      .limit(1);
+    if (conflict && conflict.length > 0) {
+      return NextResponse.json(
+        { error: "Subdomain sudah dipakai orang lain. Hubungi admin untuk mengganti subdomain." },
+        { status: 409 }
+      );
+    }
+  }
+
   let created;
   try {
     const provider = getPaymentProvider();

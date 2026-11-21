@@ -73,6 +73,26 @@ export async function sendPaidEmail(input: {
   return true;
 }
 
+export async function sendDeleteConfirmationEmail(input: {
+  to: string;
+  subdomain: string;
+  link: string;
+}): Promise<{ sent: boolean; devLink?: string }> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.info(`[email:dev] Link hapus data untuk ${input.to} (${input.subdomain}): ${input.link}`);
+    return { sent: false, devLink: input.link };
+  }
+  const resend = new Resend(apiKey);
+  await resend.emails.send({
+    from: process.env.EMAIL_FROM ?? "Portofolio <noreply@group.portofolio.my.id>",
+    to: input.to,
+    subject: `Konfirmasi hapus data portofolio ${input.subdomain}.portofolio.my.id`,
+    html: `<p>Kamu meminta menghapus semua data portofolio ${input.subdomain}.portofolio.my.id.</p><p>Kalau memang kamu yang meminta, klik link ini dalam 24 jam untuk menghapus data secara permanen:</p><p><a href="${input.link}">${input.link}</a></p><p>Kalau bukan kamu yang meminta, abaikan email ini — data kamu tetap aman.</p>`,
+  });
+  return { sent: true };
+}
+
 export async function sendPublishedEmail(input: { to: string; subdomain: string }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {

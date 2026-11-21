@@ -52,8 +52,13 @@ export async function applyPaymentResult(
     return { ok: out.ok, changed: false, alreadyApplied: out.already, error: out.error, orderId: out.order_id, newOrderStatus: out.new_order_status };
   }
 
-  // Baru berubah menjadi paid -> kirim email sekali.
+  // Baru berubah menjadi paid -> domain_status ikut 'pending'
+  // (cerminan admin; sumber kebenaran tetap orders.status).
   if (result === "paid" && out.order_id) {
+    await supabase
+      .from("orders")
+      .update({ domain_status: "pending", domain_status_updated_at: new Date().toISOString() })
+      .eq("id", out.order_id);
     const { data: order } = await supabase
       .from("orders")
       .select("email, subdomain, template_id, price_snapshot")

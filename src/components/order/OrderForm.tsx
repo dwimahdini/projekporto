@@ -36,6 +36,22 @@ const VISIBILITY_FIELDS: { key: string; label: string }[] = [
   { key: "instagram_url", label: "Instagram" },
 ];
 
+const STATUS_LABELS: Record<string, string> = {
+  draft: "Draft — belum selesai diisi",
+  preview: "Pratinjau — belum dibayar",
+  pending_payment: "Menunggu pembayaran",
+  paid: "Lunas",
+  domain_pending: "Lunas — menunggu aktivasi domain",
+  published: "Aktif",
+  expired: "Kedaluwarsa",
+  cancelled: "Dibatalkan",
+  deleted: "Dihapus",
+};
+
+function statusLabel(status: string): string {
+  return STATUS_LABELS[status] ?? status;
+}
+
 const inputCls = "mt-1 block w-full min-h-[48px] rounded-xl border px-3 py-2 text-base";
 const labelCls = "block text-sm font-medium";
 
@@ -263,10 +279,49 @@ export default function OrderForm({ token }: { token: string }) {
         <div className="h-full bg-blue-600 transition-all" style={{ width: `${progress}%` }} />
       </div>
       <h1 className="mt-4 text-2xl font-bold">{STEPS[step]}</h1>
-      <p className="mt-1 text-sm text-gray-600">
-        Pesanan: <strong>{String(order?.subdomain ?? "")}.portofolio.my.id</strong> · Status: {String(order?.status ?? "")}
-        {order?.draft_expires_at ? ` · Draft kedaluwarsa ${new Date(String(order.draft_expires_at)).toLocaleDateString("id-ID")}` : ""}
-      </p>
+      {/* Dashboard klien — halaman ini adalah dashboardnya:
+          status pesanan + domain, link situs, edit data (form
+          di bawah), ganti template (lewat pratinjau), dan
+          hapus data. Tidak ada akun klien. */}
+      <section className="mt-4 rounded-2xl border bg-white p-4">
+        <h2 className="font-bold">Dashboard pesanan</h2>
+        <dl className="mt-3 space-y-1 text-sm">
+          <div className="flex justify-between gap-2"><dt className="text-gray-500">Status</dt><dd className="font-medium">{statusLabel(String(order?.status ?? ""))}</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-gray-500">Domain</dt><dd className="font-medium">{String(order?.subdomain ?? "")}.portofolio.my.id</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-gray-500">Template</dt><dd className="font-medium">{String(order?.template_id ?? "")}</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-gray-500">Harga</dt><dd className="font-medium">Rp{Number(order?.price_snapshot ?? 0).toLocaleString("id-ID")}</dd></div>
+        </dl>
+        {String(order?.status ?? "") === "published" ? (
+          <p className="mt-3 text-sm">Situs kamu sudah aktif: <a className="font-medium text-blue-600 underline" href={`https://${String(order?.subdomain ?? "")}.portofolio.my.id`}>{String(order?.subdomain ?? "")}.portofolio.my.id</a></p>
+        ) : (
+          <p className="mt-3 text-sm text-gray-600">Situs belum aktif — {String(order?.status ?? "") === "domain_pending" ? "pembayaran lunas, admin sedang mengaktifkan domain (maks. 1x24 jam)." : "selesaikan form, pratinjau, dan pembayaran dulu."}</p>
+        )}
+        <div className="mt-3 flex flex-wrap gap-2">
+          <a href={`/pesanan/${token}/status`} className="min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium">Lihat status</a>
+          <a href={`/pesanan/${token}/preview`} className="min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium">Pratinjau &amp; ganti template</a>
+        </div>
+        <div className="mt-4 border-t pt-3">
+          <p className="text-sm font-medium">Hapus data saya</p>
+          <p className="mt-1 text-xs text-gray-500">Menghapus semua data secara permanen. Link konfirmasi dikirim ke email kamu — data tidak terhapus sebelum link itu dibuka dan dikonfirmasi.</p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true);
+              setError("");
+              const res = await fetch(`/api/orders/${token}/delete-request`, { method: "POST" });
+              const data = await res.json();
+              setBusy(false);
+              if (!res.ok) setError(data.error ?? "Gagal meminta hapus data.");
+              else setNotice(data.message ?? "Link konfirmasi dikirim ke email kamu.");
+            }}
+            className="mt-2 min-h-[44px] rounded-xl border border-red-300 px-3 py-2 text-sm font-medium text-red-700 disabled:opacity-50"
+          >
+            {busy ? "Mengirim…" : "Hapus data saya"}
+          </button>
+        </div>
+        {order?.draft_expires_at ? <p className="mt-3 text-xs text-gray-500">Draft kedaluwarsa {new Date(String(order.draft_expires_at)).toLocaleDateString("id-ID")}</p> : null}
+      </section>
 
       {error ? <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
       {notice ? <p className="mt-4 rounded-xl bg-green-50 p-3 text-sm text-green-700">{notice}</p> : null}

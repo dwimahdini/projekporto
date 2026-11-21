@@ -18,6 +18,16 @@ export function middleware(req: NextRequest) {
 
   // --- Development: localhost ---
   if (host.includes("localhost") || host.includes("127.0.0.1")) {
+    // wirza.localhost:3000 -> portofolio wirza (seperti
+    // wirza.portofolio.my.id di production).
+    const hostname = host.split(":")[0].toLowerCase();
+    const localSub = hostname.endsWith(".localhost")
+      ? hostname.slice(0, -".localhost".length)
+      : "";
+    if (localSub && localSub !== "group" && localSub !== "www") {
+      url.pathname = `/s/${localSub}${url.pathname === "/" ? "" : url.pathname}`;
+      return NextResponse.rewrite(url);
+    }
     const testSubdomain = url.searchParams.get("__subdomain");
     if (testSubdomain) {
       url.pathname = `/s/${testSubdomain}${url.pathname === "/" ? "" : url.pathname}`;

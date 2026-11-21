@@ -67,6 +67,13 @@ export async function PATCH(req: Request, { params }: { params: { token: string 
   }
 
   const body = await req.json().catch(() => null);
+
+  // Subdomain dikunci: tidak ada API yang boleh mengubahnya,
+  // apalagi setelah paid. Form tidak pernah mengirim field ini.
+  if (body?.data && typeof body.data === "object" && "subdomain" in body.data) {
+    return NextResponse.json({ error: "Subdomain sudah dikunci dan tidak bisa diubah." }, { status: 403 });
+  }
+
   const parsed = autosaveSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Data tidak valid." }, { status: 400 });
 
