@@ -37,4 +37,9 @@ export const RATE_LIMITS = {
   otpPerIp: { limit: 10, windowMs: 60 * 60 * 1000 },
   lookupPerIp: { limit: 10, windowMs: 60 * 60 * 1000 },
   uploadPerToken: { limit: 20, windowMs: 60 * 60 * 1000 },
+  // Tahap 7:
+  adminLogin: { limit: 5, windowMs: 15 * 60 * 1000 },
+  exportPerToken: { limit: 5, windowMs: 60 * 60 * 1000 },
+  deleteRequestPerToken: { limit: 3, windowMs: 60 * 60 * 1000 },
+  revealPerAdmin: { limit: 20, windowMs: 60 * 60 * 1000 },
 } as const;

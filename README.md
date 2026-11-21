@@ -1,5 +1,6 @@
-# group.portofolio.my.id — Tahap 1 + 2 + 3 + 4 + 5 + 6 selesai
+# group.portofolio.my.id — Tahap 1 + 2 + 3 + 4 + 5 + 6 + 7 selesai
 
+Status verifikasi Tahap 7 (2026-11-21): `npm test` 76/76 lolos, `npm run lint` bersih, `npx tsc --noEmit` lolos, `npm run build` berhasil. Cek live: header keamanan hadir, `/pesanan/*` memakai `Referrer-Policy: no-referrer`, cron tanpa secret → 401, admin tanpa login → halaman login, aktivasi tanpa login → 403. Audit keamanan: `docs/SECURITY_AUDIT.md` (9 poin lulus dengan bukti).
 Status verifikasi Tahap 6 (2026-11-21): `npm test` 62/62 lolos, `npm run lint` bersih, `npx tsc --noEmit` lolos, `npm run build` berhasil. Status Tahap 5: `npm test` 22/22 lolos, `npm run lint` bersih, `npx tsc --noEmit` lolos, `npm run build` berhasil. Halaman simulasi dites langsung saat mock mati: page 404, API 404, halaman status 200. Status Tahap 4: `npx tsc --noEmit` lolos, `npm run build` berhasil, preview tanpa token dites langsung → 404 (tanpa token, token palsu, dan rute lama dengan token palsu). Status Tahap 3: `npx tsc --noEmit` lolos, `npm run build` berhasil, 5 halaman demo dites langsung (`/demo/minimalis`, `/demo/gelap-futuristik`, `/demo/kreatif`, `/demo/profesional`, `/demo/visual` — semua 200 dan menampilkan "Dwi Mahdini", template tidak dikenal 404). Status Tahap 2: `npx tsc --noEmit` lolos, `npm run build` berhasil (13 route). Perbaikan dari Tahap 1: `next.config.ts` diganti `next.config.mjs` karena Next 14.2.5 tidak mendukung config TypeScript, dan landing dijadikan `force-dynamic` supaya build tidak gagal saat env Supabase belum diisi.
 
 Platform jasa pembuatan website portofolio murah.
@@ -77,6 +78,17 @@ values (null, 'UUID-USER-ADMIN', 'admin', 'Admin');
 - Tes: `npm test` (22 tes)
 - Detail + checklist Midtrans: `docs/TAHAP5.md`
 
+## Yang sudah ada di Tahap 7
+
+- Panel admin: semua pesanan (filter status, cari subdomain/email, paginasi), detail pesanan (riwayat pembayaran, pratinjau, audit log), aksi nonaktifkan/aktifkan/batalkan (dicatat di `audit_log`), data pribadi tersembunyi sampai admin menekan "Tampilkan" (dicatat di audit log)
+- Login admin lewat server: rate limit 5x/15 menit, penundaan saat gagal, cek role di server; cara membuat admin pertama di `docs/TAHAP7.md`
+- Hak data klien: ekspor JSON (wajib OTP), hapus data (belum dibayar = hapus total; sudah dibayar = anonimisasi + simpan catatan transaksi minimal), cleanup draft 14 hari + file Storage (cron, fail-closed)
+- Halaman legal DRAF: `/kebijakan-privasi` dan `/syarat-layanan` (rute lama `/privasi` dan `/syarat` redirect ke sana), tautan di footer dan checkbox persetujuan
+- Pengerasan: header keamanan (CSP, HSTS, dll.), rate limit di semua jalur sensitif, sanitasi URL + magic bytes upload, pesan error generik
+- Audit keamanan: `docs/SECURITY_AUDIT.md` (9 poin lulus dengan bukti + 8 celah tersisa)
+- Tes: `npm test` (76 tes)
+- Detail: `docs/TAHAP7.md`
+
 ## Yang sudah ada di Tahap 6
 
 - Middleware subdomain (group = aplikasi utama, `{subdomain}` = portofolio published, `wirza.localhost:3000` untuk dev) — hanya published yang tampil, lainnya 404
@@ -87,7 +99,7 @@ values (null, 'UUID-USER-ADMIN', 'admin', 'Admin');
 - Tes: `npm test` (62 tes)
 - Detail: `docs/TAHAP6.md`
 
-## Yang BELUM ada (Tahap 7-8)
+## Yang BELUM ada (Tahap 8)
 
 - Integrasi Midtrans asli (Snap + webhook lengkap — checklist di `docs/TAHAP5.md`)
 - Admin: tombol "Tandai domain aktif" + email ke klien (Tahap 6)

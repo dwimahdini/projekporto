@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getOrderByToken } from "@/lib/order";
 import { createAdminClient } from "@/lib/supabase/server";
 import { validateUploadFile, randomUploadPath } from "@/lib/upload";
+import { validateImageMagicBytes } from "@/lib/sanitize";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 // POST /api/upload — upload foto/gambar lewat server.
@@ -23,9 +24,14 @@ export async function POST(req: Request) {
   const err = validateUploadFile(file);
   if (err) return NextResponse.json({ error: err }, { status: 400 });
 
+  // Validasi ISI file berdasarkan magic bytes, bukan hanya
+  // ekstensi/MIME dari browser (keduanya bisa dipalsukan).
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const magicErr = validateImageMagicBytes(bytes, file.type);
+  if (magicErr) return NextResponse.json({ error: magicErr }, { status: 400 });
+
   const supabase = createAdminClient();
   const path = randomUploadPath(order.id, file.name);
-  const bytes = new Uint8Array(await file.arrayBuffer());
   const { error } = await supabase.storage
     .from("portfolio-uploads")
     .upload(path, bytes, { contentType: file.type, upsert: false });

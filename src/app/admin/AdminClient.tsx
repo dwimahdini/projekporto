@@ -2,22 +2,61 @@
 import { useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
-// Login admin (Supabase Auth, email + password).
+// Tombol keluar admin.
+export function LogoutButton() {
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        const supabase = createBrowserSupabaseClient();
+        await supabase.auth.signOut();
+        window.location.reload();
+      }}
+      className="min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium"
+    >
+      Keluar
+    </button>
+  );
+}
+
+// Login admin (Supabase Auth, email + password) LEWAT
+// SERVER (/api/admin/login) supaya ada rate limiting +
+// penundaan percobaan gagal + cek role di server.
 // Halaman admin tidak ditautkan dari situs publik.
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [failures, setFailures] = useState(0);
+  const [cooldownUntil, setCooldownUntil] = useState(0);
 
   async function login() {
+    if (Date.now() < cooldownUntil) return;
     setBusy(true);
     setError("");
-    const supabase = createBrowserSupabaseClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setBusy(false);
-    if (error) setError("Login gagal. Periksa email/password dan pastikan akun ini role admin.");
-    else window.location.reload();
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      setBusy(false);
+      if (!res.ok) {
+        // Penundaan bertingkat di client: gagal ke-1 tunggu
+        // 2 detik, ke-2 tunggu 4 detik, dst (maks 30 detik).
+        const nextFailures = failures + 1;
+        setFailures(nextFailures);
+        setCooldownUntil(Date.now() + Math.min(2000 * nextFailures, 30000));
+        setError(data.error ?? "Login gagal.");
+        return;
+      }
+      window.location.reload();
+    } catch {
+      setBusy(false);
+      setError("Login gagal. Coba lagi.");
+    }
   }
 
   return (

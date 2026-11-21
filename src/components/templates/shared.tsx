@@ -6,6 +6,7 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import type { PortfolioData } from "@/lib/types";
+import { safeHttpUrl } from "@/lib/sanitize";
 
 export function formatDate(date: string | null): string {
   if (!date) return "";
@@ -68,13 +69,20 @@ export function Avatar({ data, className }: { data: PortfolioData; className?: s
 // Tautan kontak — hanya yang terisi yang dirender.
 export function ContactLinks({ data, className = "" }: { data: PortfolioData; className?: string }) {
   const links: { label: string; href: string }[] = [];
-  if (data.email) links.push({ label: "Email", href: `mailto:${data.email}` });
-  if (data.phone) links.push({ label: "Telepon", href: `tel:${data.phone}` });
+  // Email/telepon hanya tampil kalau datanya berupa alamat
+  // yang masuk akal; URL website/sosial HARUS http/https
+  // (safeHttpUrl menolak javascript:, data:, dan sejenisnya).
+  if (data.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) links.push({ label: "Email", href: `mailto:${data.email}` });
+  if (data.phone && /^\+?[0-9\s-]+$/.test(data.phone)) links.push({ label: "Telepon", href: `tel:${data.phone.replace(/[\s-]/g, "")}` });
   if (data.whatsapp) links.push({ label: "WhatsApp", href: `https://wa.me/${data.whatsapp.replace(/[^0-9]/g, "")}` });
-  if (data.website_url) links.push({ label: "Website", href: data.website_url });
-  if (data.linkedin_url) links.push({ label: "LinkedIn", href: data.linkedin_url });
-  if (data.github_url) links.push({ label: "GitHub", href: data.github_url });
-  if (data.instagram_url) links.push({ label: "Instagram", href: data.instagram_url });
+  const website = safeHttpUrl(data.website_url);
+  if (website) links.push({ label: "Website", href: website });
+  const linkedin = safeHttpUrl(data.linkedin_url);
+  if (linkedin) links.push({ label: "LinkedIn", href: linkedin });
+  const github = safeHttpUrl(data.github_url);
+  if (github) links.push({ label: "GitHub", href: github });
+  const instagram = safeHttpUrl(data.instagram_url);
+  if (instagram) links.push({ label: "Instagram", href: instagram });
   if (links.length === 0) return null;
   return (
     <div className={className}>

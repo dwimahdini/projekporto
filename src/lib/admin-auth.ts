@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { createAdminClient } from "./supabase/server";
 
-export async function isAdminRequest(): Promise<boolean> {
+export async function getAdminEmail(): Promise<string | null> {
   try {
     const cookieStore = cookies();
     const supabase = createServerClient(
@@ -21,7 +21,7 @@ export async function isAdminRequest(): Promise<boolean> {
       }
     );
     const { data } = await supabase.auth.getUser();
-    if (!data.user) return false;
+    if (!data.user) return null;
     const admin = createAdminClient();
     const { data: profile } = await admin
       .from("profiles")
@@ -30,8 +30,13 @@ export async function isAdminRequest(): Promise<boolean> {
       .eq("role", "admin")
       .limit(1)
       .single();
-    return Boolean(profile);
+    if (!profile) return null;
+    return data.user.email ?? null;
   } catch {
-    return false;
+    return null;
   }
+}
+
+export async function isAdminRequest(): Promise<boolean> {
+  return (await getAdminEmail()) !== null;
 }

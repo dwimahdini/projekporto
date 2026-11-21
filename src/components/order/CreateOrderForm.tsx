@@ -71,7 +71,7 @@ export default function CreateOrderForm({ templates }: { templates: { id: string
       </div>
       <label className="flex min-h-[48px] items-start gap-3 rounded-xl border px-3 py-2 text-sm">
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1 h-5 w-5 shrink-0" />
-        <span>Saya menyetujui <a className="text-blue-600 underline" href="/privasi">Kebijakan Privasi</a> dan <a className="text-blue-600 underline" href="/syarat">Syarat Layanan</a>. Saya paham data saya dipakai untuk membuat portofolio ini.</span>
+        <span>Saya menyetujui <a className="text-blue-600 underline" href="/kebijakan-privasi">Kebijakan Privasi</a> dan <a className="text-blue-600 underline" href="/syarat-layanan">Syarat Layanan</a>. Saya paham data saya dipakai untuk membuat portofolio ini.</span>
       </label>
       <TurnstileWidget onToken={setTurnstileToken} />
       {error ? <p className="text-sm text-red-600">{error}</p> : null}

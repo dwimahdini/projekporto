@@ -12,6 +12,10 @@ export async function POST(_req: Request, { params }: { params: { token: string 
   const order = await getOrderByToken(params.token);
   if (!order) return NextResponse.json({ error: "Link tidak valid." }, { status: 401 });
 
+  const { checkRateLimit, RATE_LIMITS } = await import("@/lib/rate-limit");
+  const rl = checkRateLimit({ key: `delete-request:${order.id}`, ...RATE_LIMITS.deleteRequestPerToken });
+  if (!rl.allowed) return NextResponse.json({ error: "Terlalu banyak permintaan. Coba lagi nanti." }, { status: 429 });
+
   const supabase = createAdminClient();
   const raw = randomBytes(32).toString("hex");
   const tokenHash = createHash("sha256").update(raw).digest("hex");

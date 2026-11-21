@@ -301,6 +301,38 @@ export default function OrderForm({ token }: { token: string }) {
           <a href={`/pesanan/${token}/preview`} className="min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium">Pratinjau &amp; ganti template</a>
         </div>
         <div className="mt-4 border-t pt-3">
+          <p className="text-sm font-medium">Ekspor data saya (JSON)</p>
+          <p className="mt-1 text-xs text-gray-500">Unduh seluruh data kamu. Butuh OTP email dulu (pakai tombol OTP di Langkah 1) — OTP berlaku 15 menit.</p>
+          <button
+            type="button"
+            onClick={async () => {
+              setError("");
+              const res = await fetch(`/api/orders/${token}/export`, { method: "POST" });
+              if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                if (data.error === "OTP_REQUIRED") {
+                  setError(data.message ?? "Perlu OTP dulu.");
+                  setStep(0);
+                } else {
+                  setError(data.error ?? "Gagal mengekspor data.");
+                }
+                return;
+              }
+              const blob = await res.blob();
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `data-portofolio-${String(order?.subdomain ?? "klien")}.json`;
+              a.click();
+              URL.revokeObjectURL(url);
+              setNotice("Data kamu sudah diunduh.");
+            }}
+            className="mt-2 min-h-[44px] rounded-xl border px-3 py-2 text-sm font-medium"
+          >
+            Unduh data saya (JSON)
+          </button>
+        </div>
+        <div className="mt-4 border-t pt-3">
           <p className="text-sm font-medium">Hapus data saya</p>
           <p className="mt-1 text-xs text-gray-500">Menghapus semua data secara permanen. Link konfirmasi dikirim ke email kamu — data tidak terhapus sebelum link itu dibuka dan dikonfirmasi.</p>
           <button
