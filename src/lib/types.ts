@@ -96,7 +96,10 @@ export type TemplateId =
   | "gelap-futuristik"
   | "kreatif"
   | "profesional"
-  | "visual";
+  | "visual"
+  | "developer"
+  | "desainer"
+  | "resume-cv";
 
 export const TEMPLATE_IDS: TemplateId[] = [
   "minimalis",
@@ -104,6 +107,9 @@ export const TEMPLATE_IDS: TemplateId[] = [
   "kreatif",
   "profesional",
   "visual",
+  "developer",
+  "desainer",
+  "resume-cv",
 ];
 
 export const FORBIDDEN_SUBDOMAINS = [

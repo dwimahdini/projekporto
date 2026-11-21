@@ -47,7 +47,7 @@ export default async function HomePage() {
           </div>
           <div className="fade-up" style={{ animationDelay: "160ms" }}>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
-              Isi biodata, pilih 1 dari 5 template, lihat pratinjau, bayar, lalu
+              Isi biodata, pilih 1 dari 8 template, lihat pratinjau, bayar, lalu
               portofoliomu aktif di subdomain sendiri: namamu.portofolio.my.id
             </p>
           </div>
@@ -56,7 +56,7 @@ export default async function HomePage() {
               {/* Aksen hijau: highlight merek di homepage, sesuai Genesis. */}
               <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 font-medium ring-1 ring-line">
                 <span className="h-2 w-2 rounded-full bg-[#20970B]" aria-hidden />
-                5 template siap pakai — Rp49.000
+                8 template siap pakai — Rp49.000
               </span>
               <a className="font-medium text-brand-500 underline underline-offset-4 hover:text-brand-600" href="/cek-pesanan">
                 Sudah pesan tapi kehilangan link? Cek pesanan saya
@@ -94,7 +94,7 @@ export default async function HomePage() {
               halaman tidak putih semua. */}
           <section className="mt-16 rounded-xl bg-ink px-6 py-10 text-white sm:px-10 sm:py-12">
             <Reveal>
-              <h2 className="text-3xl tracking-[-0.03em] text-white">Lima template, satu harga</h2>
+              <h2 className="text-3xl tracking-[-0.03em] text-white">Delapan template, satu harga</h2>
               <p className="mt-2 text-[15px] text-white/70">Klik untuk melihat demo langsung dengan data contoh.</p>
             </Reveal>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

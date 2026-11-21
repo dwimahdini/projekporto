@@ -1,6 +1,6 @@
 # group.portofolio.my.id — Platform Jasa Pembuatan Website Portofolio
 
-Platform komersial: klien isi biodata, pilih 1 dari 5 template, lihat pratinjau berwatermark, bayar, lalu portofolio aktif di subdomain sendiri (`{subdomain}.portofolio.my.id`). Satu aplikasi Next.js melayani aplikasi utama (`group.portofolio.my.id`) dan semua portofolio klien.
+Platform komersial: klien isi biodata, pilih 1 dari 8 template, lihat pratinjau berwatermark, bayar, lalu portofolio aktif di subdomain sendiri (`{subdomain}.portofolio.my.id`). Satu aplikasi Next.js melayani aplikasi utama (`group.portofolio.my.id`) dan semua portofolio klien.
 
 **Status: Tahap 1–8 selesai (21 November 2026).** Pembayaran masih memakai MockProvider (simulasi); Midtrans belum diintegrasikan — lihat `docs/CHECKLIST_MIDTRANS.md`.
 
@@ -61,6 +61,7 @@ docs/             # Semua dokumentasi (lihat bawah)
 - **Tahap 1** — Scaffold, database + RLS + view `public_portfolio`, middleware subdomain. Detail: `docs/DESIGN.md`
 - **Tahap 2** — Form tamu 7 langkah, OTP, upload, rate limit, cleanup draft 14 hari. Detail: `docs/TAHAP2.md`
 - **Tahap 3** — 5 template + registry + demo. Detail: `docs/TAHAP3.md`
+- **Tahap 9** — 3 template MIT (Developer, Desainer, Resume & CV) + migrasi 0007. Detail: `docs/TAHAP9.md`
 - **Tahap 4** — Pratinjau berwatermark, ganti template, lanjut ke pembayaran. Detail: `docs/TAHAP4.md`
 - **Tahap 5** — PaymentProvider (Mock penuh, Midtrans kerangka kosong), penjaga mock, RPC idempoten. Detail: `docs/TAHAP5.md`
 - **Tahap 6** — Middleware published-only, admin "Menunggu domain", dashboard klien, SEO. Detail: `docs/TAHAP6.md`

@@ -1,6 +1,29 @@
 # Lisensi — Font dan Library
 
-Kelima template **tidak memakai aset atau font berlisensi** (tidak ada font unduhan, tidak ada gambar stok, tidak ada ikon berbayar).
+Kelima template buatan sendiri **tidak memakai aset atau font berlisensi** (tidak ada font unduhan, tidak ada gambar stok, tidak ada ikon berbayar).
+
+## Template MIT (Tahap 9)
+
+Tiga template baru — Developer, Desainer, Resume & CV — adalah
+konversi dari template HTML oleh **mmrahmanbappi**
+([100 Free HTML Templates](https://mmrahmanbappi.github.io/100-free-html-templates/portfolio/)),
+lisensi **MIT** (tertera di halaman sumber: "MIT license, no sign up",
+dan di JSON-LD tiap template: `"license": "https://opensource.org/licenses/MIT"`).
+
+Lisensi MIT mengizinkan pemakaian komersial, modifikasi, dan penjualan
+situs yang dibangun dari template ini, dengan syarat pemberitahuan
+hak cipta dan lisensi tetap disertakan. Atribusi dicatat di sini
+dan di komentar kepala tiap file komponen:
+
+- Developer Portfolio — https://mmrahmanbappi.github.io/100-free-html-templates/portfolio/developer-portfolio/
+- Designer Portfolio — https://mmrahmanbappi.github.io/100-free-html-templates/portfolio/designer-portfolio/
+- Resume and CV — https://mmrahmanbappi.github.io/100-free-html-templates/portfolio/resume-cv/
+
+Foto contoh (Unsplash) dari template asli **tidak ikut dipakai** —
+foto di portofolio klien hanya dari upload klien sendiri (atau
+inisial nama kalau tidak ada foto). Font Google yang dipakai
+ketiga template ini (Gloock, Manrope, Source Serif 4, Public Sans)
+berlisensi OFL (bebas dipakai).
 
 ## Font
 

@@ -10,6 +10,9 @@ import GelapFuturistikTemplate from "@/components/templates/GelapFuturistikTempl
 import KreatifTemplate from "@/components/templates/KreatifTemplate";
 import ProfesionalTemplate from "@/components/templates/ProfesionalTemplate";
 import VisualTemplate from "@/components/templates/VisualTemplate";
+import DeveloperTemplate from "@/components/templates/DeveloperTemplate";
+import DesignerTemplate from "@/components/templates/DesignerTemplate";
+import ResumeCvTemplate from "@/components/templates/ResumeCvTemplate";
 
 export interface TemplateMeta {
   id: TemplateId;
@@ -48,6 +51,27 @@ export const TEMPLATE_REGISTRY: Record<TemplateId, TemplateMeta> = {
     name: "Visual",
     description: "Hero foto besar, galeri proyek dengan lightbox.",
     Component: VisualTemplate,
+  },
+  developer: {
+    id: "developer",
+    name: "Developer",
+    description:
+      "Gaya terminal dan kode, filter proyek per teknologi, garis waktu pengalaman.",
+    Component: DeveloperTemplate,
+  },
+  desainer: {
+    id: "desainer",
+    name: "Desainer",
+    description:
+      "Hero serif besar, studi kasus warna-warni, proses kerja 4 langkah.",
+    Component: DesignerTemplate,
+  },
+  "resume-cv": {
+    id: "resume-cv",
+    name: "Resume & CV",
+    description:
+      "CV dua kolom navy-putih yang rapi, bisa di-print jadi PDF.",
+    Component: ResumeCvTemplate,
   },
 };
 
