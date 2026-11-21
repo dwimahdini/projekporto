@@ -50,7 +50,7 @@ export default function GelapFuturistikTemplate({ data }: { data: PortfolioData 
                     <GlowCard key={i}>
                       <p className="font-semibold">{e.institution}</p>
                       <p className="text-sm text-slate-400">{[e.degree, e.field_of_study].filter(Boolean).join(" · ")}{e.gpa ? ` · IPK ${e.gpa}` : ""}</p>
-                      <p className="mt-1 text-xs text-slate-500">{formatRange(e.start_date, e.end_date)}</p>
+                      <p className="mt-1 text-xs text-slate-400">{formatRange(e.start_date, e.end_date)}</p>
                     </GlowCard>
                   ))}
                 </div>
@@ -66,7 +66,7 @@ export default function GelapFuturistikTemplate({ data }: { data: PortfolioData 
                   <GlowCard key={i}>
                     <div className="flex flex-wrap justify-between gap-2">
                       <h3 className="font-semibold">{x.position} <span className="text-slate-400">— {x.company}</span></h3>
-                      <span className="text-xs text-slate-500">{formatRange(x.start_date, x.end_date, x.is_current)}</span>
+                      <span className="text-xs text-slate-400">{formatRange(x.start_date, x.end_date, x.is_current)}</span>
                     </div>
                     {x.description ? <p className="mt-2 text-slate-300">{x.description}</p> : null}
                   </GlowCard>

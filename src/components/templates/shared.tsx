@@ -3,7 +3,7 @@
 // Aturan utama: JANGAN tampilkan field yang kosong.
 // Semua helper di sini mengembalikan null kalau datanya
 // tidak ada, jadi template tidak perlu menulis if di mana-mana.
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 import type { PortfolioData } from "@/lib/types";
 import { safeHttpUrl } from "@/lib/sanitize";
@@ -39,6 +39,10 @@ export function initials(name: string | null): string {
 // (Framer Motion menghormati pengaturan itu lewat CSS media
 // query di bawah, plus animasi ini ringan: opacity + geser 16px).
 export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
+  // Hormati prefers-reduced-motion: kalau user meminta
+  // gerakan dikurangi, tampilkan langsung tanpa animasi.
+  const reduceMotion = useReducedMotion();
+  if (reduceMotion) return <div className={className}>{children}</div>;
   return (
     <motion.div
       className={className}

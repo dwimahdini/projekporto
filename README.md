@@ -1,108 +1,91 @@
-# group.portofolio.my.id — Tahap 1 + 2 + 3 + 4 + 5 + 6 + 7 selesai
+# group.portofolio.my.id — Platform Jasa Pembuatan Website Portofolio
 
-Status verifikasi Tahap 7 (2026-11-21): `npm test` 76/76 lolos, `npm run lint` bersih, `npx tsc --noEmit` lolos, `npm run build` berhasil. Cek live: header keamanan hadir, `/pesanan/*` memakai `Referrer-Policy: no-referrer`, cron tanpa secret → 401, admin tanpa login → halaman login, aktivasi tanpa login → 403. Audit keamanan: `docs/SECURITY_AUDIT.md` (9 poin lulus dengan bukti).
-Status verifikasi Tahap 6 (2026-11-21): `npm test` 62/62 lolos, `npm run lint` bersih, `npx tsc --noEmit` lolos, `npm run build` berhasil. Status Tahap 5: `npm test` 22/22 lolos, `npm run lint` bersih, `npx tsc --noEmit` lolos, `npm run build` berhasil. Halaman simulasi dites langsung saat mock mati: page 404, API 404, halaman status 200. Status Tahap 4: `npx tsc --noEmit` lolos, `npm run build` berhasil, preview tanpa token dites langsung → 404 (tanpa token, token palsu, dan rute lama dengan token palsu). Status Tahap 3: `npx tsc --noEmit` lolos, `npm run build` berhasil, 5 halaman demo dites langsung (`/demo/minimalis`, `/demo/gelap-futuristik`, `/demo/kreatif`, `/demo/profesional`, `/demo/visual` — semua 200 dan menampilkan "Dwi Mahdini", template tidak dikenal 404). Status Tahap 2: `npx tsc --noEmit` lolos, `npm run build` berhasil (13 route). Perbaikan dari Tahap 1: `next.config.ts` diganti `next.config.mjs` karena Next 14.2.5 tidak mendukung config TypeScript, dan landing dijadikan `force-dynamic` supaya build tidak gagal saat env Supabase belum diisi.
+Platform komersial: klien isi biodata, pilih 1 dari 5 template, lihat pratinjau berwatermark, bayar, lalu portofolio aktif di subdomain sendiri (`{subdomain}.portofolio.my.id`). Satu aplikasi Next.js melayani aplikasi utama (`group.portofolio.my.id`) dan semua portofolio klien.
 
-Platform jasa pembuatan website portofolio murah.
-Satu aplikasi Next.js melayani aplikasi utama (`group`) dan
-portofolio klien (`{subdomain}.portofolio.my.id`).
+**Status: Tahap 1–8 selesai (21 November 2026).** Pembayaran masih memakai MockProvider (simulasi); Midtrans belum diintegrasikan — lihat `docs/CHECKLIST_MIDTRANS.md`.
 
-## Yang sudah ada di Tahap 1
+Verifikasi terakhir (Tahap 8): `npm test` 93/93 lolos, Playwright 13/13 lolos (1 alur penuh di-skip, butuh Supabase), `npm run lint` bersih, `npx tsc --noEmit` lolos, `npm run build` berhasil. Lighthouse: performa 91–99, aksesibilitas 100 di semua halaman yang diukur (lihat `docs/PERFORMANCE.md`).
 
-- Struktur Next.js 14 (App Router, TypeScript, Tailwind)
-- `supabase/migrations/0001_init.sql` — semua tabel, RLS, view `public_portfolio`
-- `supabase/seed.sql` — contoh Dwi Mahdini (development saja)
-- `middleware.ts` — routing berdasarkan host + localhost
-- `src/lib/domains/add-domain.ts` — stub log untuk penambahan domain manual
-- `src/lib/midtrans.ts` + `src/app/api/webhooks/midtrans/route.ts` — kerangka verifikasi signature
+## Stack
+
+- Next.js 14 (App Router, TypeScript), Tailwind CSS, Framer Motion
+- Supabase (PostgreSQL, Auth, Storage) — RLS, view `public_portfolio`
+- Midtrans Snap (sandbox, belum diintegrasikan — kerangka kosong di Tahap 5)
+- Cloudflare Turnstile, Resend (email), Vercel (hosting + Cron)
 
 ## Cara menjalankan (lokal)
 
 ```bash
-cp .env.example .env.local   # isi Supabase + Midtrans sandbox + Turnstile + Resend
+cp .env.example .env.local   # isi Supabase + Turnstile + Resend (lihat .env.example)
 npm install
 npm run dev                  # http://localhost:3000
 ```
 
-Tes subdomain di lokal: `http://localhost:3000/?__subdomain=dwimahdini`
+Tes subdomain di lokal: `http://wirza.localhost:3000` atau `http://localhost:3000/?__subdomain=wirza`.
 
 ## Cara pasang database (Supabase)
 
-1. Buat project Supabase baru.
-2. SQL Editor > paste `supabase/migrations/0001_init.sql` > Run.
-3. (Development saja) paste `supabase/seed.sql` > Run.
-4. Cek: `select * from public.public_portfolio_by_subdomain('dwimahdini');`
-   Harusnya 1 baris, email dan telepon `null` (disembunyikan).
+Jalankan di SQL Editor **berurutan** (jangan diubah isinya):
 
-## Admin pertama
+1. `supabase/migrations/0001_init.sql`
+2. `supabase/migrations/0002_tahap2.sql`
+3. `supabase/migrations/0003_templates.sql`
+4. `supabase/migrations/0004_payments.sql`
+5. `supabase/migrations/0005_tahap6.sql`
+6. `supabase/migrations/0006_tahap7.sql` — baris `ALTER TYPE ... ADD VALUE 'disabled'` tidak bisa jalan di dalam blok transaksi; SQL Editor mengeksekusi pernyataan satu per satu, jadi aman di sana.
 
-1. Buat user di Supabase Auth (Dashboard > Authentication > Add user).
-2. Jalankan di SQL Editor (ganti UUID dengan id user itu):
-```sql
-insert into public.profiles (order_id, auth_user_id, role, full_name)
-values (null, 'UUID-USER-ADMIN', 'admin', 'Admin');
+(Development saja) `supabase/seed.sql` untuk data contoh Dwi Mahdini.
+
+## Environment variable
+
+Daftar lengkap ada di `.env.example` (hanya placeholder, tanpa nilai asli) dan di `docs/DEPLOY.md` (termasuk environment mana yang boleh memakai tiap variabel).
+
+**Aturan terpenting:** Production **TIDAK boleh** berisi `PAYMENT_PROVIDER=mock` maupun `ALLOW_MOCK_PAYMENT=true`. Keduanya hanya untuk Preview dan lokal.
+
+## Struktur folder
+
 ```
-3. Login lewat halaman `/admin` (logikanya di Tahap 4).
+src/
+  app/            # Halaman + API routes (pesanan, preview, admin, s/[subdomain], demo)
+  components/     # Template portofolio + komponen form
+  lib/            # Supabase, order, otp, email, payments, subdomain, audit, sanitize
+supabase/
+  migrations/     # 0001–0006 (jangan ubah migrasi lama)
+  seed.sql
+e2e/              # Tes Playwright (main.spec.ts)
+docs/             # Semua dokumentasi (lihat bawah)
+```
 
-## Yang sudah ada di Tahap 2
+## Daftar tahap
 
-- Form multi-langkah 7 langkah di `/pesanan/[token]` (RHF + Zod, autosave per langkah, toggle tampil per field, upload foto/gambar, OTP edit data pribadi)
-- Langkah 1 di landing: email + subdomain + template + checkbox privasi wajib + Turnstile, order draft + token hash, link dikirim via Resend (dev: link ditampilkan)
-- Verifikasi email sebelum boleh lanjut ke pembayaran; halaman `/cek-pesanan` dengan respons selalu sama (tidak membocorkan email terdaftar)
-- Rate limiting, upload server ke Storage (2 MB, jpg/png/webp), hapus draft 14 hari (`cleanup_expired_drafts()` + Vercel Cron `vercel.json`)
-- Migrasi `supabase/migrations/0002_tahap2.sql` — kolom identitas baru, tabel `otps`, bucket `portfolio-uploads`
-- Detail: `docs/TAHAP2.md`
+- **Tahap 1** — Scaffold, database + RLS + view `public_portfolio`, middleware subdomain. Detail: `docs/DESIGN.md`
+- **Tahap 2** — Form tamu 7 langkah, OTP, upload, rate limit, cleanup draft 14 hari. Detail: `docs/TAHAP2.md`
+- **Tahap 3** — 5 template + registry + demo. Detail: `docs/TAHAP3.md`
+- **Tahap 4** — Pratinjau berwatermark, ganti template, lanjut ke pembayaran. Detail: `docs/TAHAP4.md`
+- **Tahap 5** — PaymentProvider (Mock penuh, Midtrans kerangka kosong), penjaga mock, RPC idempoten. Detail: `docs/TAHAP5.md`
+- **Tahap 6** — Middleware published-only, admin "Menunggu domain", dashboard klien, SEO. Detail: `docs/TAHAP6.md`
+- **Tahap 7** — Panel admin lengkap, hak data klien (UU PDP), halaman legal draf, audit keamanan. Detail: `docs/TAHAP7.md`, `docs/SECURITY_AUDIT.md`
+- **Tahap 8** — Pengujian menyeluruh + panduan deploy (tahap ini). Detail: `docs/TAHAP8.md`
 
-## Yang sudah ada di Tahap 3
+## Dokumentasi
 
-- 5 template di `src/components/templates/` dengan props sama (`PortfolioData`): Minimalis, Gelap Futuristik, Kreatif, Profesional, Visual — masing-masing punya Hero, Tentang, Pengalaman, Proyek, Skill, Sertifikasi, Kontak, dan tidak menampilkan field kosong
-- Registry `src/lib/templates/registry.ts` (template_id → komponen), data contoh CV Dwi di `src/lib/templates/demo-data.ts`
-- Halaman `/demo/[template]` untuk membandingkan kelima template; halaman publik `/s/[subdomain]` sekarang memakai registry
-- Migrasi `supabase/migrations/0003_templates.sql` (template final, harga contoh Rp49.000); `seed.sql` diperbarui
-- Detail: `docs/TAHAP3.md`
+| Dokumen | Isi |
+|---|---|
+| `docs/DESIGN.md` | Desain awal (Tahap 1) |
+| `docs/TAHAP2.md` – `docs/TAHAP8.md` | Catatan per tahap |
+| `docs/E2E_CHECKLIST.md` | Checklist uji manual end-to-end + skenario negatif |
+| `docs/PERFORMANCE.md` | Hasil Lighthouse + perbaikan + uji mobile |
+| `docs/DEPLOY.md` | Panduan deploy Vercel (env, migrasi, domain, layanan) |
+| `docs/CHECKLIST_DOMAIN_KLIEN.md` | Langkah manual tiap klien baru yang sudah lunas |
+| `docs/CHECKLIST_MIDTRANS.md` | Langkah pindah dari mock ke Midtrans |
+| `docs/SECURITY_AUDIT.md` | Audit keamanan (9 poin lulus + celah tersisa) |
+| `docs/LICENSES.md` | Lisensi font dan library |
 
-## Yang sudah ada di Tahap 4
+## Alur status order
 
-- Halaman `/preview/[orderId]?token=...` — hanya pemilik token atau admin, tanpa keduanya 404; rute lama `/pesanan/[token]/preview` redirect ke rute baru
-- Submit pratinjau: `draft -> preview`; tombol "Ganti template" (data tetap, hanya template + harga berubah kalau belum bayar); tombol "Lanjut ke pembayaran" hanya aktif setelah render selesai, ditekan → `preview -> pending_payment` (syarat email terverifikasi)
-- Watermark diagonal "PRATINJAU", blokir klik kanan/salin di area pratinjau (pencegah ringan saja, lihat `docs/TAHAP4.md`), `noindex` di halaman preview
-- Detail: `docs/TAHAP4.md`
+`draft -> preview -> pending_payment -> paid -> domain_pending -> published`, plus `disabled`, `expired`, `cancelled`, `deleted`. Lunas **tidak sama** dengan situs aktif — hanya admin yang mengubah `domain_pending -> published` (Tahap 6).
 
-## Yang sudah ada di Tahap 5
+## Yang BELUM ada
 
-- Antarmuka `PaymentProvider` + MockProvider penuh + MidtransProvider kerangka kosong (tanpa logika, tanpa dependensi Midtrans — `midtrans-client` dihapus dari package.json)
-- Penjaga mock dua lapis (`PAYMENT_PROVIDER=mock` + `ALLOW_MOCK_PAYMENT=true` + bukan production), satu fungsi `isMockPaymentEnabled()` di server
-- Migrasi `0004_payments.sql`: kolom provider/amount/internal_status + RPC `apply_payment_result()` atomik & idempoten (satu jalur untuk Mock dan Midtrans nanti)
-- Halaman `/pesanan/[token]/bayar-simulasi` (banner MODE SIMULASI, 3 tombol) + `/pesanan/[token]/status` (polling 5 detik, bayar ulang)
-- Email paid sekali (kalau Resend belum dikonfigurasi, catat log saja)
-- Tes: `npm test` (22 tes)
-- Detail + checklist Midtrans: `docs/TAHAP5.md`
-
-## Yang sudah ada di Tahap 7
-
-- Panel admin: semua pesanan (filter status, cari subdomain/email, paginasi), detail pesanan (riwayat pembayaran, pratinjau, audit log), aksi nonaktifkan/aktifkan/batalkan (dicatat di `audit_log`), data pribadi tersembunyi sampai admin menekan "Tampilkan" (dicatat di audit log)
-- Login admin lewat server: rate limit 5x/15 menit, penundaan saat gagal, cek role di server; cara membuat admin pertama di `docs/TAHAP7.md`
-- Hak data klien: ekspor JSON (wajib OTP), hapus data (belum dibayar = hapus total; sudah dibayar = anonimisasi + simpan catatan transaksi minimal), cleanup draft 14 hari + file Storage (cron, fail-closed)
-- Halaman legal DRAF: `/kebijakan-privasi` dan `/syarat-layanan` (rute lama `/privasi` dan `/syarat` redirect ke sana), tautan di footer dan checkbox persetujuan
-- Pengerasan: header keamanan (CSP, HSTS, dll.), rate limit di semua jalur sensitif, sanitasi URL + magic bytes upload, pesan error generik
-- Audit keamanan: `docs/SECURITY_AUDIT.md` (9 poin lulus dengan bukti + 8 celah tersisa)
-- Tes: `npm test` (76 tes)
-- Detail: `docs/TAHAP7.md`
-
-## Yang sudah ada di Tahap 6
-
-- Middleware subdomain (group = aplikasi utama, `{subdomain}` = portofolio published, `wirza.localhost:3000` untuk dev) — hanya published yang tampil, lainnya 404
-- Panel admin "Menunggu domain": nama klien, tanggal bayar, checklist manual Vercel/Cloudflare, tombol "Tandai domain aktif" (admin saja, hanya domain_pending, idempoten, email sekali)
-- Dashboard klien `/pesanan/[token]`: status + domain, link situs kalau published, edit data (OTP untuk data pribadi), ganti template, "Hapus data saya" (konfirmasi lewat link email 24 jam)
-- `domain_status` + timestamp (migrasi `0005_tahap6.sql`); subdomain dikunci setelah paid + cek unik ulang saat pending_payment
-- SEO per situs klien (metadata + Open Graph); noindex untuk pesanan, pratinjau, simulasi, status, admin
-- Tes: `npm test` (62 tes)
-- Detail: `docs/TAHAP6.md`
-
-## Yang BELUM ada (Tahap 8)
-
-- Integrasi Midtrans asli (Snap + webhook lengkap — checklist di `docs/TAHAP5.md`)
-- Admin: tombol "Tandai domain aktif" + email ke klien (Tahap 6)
-- Panel admin lengkap + privasi/syarat UU PDP (Tahap 7)
-- Tes otomatis + panduan deploy (Tahap 8)
-- Penambahan domain otomatis via API Vercel/Cloudflare (nanti, ganti isi `addDomain()`)
+- Integrasi Midtrans asli (Snap + webhook lengkap) — checklist di `docs/CHECKLIST_MIDTRANS.md`
+- Penambahan domain otomatis via API Vercel/Cloudflare (nanti, ganti isi `addDomain()` di `src/lib/domains/add-domain.ts`)

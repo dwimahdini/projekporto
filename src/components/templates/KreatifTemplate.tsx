@@ -13,7 +13,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
       <header className="mx-auto max-w-5xl px-6 pb-14 pt-16 sm:pt-24">
         <Reveal>
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
-            <Avatar data={data} className="h-28 w-28 -rotate-3 rounded-[2rem] bg-pink-400 text-4xl text-white shadow-lg ring-4 ring-white" />
+            <Avatar data={data} className="h-28 w-28 -rotate-3 rounded-[2rem] bg-pink-600 text-4xl text-white shadow-lg ring-4 ring-white" />
             <div>
               <span className="inline-block -rotate-2 rounded-full bg-yellow-300 px-3 py-1 text-xs font-bold uppercase tracking-wide">Halo, saya</span>
               <h1 className="mt-3 text-5xl font-black leading-none sm:text-7xl">{data.full_name}</h1>
