@@ -18,9 +18,9 @@ const config: Config = {
         danger: "#EF4444",
       },
       fontFamily: {
-        display: ['"General Sans"', "var(--font-dm-sans)", "system-ui", "sans-serif"],
-        sans: ["var(--font-dm-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-jetbrains)", "ui-monospace", "monospace"],
+        display: ['"General Sans"', '"DM Sans"', "system-ui", "sans-serif"],
+        sans: ['"DM Sans"', "system-ui", "sans-serif"],
+        mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
       },
     },
   },
