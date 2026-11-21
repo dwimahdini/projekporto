@@ -37,19 +37,21 @@ export default async function HomePage() {
       <section className="relative overflow-hidden rounded-xl">
         <DotGrid />
         <div className="relative px-2 py-6 sm:px-4 sm:py-10">
-          <Reveal>
+          {/* Hero memakai .fade-up (CSS), bukan Reveal: teks harus
+              terlihat begitu halaman dicat, tanpa menunggu JS. */}
+          <div className="fade-up">
             <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-faint">Group.portofolio.my.id</p>
-          </Reveal>
-          <Reveal delay={0.08}>
+          </div>
+          <div className="fade-up" style={{ animationDelay: "80ms" }}>
             <h1 className="mt-4 max-w-2xl text-5xl leading-[1.05] tracking-[-0.04em] sm:text-6xl">Website Portofolio Murah</h1>
-          </Reveal>
-          <Reveal delay={0.16}>
+          </div>
+          <div className="fade-up" style={{ animationDelay: "160ms" }}>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
               Isi biodata, pilih 1 dari 5 template, lihat pratinjau, bayar, lalu
               portofoliomu aktif di subdomain sendiri: namamu.portofolio.my.id
             </p>
-          </Reveal>
-          <Reveal delay={0.24}>
+          </div>
+          <div className="fade-up" style={{ animationDelay: "240ms" }}>
             <p className="mt-5 flex flex-wrap items-center gap-3 text-sm">
               {/* Aksen hijau: highlight merek di homepage, sesuai Genesis. */}
               <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 font-medium ring-1 ring-line">
@@ -60,15 +62,15 @@ export default async function HomePage() {
                 Sudah pesan tapi kehilangan link? Cek pesanan saya
               </a>
             </p>
-          </Reveal>
+          </div>
         </div>
       </section>
 
       {templates.length > 0 ? (
         <>
-          <Reveal delay={0.1}>
+          <div className="fade-up" style={{ animationDelay: "100ms" }}>
             <CreateOrderForm templates={templates} />
-          </Reveal>
+          </div>
 
           {/* Cara kerja — tiga langkah singkat */}
           <section className="mt-16">
