@@ -3,7 +3,6 @@
 // Aturan utama: JANGAN tampilkan field yang kosong.
 // Semua helper di sini mengembalikan null kalau datanya
 // tidak ada, jadi template tidak perlu menulis if di mana-mana.
-import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 import type { PortfolioData } from "@/lib/types";
 import { safeHttpUrl } from "@/lib/sanitize";
@@ -34,33 +33,23 @@ export function initials(name: string | null): string {
     .join("");
 }
 
-// Animasi muncul saat komponen dipasang (mount) — halus,
-// sekali saja, dan mati total kalau user mengaktifkan
-// prefers-reduced-motion (plus animasi ini ringan:
-// opacity + geser 16px).
+// Animasi muncul — keyframes CSS (.fade-up), BUKAN framer-motion.
 //
-// PENTING: dulu ini memakai whileInView (animasi baru jalan
-// saat elemen masuk viewport). Di halaman pratinjau itu
-// membuat konten tertahan transparan belasan detik kalau
-// IntersectionObserver-nya telat jalan — halaman tampak
-// kosong padahal datanya sudah ada. Dengan animate, konten
-// selalu muncul begitu halaman selesai dimuat, tidak peduli
-// posisi scroll. Efeknya sama halusnya, tapi tidak bisa
-// macet.
+// PENTING: dulu ini framer-motion (initial opacity 0, animate
+// saat mount). Itu mengirim konten dalam keadaan transparan dan
+// baru memunculkannya setelah JavaScript selesai diunduh — di
+// koneksi lambat, bagian halaman yang memakai Reveal (misalnya
+// "Cara kerja" dan galeri template di landing, atau isi template
+// portofolio) tampak kosong: ruang putih lebar dan band gelap
+// tanpa isi, padahal datanya sudah ada. Animasi CSS jalan begitu
+// CSS dimuat, tanpa menunggu JavaScript, jadi tidak bisa macet.
+// prefers-reduced-motion sudah ditangani aturan global di
+// globals.css (durasi animasi dipendekkan sampai tidak terasa).
 export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
-  // Hormati prefers-reduced-motion: kalau user meminta
-  // gerakan dikurangi, tampilkan langsung tanpa animasi.
-  const reduceMotion = useReducedMotion();
-  if (reduceMotion) return <div className={className}>{children}</div>;
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
-    >
+    <div className={className ? `fade-up ${className}` : "fade-up"} style={delay ? { animationDelay: `${delay * 1000}ms` } : undefined}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
