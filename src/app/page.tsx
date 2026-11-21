@@ -7,6 +7,12 @@ import { createPublicClient } from "@/lib/supabase/server";
 // dari Supabase saat request, supaya build tidak gagal
 // kalau env belum diisi di mesin build.
 export const dynamic = "force-dynamic";
+// PENTING: force-dynamic SAJA tidak cukup — fetch Supabase
+// tetap bisa masuk Data Cache Next.js, dan cache itu di
+// Vercel bertahan antar-deploy. Akibatnya template baru
+// yang ditambah lewat SQL tidak muncul di landing sampai
+// cache kedaluwarsa. revalidate = 0 mematikan cache fetch
+// untuk halaman ini, jadi daftar template selalu segar.
 
 // Landing aplikasi utama (group.portofolio.my.id).
 // Desain Genesis (docs/GENESIS.md): General Sans untuk judul,
