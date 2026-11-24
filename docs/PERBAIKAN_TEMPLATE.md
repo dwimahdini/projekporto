@@ -87,10 +87,16 @@ dari form.
   skill (0 emoji di halaman).
 - Thumbnail `desainer.jpg` dirender ulang (hero berubah) dan
   di-upload lewat halaman GitHub web.
-- Uji browser pada order tes "budi" (kolom IPK, centang "masih
-  bekerja", kolom Teknologi, pratinjau Desainer / Developer /
-  Kreatif): dijalankan setelah deploy — hasilnya dicatat di
-  MEMORY.md saat sudah masuk.
+- Uji browser pada order tes "budi" (19:02–19:08 WIB): kolom IPK,
+  centang "masih bekerja", dan kolom Teknologi diisi dan tersimpan;
+  pratinjau Desainer / Developer / Kreatif menampilkan data baru
+  dengan benar; pekerjaan sekarang tampil "Jan 2023 – Sekarang".
+- Uji ulang kolom Teknologi setelah perbaikan bug (19:14–19:16
+  WIB): mengetik "Figma, HTML, CSS" huruf demi huruf — koma dan
+  spasi utuh; setelah simpan dan muat ulang, kolom tetap
+  "Figma, HTML, CSS"; Developer menampilkan ketiga chip
+  (filter + kartu proyek), Desainer menampilkan dua chip pertama
+  (Figma, HTML) sesuai desain aslinya (`slice(0, 2)`).
 
 ## Commit
 - Lokal `be4f58d` (kode), `d428432` (thumbnail desainer).
