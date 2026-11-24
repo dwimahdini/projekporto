@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { identitySchema } from "@/lib/validation";
+import { identitySchema, parseTechStackText } from "@/lib/validation";
 import VisibilityToggle from "./VisibilityToggle";
 import UploadField from "./UploadField";
 import type { z } from "zod";
@@ -58,7 +58,7 @@ const labelCls = "block text-sm font-medium";
 function emptyListItem(kind: string): Record<string, unknown> {
   if (kind === "education") return { institution: "", degree: "", fieldOfStudy: "", startDate: "", endDate: "", description: "", isVisible: true };
   if (kind === "experiences") return { company: "", position: "", startDate: "", endDate: "", isCurrent: false, description: "", isVisible: true };
-  if (kind === "projects") return { title: "", description: "", url: "", imageUrl: "", techStack: [], isVisible: true };
+  if (kind === "projects") return { title: "", description: "", url: "", imageUrl: "", techStackText: "", isVisible: true };
   if (kind === "skills") return { name: "", category: "", level: 3, isVisible: true };
   if (kind === "certifications") return { name: "", issuer: "", issueDate: "", expiryDate: "", credentialId: "", credentialUrl: "", isVisible: true };
   return { title: "", publisher: "", publishedDate: "", url: "", description: "", isVisible: true };
@@ -128,7 +128,7 @@ export default function OrderForm({ token }: { token: string }) {
       setLists({
         education: mapList(data.lists?.education ?? [], (r) => ({ institution: r.institution, degree: r.degree ?? "", fieldOfStudy: r.field_of_study ?? "", startDate: r.start_date ? String(r.start_date).slice(0, 10) : "", endDate: r.end_date ? String(r.end_date).slice(0, 10) : "", gpa: r.gpa ?? undefined, description: r.description ?? "", isVisible: r.is_visible ?? true })),
         experiences: mapList(data.lists?.experiences ?? [], (r) => ({ company: r.company, position: r.position, startDate: r.start_date ? String(r.start_date).slice(0, 10) : "", endDate: r.end_date ? String(r.end_date).slice(0, 10) : "", isCurrent: r.is_current ?? false, description: r.description ?? "", isVisible: r.is_visible ?? true })),
-        projects: mapList(data.lists?.projects ?? [], (r) => ({ title: r.title, description: r.description ?? "", url: r.url ?? "", imageUrl: r.image_url ?? "", techStack: r.tech_stack ?? [], isVisible: r.is_visible ?? true })),
+        projects: mapList(data.lists?.projects ?? [], (r) => ({ title: r.title, description: r.description ?? "", url: r.url ?? "", imageUrl: r.image_url ?? "", techStackText: ((r.tech_stack as string[] | undefined) ?? []).join(", "), isVisible: r.is_visible ?? true })),
         skills: mapList(data.lists?.skills ?? [], (r) => ({ name: r.name, category: r.category ?? "", level: r.level ?? 3, isVisible: r.is_visible ?? true })),
         certifications: mapList(data.lists?.certifications ?? [], (r) => ({ name: r.name, issuer: r.issuer ?? "", issueDate: r.issue_date ? String(r.issue_date).slice(0, 10) : "", expiryDate: r.expiry_date ? String(r.expiry_date).slice(0, 10) : "", credentialId: r.credential_id ?? "", credentialUrl: r.credential_url ?? "", isVisible: r.is_visible ?? true })),
         publications: mapList(data.lists?.publications ?? [], (r) => ({ title: r.title, publisher: r.publisher ?? "", publishedDate: r.published_date ? String(r.published_date).slice(0, 10) : "", url: r.url ?? "", description: r.description ?? "", isVisible: r.is_visible ?? true })),
@@ -141,10 +141,19 @@ export default function OrderForm({ token }: { token: string }) {
 
   async function saveStep(stepName: string, data: unknown): Promise<boolean> {
     setError("");
+    // Proyek: teks teknologi ("Figma, HTML, CSS") diubah menjadi
+    // daftar di sini, sekali, saat menyimpan — bukan saat mengetik.
+    const payload =
+      stepName === "projects" && Array.isArray(data)
+        ? (data as Record<string, unknown>[]).map(({ techStackText, ...rest }) => ({
+            ...rest,
+            techStack: parseTechStackText(String(techStackText ?? "")),
+          }))
+        : data;
     const res = await fetch(`/api/orders/${token}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ step: stepName, data }),
+      body: JSON.stringify({ step: stepName, data: payload }),
     });
     const out = await res.json();
     if (!res.ok) {
@@ -231,11 +240,16 @@ export default function OrderForm({ token }: { token: string }) {
     }));
   }
 
-  // Field daftar: `parse` mengubah teks ketikan menjadi nilai
-  // yang disimpan (mis. "Figma, HTML" -> ["Figma", "HTML"]),
-  // `display` sebaliknya; `disabledWhen` menonaktifkan input
-  // (mis. tanggal selesai saat "masih bekerja" dicentang).
-  // `extra` merender kontrol tambahan per item (mis. checkbox).
+  // Field daftar: `disabledWhen` menonaktifkan input (mis. tanggal
+  // selesai saat "masih bekerja" dicentang); `extra` merender
+  // kontrol tambahan per item (mis. checkbox).
+  // CATATAN: kolom Teknologi proyek sengaja disimpan sebagai TEKS
+  // mentah (`techStackText`) dan baru diubah menjadi daftar saat
+  // menyimpan (lihat `saveStep`). Percobaan pertama memakai
+  // parse-di-setiap-ketikan justru merusak input: nilai yang
+  // ditampilkan selalu dirender ulang dari daftar hasil parse,
+  // sehingga koma dan spasi langsung hilang ("Figma, HTML" jadi
+  // "FigmaHTML") dan pengguna tidak bisa mengetik teknologi.
   type ListField = {
     key: string;
     label: string;
@@ -244,8 +258,6 @@ export default function OrderForm({ token }: { token: string }) {
     min?: string;
     max?: string;
     placeholder?: string;
-    parse?: (v: string) => unknown;
-    display?: (v: unknown) => string;
     disabledWhen?: (item: Record<string, unknown>) => boolean;
   };
 
@@ -267,12 +279,11 @@ export default function OrderForm({ token }: { token: string }) {
                   max={f.max}
                   placeholder={f.placeholder}
                   disabled={f.disabledWhen?.(item)}
-                  value={f.display ? f.display(item[f.key]) : String(item[f.key] ?? "")}
+                  value={String(item[f.key] ?? "")}
                   onChange={(e) =>
                     updateList(kind, idx, {
-                      [f.key]: f.parse
-                        ? f.parse(e.target.value)
-                        : f.type === "number"
+                      [f.key]:
+                        f.type === "number"
                           ? e.target.value === ""
                             ? undefined
                             : Number(e.target.value)
@@ -520,11 +531,9 @@ export default function OrderForm({ token }: { token: string }) {
             { key: "url", label: "URL proyek" },
             { key: "imageUrl", label: "URL gambar proyek (opsional)" },
             {
-              key: "techStack",
+              key: "techStackText",
               label: "Teknologi (pisah dengan koma, contoh: Figma, HTML, CSS)",
               placeholder: "Figma, HTML, CSS",
-              parse: (v: string) => v.split(",").map((s) => s.trim()).filter(Boolean),
-              display: (v: unknown) => (Array.isArray(v) ? (v as string[]).join(", ") : String(v ?? "")),
             },
           ], "Proyek")}
           <p className="mt-3 text-sm text-muted">Gambar proyek: upload lewat tombol di bawah, lalu tempel URL hasil upload ke kolom gambar di item proyek (atau isi langsung URL gambar yang sudah ada).</p>

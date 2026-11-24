@@ -8,6 +8,7 @@ import {
   educationItemSchema,
   experienceItemSchema,
   projectItemSchema,
+  parseTechStackText,
 } from "../validation";
 
 describe("kolom form yang baru diekspos", () => {
@@ -39,5 +40,12 @@ describe("kolom form yang baru diekspos", () => {
       projectItemSchema.safeParse({ ...base, techStack: Array.from({ length: 13 }, (_, i) => `T${i}`) }).success,
     ).toBe(false);
     expect(projectItemSchema.safeParse(base).success).toBe(true);
+  });
+
+  it("teks teknologi dipisah koma hanya saat menyimpan", () => {
+    expect(parseTechStackText("Figma, HTML, CSS")).toEqual(["Figma", "HTML", "CSS"]);
+    expect(parseTechStackText("Figma,HTML")).toEqual(["Figma", "HTML"]);
+    expect(parseTechStackText("  Figma  , , HTML ")).toEqual(["Figma", "HTML"]);
+    expect(parseTechStackText("")).toEqual([]);
   });
 });

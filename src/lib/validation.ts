@@ -143,6 +143,17 @@ export const lookupSchema = z.object({
   turnstileToken: z.string().min(1, "Verifikasi keamanan wajib diisi"),
 });
 
+// Teknologi proyek: teks "Figma, HTML, CSS" -> ["Figma", "HTML", "CSS"].
+// Dipanggil saat menyimpan (OrderForm.saveStep), BUKAN saat mengetik:
+// parse-di-setiap-ketikan merusak input karena nilai yang tampil
+// selalu dirender ulang dari hasil parse (koma dan spasi hilang).
+export function parseTechStackText(text: string): string[] {
+  return text
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 // Token: 32 byte acak -> 64 karakter hex. Disimpan sebagai
 // SHA-256 hash di orders.token_hash. Jangan simpan token asli.
 export function createOrderToken(): string {
