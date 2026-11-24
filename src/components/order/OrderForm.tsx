@@ -370,8 +370,8 @@ export default function OrderForm({ token }: { token: string }) {
             </button>
           )}
           <div className="rounded-2xl border p-4">
-            <h2 className="font-semibold">Ubah data pribadi? Perlu OTP</h2>
-            <p className="mt-1 text-sm text-muted">Kalau nanti kamu mengubah email, nomor HP, WhatsApp, alamat, atau tanggal lahir setelah data pertama terisi, sistem akan minta kode OTP 6 digit yang dikirim ke email kamu (berlaku 10 menit, maks 5 kali coba).</p>
+            <h2 className="font-semibold">Kode OTP — untuk ubah data pribadi (bukan verifikasi email)</h2>
+            <p className="mt-1 text-sm text-muted"><strong>Kode ini tidak memverifikasi email.</strong> Email diverifikasi dengan tombol biru di atas. Kode ini hanya dipakai kalau kamu mengubah data pribadi nanti (email, nomor HP, WhatsApp, alamat, atau tanggal lahir) setelah data pertama terisi — kode 6 digit dikirim ke email kamu, berlaku 10 menit, maks 5 kali coba.</p>
             <div className="mt-3 flex gap-2">
               <button type="button" onClick={requestOtp} className="min-h-[48px] flex-1 rounded-md border px-4 py-2 font-medium">Kirim kode OTP</button>
               <input value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))} placeholder="123456" inputMode="numeric" className="min-h-[48px] w-32 rounded-md border px-3 text-center text-lg tracking-widest" />

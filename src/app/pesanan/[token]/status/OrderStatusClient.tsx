@@ -17,7 +17,9 @@ interface PaymentRow {
 export default function OrderStatusClient({ token }: { token: string }) {
   const [status, setStatus] = useState<string>("");
   const [subdomain, setSubdomain] = useState("");
-  const [amount, setAmount] = useState(0);
+  // null = data belum dimuat; jangan tampilkan Rp0 sesaat
+  // sebelum polling pertama selesai (bug audit 24 Nov 2026).
+  const [amount, setAmount] = useState<number | null>(null);
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -86,7 +88,7 @@ export default function OrderStatusClient({ token }: { token: string }) {
   return (
     <main className="mx-auto max-w-xl px-4 py-10">
       <h1 className="text-2xl font-bold">Status pesanan</h1>
-      <p className="mt-1 text-sm text-muted">{subdomain ? `${subdomain}.portofolio.my.id` : ""} · Rp{amount.toLocaleString("id-ID")}</p>
+      <p className="mt-1 text-sm text-muted">{amount === null ? "Memuat status pesanan…" : `${subdomain}.portofolio.my.id · Rp${amount.toLocaleString("id-ID")}`}</p>
 
       {status === "pending_payment" ? (
         <div className="mt-6 rounded-2xl border bg-yellow-50 p-5">
