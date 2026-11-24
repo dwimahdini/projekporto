@@ -13,7 +13,7 @@
 // tidak ditampilkan karena bukan data klien.
 import { useState } from "react";
 import type { PortfolioData } from "@/lib/types";
-import { Reveal, Avatar, ContactLinks } from "./shared";
+import { Reveal, Avatar, ContactLinks, formatRange, formatDate } from "./shared";
 import { CSS_DESIGNER } from "./mit/designer.css";
 
 const CASE_COLORS = ["c1", "c2", "c3", "c4"];
@@ -48,6 +48,9 @@ export default function DesignerTemplate({ data }: { data: PortfolioData }) {
               <a href="#work">Work</a>
             </li>
             <li>
+              <a href="#experience">Experience</a>
+            </li>
+            <li>
               <a href="#process">Process</a>
             </li>
             <li>
@@ -72,6 +75,12 @@ export default function DesignerTemplate({ data }: { data: PortfolioData }) {
       <main id="main" className="wrap">
         <section className="hero" aria-labelledby="h1">
           <Reveal>
+            {/* Nama pemilik ditampilkan jelas di atas headline:
+                sebelumnya nama hanya muncul kecil di nav dan
+                caption avatar, padahal ini portofolio orangnya. */}
+            <p style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", margin: "0 0 14px" }}>
+              {data.full_name ?? data.subdomain}
+            </p>
             <h1 id="h1">
               {headlineWords.length > 0 ? (
                 <>
@@ -169,6 +178,73 @@ export default function DesignerTemplate({ data }: { data: PortfolioData }) {
           </section>
         ) : null}
 
+        {data.experiences.length > 0 ? (
+          <section id="experience" aria-labelledby="x1">
+            <Reveal>
+              <div className="sh">
+                <h2 id="x1">Experience</h2>
+                <p>Roles I have held and what I did in each of them.</p>
+              </div>
+              <div className="space-y-7">
+                {data.experiences.map((x, i) => (
+                  <div key={i} className="border-t border-black/10 pt-5 first:border-t-0 first:pt-0">
+                    <h3 className="text-xl font-bold">
+                      {x.position} · {x.company}
+                    </h3>
+                    <p className="mt-1 text-sm text-black/60">
+                      {formatRange(x.start_date, x.end_date, x.is_current)}
+                    </p>
+                    {x.description ? <p className="mt-2 leading-relaxed">{x.description}</p> : null}
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </section>
+        ) : null}
+
+        {data.education.length > 0 ? (
+          <section id="education" aria-labelledby="e1">
+            <Reveal>
+              <div className="sh">
+                <h2 id="e1">Education</h2>
+              </div>
+              <div className="space-y-5">
+                {data.education.map((e, i) => (
+                  <div key={i} className="border-t border-black/10 pt-4 first:border-t-0 first:pt-0">
+                    <h3 className="text-lg font-bold">{e.institution}</h3>
+                    <p className="mt-1 text-black/70">
+                      {[e.degree, e.field_of_study].filter(Boolean).join(" · ")}
+                      {e.gpa ? ` · IPK ${e.gpa}` : ""}
+                    </p>
+                    <p className="mt-1 text-sm text-black/60">{formatRange(e.start_date, e.end_date)}</p>
+                    {e.description ? <p className="mt-2 leading-relaxed">{e.description}</p> : null}
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </section>
+        ) : null}
+
+        {data.certifications.length > 0 ? (
+          <section id="certificates" aria-labelledby="c2">
+            <Reveal>
+              <div className="sh">
+                <h2 id="c2">Certificates</h2>
+              </div>
+              <ul className="space-y-4">
+                {data.certifications.map((c, i) => (
+                  <li key={i} className="border-t border-black/10 pt-4 first:border-t-0 first:pt-0">
+                    <p className="font-bold">{c.name}</p>
+                    <p className="mt-1 text-sm text-black/70">
+                      {[c.issuer, formatDate(c.issue_date)].filter(Boolean).join(" · ")}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </section>
+        ) : null}
+
         <section id="process" aria-labelledby="p1">
           <Reveal>
             <div className="sh">
@@ -208,7 +284,10 @@ export default function DesignerTemplate({ data }: { data: PortfolioData }) {
               </div>
               <div className="tools">
                 {data.skills.map((s, i) => (
-                  <span key={i}>{s.name}</span>
+                  <span key={i}>
+                    {s.name}
+                    {s.level ? ` · ${s.level}/5` : ""}
+                  </span>
                 ))}
               </div>
             </Reveal>

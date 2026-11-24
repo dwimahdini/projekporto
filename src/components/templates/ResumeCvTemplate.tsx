@@ -170,6 +170,7 @@ export default function ResumeCvTemplate({ data }: { data: PortfolioData }) {
                             .join(" ")}
                         </b>
                         <span>{e.institution}</span>
+                        {e.gpa ? <span>{`IPK ${e.gpa}`}</span> : null}
                       </div>
                       <span>{formatRange(e.start_date, e.end_date)}</span>
                     </div>

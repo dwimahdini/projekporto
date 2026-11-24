@@ -29,7 +29,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
         {data.bio ? (
           <Reveal>
             <section className="rounded-[2rem] bg-white p-6 shadow-sm sm:p-8">
-              <h2 className="text-2xl font-black">Tentang 🎨</h2>
+              <h2 className="text-2xl font-black">Tentang</h2>
               <p className="mt-3 text-lg leading-relaxed">{data.bio}</p>
               {data.education.length > 0 ? (
                 <div className="mt-5 space-y-2">
@@ -44,7 +44,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
 
         {data.experiences.length > 0 ? (
           <Reveal>
-            <h2 className="text-2xl font-black">Pengalaman 🚀</h2>
+            <h2 className="text-2xl font-black">Pengalaman</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {data.experiences.map((x, i) => (
                 <article key={i} className={`rounded-[1.5rem] p-6 shadow-sm transition duration-300 hover:-rotate-1 hover:scale-[1.02] hover:shadow-lg ${COLORS[i % COLORS.length]}`}>
@@ -59,7 +59,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
 
         {data.projects.length > 0 ? (
           <Reveal>
-            <h2 className="text-2xl font-black">Proyek ✨</h2>
+            <h2 className="text-2xl font-black">Proyek</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {data.projects.map((p, i) => (
                 <article key={i} className="rounded-[1.5rem] bg-white p-6 shadow-sm transition duration-300 hover:rotate-1 hover:scale-[1.02] hover:shadow-lg">
@@ -78,10 +78,10 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
 
         {data.skills.length > 0 ? (
           <Reveal>
-            <h2 className="text-2xl font-black">Skill 💡</h2>
+            <h2 className="text-2xl font-black">Skill</h2>
             <div className="mt-5 flex flex-wrap gap-2">
               {data.skills.map((s, i) => (
-                <span key={i} className={`rounded-full px-4 py-2 text-sm font-bold shadow-sm transition hover:-rotate-3 hover:scale-110 ${COLORS[i % COLORS.length]}`}>{s.name}</span>
+                <span key={i} className={`rounded-full px-4 py-2 text-sm font-bold shadow-sm transition hover:-rotate-3 hover:scale-110 ${COLORS[i % COLORS.length]}`}>{s.name}{s.level ? ` · ${s.level}/5` : ""}</span>
               ))}
             </div>
           </Reveal>
@@ -89,7 +89,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
 
         {data.certifications.length > 0 ? (
           <Reveal>
-            <h2 className="text-2xl font-black">Sertifikasi 🏅</h2>
+            <h2 className="text-2xl font-black">Sertifikasi</h2>
             <ul className="mt-5 space-y-3">
               {data.certifications.map((c, i) => (
                 <li key={i} className="rounded-2xl bg-white p-4 shadow-sm">
@@ -103,7 +103,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
 
         {data.publications.length > 0 ? (
           <Reveal>
-            <h2 className="text-2xl font-black">Publikasi 📚</h2>
+            <h2 className="text-2xl font-black">Publikasi</h2>
             <ul className="mt-5 space-y-3">
               {data.publications.map((p, i) => (
                 <li key={i} className="rounded-2xl bg-white p-4 shadow-sm">
@@ -119,7 +119,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
       <footer className="bg-gray-900 px-6 py-14 text-white">
         <div className="mx-auto max-w-5xl">
           <Reveal>
-            <h2 className="text-2xl font-black">Kontak 👋</h2>
+            <h2 className="text-2xl font-black">Kontak</h2>
             <ContactLinks data={data} className="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-bold text-yellow-300" />
           </Reveal>
         </div>

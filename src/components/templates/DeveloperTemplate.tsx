@@ -10,7 +10,7 @@
 // tombol unduh CV, dan tautan "Source code".
 import { useState } from "react";
 import type { PortfolioData } from "@/lib/types";
-import { Reveal, Avatar, ContactLinks, formatRange } from "./shared";
+import { Reveal, Avatar, ContactLinks, formatRange, formatDate } from "./shared";
 import { CSS_DEVELOPER } from "./mit/developer.css";
 
 export default function DeveloperTemplate({ data }: { data: PortfolioData }) {
@@ -72,6 +72,12 @@ export default function DeveloperTemplate({ data }: { data: PortfolioData }) {
             </li>
             <li>
               <a href="#experience">experience</a>
+            </li>
+            <li>
+              <a href="#education">education</a>
+            </li>
+            <li>
+              <a href="#certificates">certificates</a>
             </li>
             <li>
               <a href="#contact">contact</a>
@@ -265,6 +271,59 @@ export default function DeveloperTemplate({ data }: { data: PortfolioData }) {
                         {x.position} · <b>{x.company}</b>
                       </h3>
                       {x.description ? <p>{x.description}</p> : null}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          </section>
+        ) : null}
+
+        {data.education.length > 0 ? (
+          <section id="education" aria-labelledby="e1">
+            <Reveal>
+              <div className="sh">
+                <div>
+                  <span className="k">{"// education"}</span>
+                  <h2 id="e1">Education</h2>
+                </div>
+              </div>
+              <ol className="xp">
+                {data.education.map((e, i) => (
+                  <li key={i}>
+                    <time>{formatRange(e.start_date, e.end_date)}</time>
+                    <div>
+                      <h3>
+                        {[e.degree, e.field_of_study].filter(Boolean).join(" ") || e.institution} · <b>{e.institution}</b>
+                      </h3>
+                      {e.gpa ? <p>IPK {e.gpa}</p> : null}
+                      {e.description ? <p>{e.description}</p> : null}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          </section>
+        ) : null}
+
+        {data.certifications.length > 0 ? (
+          <section id="certificates" aria-labelledby="c2">
+            <Reveal>
+              <div className="sh">
+                <div>
+                  <span className="k">{"// certificates"}</span>
+                  <h2 id="c2">Certificates</h2>
+                </div>
+              </div>
+              <ol className="xp">
+                {data.certifications.map((c, i) => (
+                  <li key={i}>
+                    <time>{formatDate(c.issue_date)}</time>
+                    <div>
+                      <h3>{c.name}</h3>
+                      {[c.issuer, c.credential_id].filter(Boolean).join(" · ") ? (
+                        <p>{[c.issuer, c.credential_id].filter(Boolean).join(" · ")}</p>
+                      ) : null}
                     </div>
                   </li>
                 ))}

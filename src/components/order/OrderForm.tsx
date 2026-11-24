@@ -231,7 +231,25 @@ export default function OrderForm({ token }: { token: string }) {
     }));
   }
 
-  function renderListEditor(kind: string, apiStep: string, fields: { key: string; label: string; type?: string }[], title: string, advance = true) {
+  // Field daftar: `parse` mengubah teks ketikan menjadi nilai
+  // yang disimpan (mis. "Figma, HTML" -> ["Figma", "HTML"]),
+  // `display` sebaliknya; `disabledWhen` menonaktifkan input
+  // (mis. tanggal selesai saat "masih bekerja" dicentang).
+  // `extra` merender kontrol tambahan per item (mis. checkbox).
+  type ListField = {
+    key: string;
+    label: string;
+    type?: string;
+    step?: string;
+    min?: string;
+    max?: string;
+    placeholder?: string;
+    parse?: (v: string) => unknown;
+    display?: (v: unknown) => string;
+    disabledWhen?: (item: Record<string, unknown>) => boolean;
+  };
+
+  function renderListEditor(kind: string, apiStep: string, fields: ListField[], title: string, advance = true, extra?: (item: Record<string, unknown>, idx: number) => React.ReactNode) {
     const items = lists[kind] ?? [];
     return (
       <div className="space-y-4">
@@ -244,12 +262,28 @@ export default function OrderForm({ token }: { token: string }) {
                 <label className={labelCls}>{f.label}</label>
                 <input
                   type={f.type ?? "text"}
-                  value={String(item[f.key] ?? "")}
-                  onChange={(e) => updateList(kind, idx, { [f.key]: f.type === "number" ? Number(e.target.value) : e.target.value })}
-                  className={inputCls}
+                  step={f.step}
+                  min={f.min}
+                  max={f.max}
+                  placeholder={f.placeholder}
+                  disabled={f.disabledWhen?.(item)}
+                  value={f.display ? f.display(item[f.key]) : String(item[f.key] ?? "")}
+                  onChange={(e) =>
+                    updateList(kind, idx, {
+                      [f.key]: f.parse
+                        ? f.parse(e.target.value)
+                        : f.type === "number"
+                          ? e.target.value === ""
+                            ? undefined
+                            : Number(e.target.value)
+                          : e.target.value,
+                    })
+                  }
+                  className={`${inputCls} disabled:opacity-40`}
                 />
               </div>
             ))}
+            {extra ? extra(item, idx) : null}
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={Boolean(item.isVisible)} onChange={(e) => updateList(kind, idx, { isVisible: e.target.checked })} className="h-5 w-5" />
               Tampilkan item ini di portofolio
@@ -452,6 +486,7 @@ export default function OrderForm({ token }: { token: string }) {
         { key: "institution", label: "Institusi / sekolah / kampus *" },
         { key: "degree", label: "Gelar / jenjang" },
         { key: "fieldOfStudy", label: "Bidang studi" },
+        { key: "gpa", label: "IPK (0–4, boleh kosong)", type: "number", step: "0.01", min: "0", max: "4" },
         { key: "startDate", label: "Tanggal mulai", type: "date" },
         { key: "endDate", label: "Tanggal selesai", type: "date" },
         { key: "description", label: "Keterangan" },
@@ -461,9 +496,21 @@ export default function OrderForm({ token }: { token: string }) {
         { key: "company", label: "Perusahaan *" },
         { key: "position", label: "Posisi *" },
         { key: "startDate", label: "Tanggal mulai", type: "date" },
-        { key: "endDate", label: "Tanggal selesai", type: "date" },
+        { key: "endDate", label: "Tanggal selesai", type: "date", disabledWhen: (item) => Boolean(item.isCurrent) },
         { key: "description", label: "Deskripsi pekerjaan" },
-      ], "Pengalaman")}
+      ], "Pengalaman", true, (item, idx) => (
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={Boolean(item.isCurrent)}
+            onChange={(e) =>
+              updateList("experiences", idx, e.target.checked ? { isCurrent: true, endDate: "" } : { isCurrent: false })
+            }
+            className="h-5 w-5"
+          />
+          Saya masih bekerja di sini (tampil sebagai “Sekarang”)
+        </label>
+      ))}
 
       {step === 4 && (
         <div className="mt-6">
@@ -471,6 +518,14 @@ export default function OrderForm({ token }: { token: string }) {
             { key: "title", label: "Judul proyek *" },
             { key: "description", label: "Deskripsi" },
             { key: "url", label: "URL proyek" },
+            { key: "imageUrl", label: "URL gambar proyek (opsional)" },
+            {
+              key: "techStack",
+              label: "Teknologi (pisah dengan koma, contoh: Figma, HTML, CSS)",
+              placeholder: "Figma, HTML, CSS",
+              parse: (v: string) => v.split(",").map((s) => s.trim()).filter(Boolean),
+              display: (v: unknown) => (Array.isArray(v) ? (v as string[]).join(", ") : String(v ?? "")),
+            },
           ], "Proyek")}
           <p className="mt-3 text-sm text-muted">Gambar proyek: upload lewat tombol di bawah, lalu tempel URL hasil upload ke kolom gambar di item proyek (atau isi langsung URL gambar yang sudah ada).</p>
           <div className="mt-3">
