@@ -108,14 +108,22 @@ export default async function HomePage() {
                 <Reveal key={t.id} delay={i * 0.06}>
                   {/* text-ink wajib: section ini text-white,
                       tanpa ini nama template ikut putih dan
-                      hilang di atas kartu putih. */}
-                  <a href={`/demo/${t.id}`} className="card card-hover block h-full p-5 text-ink">
-                    <p className="text-xs font-medium uppercase tracking-wide text-faint">Template</p>
-                    <h3 className="mt-2 text-2xl">{t.name}</h3>
-                    <p className="mt-3 flex items-baseline justify-between text-sm">
-                      <span className="font-medium text-ink">Rp{t.price.toLocaleString("id-ID")}</span>
-                      <span className="font-medium text-brand-500">Lihat demo →</span>
-                    </p>
+                      hilang di atas kartu putih. Thumbnail
+                      adalah tangkapan hero demo (800x500,
+                      public/templates/thumbs/) — render ulang
+                      dengan skrip /tmp/gen-thumbs.cjs kalau
+                      tampilan demo berubah. */}
+                  <a href={`/demo/${t.id}`} className="card card-hover block h-full overflow-hidden text-ink">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- thumbnail statis 800x500 yang sudah dioptimasi (13-28 KB), lazy-loaded; next/image tidak menambah nilai di sini. */}
+                    <img src={`/templates/thumbs/${t.id}.jpg`} alt={`Pratinjau template ${t.name}`} width={800} height={500} loading="lazy" className="aspect-[8/5] w-full object-cover object-top" />
+                    <div className="p-5">
+                      <p className="text-xs font-medium uppercase tracking-wide text-faint">Template</p>
+                      <h3 className="mt-2 text-2xl">{t.name}</h3>
+                      <p className="mt-3 flex items-baseline justify-between text-sm">
+                        <span className="font-medium text-ink">Rp{t.price.toLocaleString("id-ID")}</span>
+                        <span className="font-medium text-brand-500">Lihat demo →</span>
+                      </p>
+                    </div>
                   </a>
                 </Reveal>
               ))}
