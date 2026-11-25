@@ -1,84 +1,71 @@
-// Data contoh untuk /demo/[template] — dari CV Dwi Mahdini.
+// Data contoh untuk /demo/[template] — persona FIKTIF "John Alex".
 // Bentuknya SAMA dengan PortfolioData dari view public_portfolio,
 // jadi yang kamu lihat di demo adalah yang akan tampil di
-// portofolio asli klien. Email/telepon sengaja null di sini,
-// sama seperti kalau klien mematikan toggle tampilnya.
+// portofolio asli klien. Semua nama, perusahaan, dan alamat di
+// sini karangan — JANGAN pakai data orang asli di file ini.
+// Email/telepon tampil apa adanya karena nilainya contoh.
 import type { PortfolioData } from "@/lib/types";
 
 export const demoPortfolio: PortfolioData = {
-  profile_id: "demo-dwi-mahdini",
-  subdomain: "dwimahdini",
+  profile_id: "demo-john-alex",
+  subdomain: "johnalex",
   template_id: "minimalis",
   template_name: "Minimalis",
-  full_name: "Dwi Mahdini",
+  full_name: "John Alex",
   headline: "Fullstack Web Developer",
-  bio: "Lulusan S1 Teknik Informatika UIN Suska Riau. Membangun website dengan Laravel, Next.js, dan MySQL/PostgreSQL. Fokus ke website yang cepat, rapi, dan mudah dipakai.",
-  location: "Pekanbaru, Riau",
+  bio: "Lulusan S1 Ilmu Komputer Universitas XYZ. Membangun website dengan Laravel, Next.js, dan MySQL/PostgreSQL. Fokus ke website yang cepat, rapi, dan mudah dipakai.",
+  location: "Jakarta, Indonesia",
   photo_url: null,
-  website_url: "https://porto.mahdini.my.id/",
+  website_url: "https://johnalex.example.com",
   linkedin_url: null,
-  github_url: "https://github.com/dwimahdini",
+  github_url: null,
   instagram_url: null,
-  email: null,
-  phone: null,
-  whatsapp: null,
+  email: "john.alex@example.com",
+  phone: "+6281234567890",
+  whatsapp: "+6281234567890",
   education: [
     {
-      institution: "UIN Suska Riau",
+      institution: "Universitas XYZ",
       degree: "S1",
-      field_of_study: "Teknik Informatika",
-      start_date: "2022-08-01",
-      end_date: "2026-06-01",
-      gpa: 3.58,
+      field_of_study: "Ilmu Komputer",
+      start_date: "2020-08-01",
+      end_date: "2024-06-01",
+      gpa: 3.5,
       description: null,
     },
   ],
   experiences: [
     {
-      company: "Freelance",
+      company: "PT Contoh Teknologi",
       position: "Web Developer",
-      start_date: "2024-12-01",
+      start_date: "2023-01-01",
       end_date: null,
       is_current: true,
-      description: "Membangun website portofolio, toko digital, dan aplikasi gudang untuk klien.",
+      description: "Membangun dan merawat website perusahaan dengan Laravel dan Next.js.",
     },
     {
-      company: "Lab Inkubator Bisnis TI UIN Suska Riau",
+      company: "Freelance",
       position: "Web Developer",
-      start_date: "2025-02-01",
-      end_date: "2025-07-31",
-      is_current: false,
-      description: "Mengembangkan aplikasi web untuk kebutuhan lab dan mahasiswa.",
+      start_date: "2022-01-01",
+      end_date: null,
+      is_current: true,
+      description: "Membangun website portofolio, toko online, dan aplikasi kasir untuk klien.",
     },
   ],
   projects: [
     {
-      title: "Toko Digital Lynk.id",
-      description: "Storefront untuk produk digital: kelas PHP, source code Laravel, dan e-book.",
-      url: "https://lynk.id/wikithey",
-      image_url: null,
-      tech_stack: ["Next.js", "Tailwind CSS"],
-    },
-    {
-      title: "Website Gempa Global (USGS)",
-      description: "Peta gempa global interaktif, refresh tiap menit, data USGS.",
-      url: "https://github.com/dwimahdini/gempa-global",
-      image_url: null,
-      tech_stack: ["Next.js", "Leaflet"],
-    },
-    {
-      title: "Peminjaman Alat Gudang",
-      description: "Aplikasi peminjaman alat untuk 12 teknisi gudang.",
-      url: null,
-      image_url: null,
-      tech_stack: ["Next.js", "Supabase"],
-    },
-    {
-      title: "Pembuat CV ATS",
-      description: "Website pembuat CV ATS: isi biodata, unduh PDF, tanpa login.",
+      title: "Website Toko Online Contoh",
+      description: "Toko online fiktif: katalog produk, keranjang, dan checkout sederhana.",
       url: null,
       image_url: null,
       tech_stack: ["Next.js", "Tailwind CSS"],
+    },
+    {
+      title: "Aplikasi Kasir Sederhana",
+      description: "Aplikasi kasir fiktif: pencatatan penjualan dan laporan harian.",
+      url: null,
+      image_url: null,
+      tech_stack: ["Laravel", "MySQL"],
     },
   ],
   skills: [
@@ -91,31 +78,31 @@ export const demoPortfolio: PortfolioData = {
     { name: "Android Studio", category: "Mobile", level: 3 },
   ],
   certifications: [
-    { name: "Intro to Front-End Development", issuer: "Meta (Coursera)", issue_date: "2026-08-18", expiry_date: null, credential_id: "DXIP03SSFWK2", credential_url: null },
-    { name: "Technical Support Fundamentals", issuer: "Google (Coursera)", issue_date: "2026-10-31", expiry_date: null, credential_id: "PKE6GST0YQZH", credential_url: null },
-    { name: "Implementing the Application Front End Using React Components", issuer: "IBM", issue_date: "2026-09-04", expiry_date: null, credential_id: null, credential_url: null },
-    { name: "Responsive Web Design", issuer: "freeCodeCamp", issue_date: "2025-09-25", expiry_date: null, credential_id: null, credential_url: null },
+    { name: "Responsive Web Design", issuer: "freeCodeCamp", issue_date: "2024-09-25", expiry_date: null, credential_id: null, credential_url: null },
+    { name: "Full-Stack Web Development", issuer: "Contoh Academy", issue_date: "2024-01-20", expiry_date: null, credential_id: null, credential_url: null },
   ],
-  publications: [
-    {
-      title: "Chatbot Generative AI Berbasis Hybrid RAG dengan Integrasi RIASEC untuk Rekomendasi Jurusan",
-      publisher: "JUPTIK",
-      published_date: null,
-      url: "https://ejournal.ummuba.ac.id/index.php/JUPTIK/en/article/view/4373",
-      description: "Skripsi: perancangan chatbot Hybrid RAG untuk rekomendasi jurusan.",
-    },
-  ],
+  publications: [],
   achievements: [
     {
-      // Judul panjang (90 karakter) — sengaja dipakai untuk
-      // memastikan kartu pencapaian tidak memotong judul.
-      title: "Chatbot Generative AI Berbasis Hybrid RAG dengan Integrasi RIASEC untuk Rekomendasi Jurusan",
-      issuer: "JUPTIK",
-      date: "2026-06",
-      description: "Publikasi skripsi di jurnal JUPTIK.",
-      document_url: "https://ejournal.ummuba.ac.id/index.php/JUPTIK/en/article/view/4373",
+      title: "Juara 1 Lomba Desain Web Tingkat Kota",
+      issuer: "Dinas Komunikasi dan Informatika Kota Contoh",
+      date: "2024-08",
+      description: "Lomba desain web antar peserta se-kota.",
+      document_url: null,
+    },
+    {
+      // Judul panjang fiktif (101 karakter) — sengaja dipakai
+      // untuk memastikan kartu pencapaian tidak memotong judul.
+      title: "Juara 1 Lomba Membuat Website Toko Online untuk Pelaku Usaha Kecil dan Menengah di Kota Contoh",
+      issuer: "Dinas Koperasi dan UKM Kota Contoh",
+      date: "2024-11",
+      description: "Lomba membuat website toko online untuk pelaku usaha kecil dan menengah.",
+      document_url: null,
     },
   ],
-  languages: [],
-  published_at: "2026-11-21T00:00:00.000Z",
+  languages: [
+    { language: "Bahasa Indonesia", level: "Tingkat Fasih atau Bahasa Ahli" },
+    { language: "English", level: "Tingkat Menengah" },
+  ],
+  published_at: "2024-12-01T00:00:00.000Z",
 };

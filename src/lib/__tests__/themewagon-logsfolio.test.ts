@@ -102,8 +102,8 @@ describe("Render LogsfolioTemplate", () => {
   it("merender sertifikasi dari data demo", () => {
     const html = renderToString(createElement(LogsfolioTemplate, { data: demoPortfolio }));
     expect(html).toContain('id="certifications"');
-    expect(html).toContain("Intro to Front-End Development");
-    expect(html).toContain("DXIP03SSFWK2");
+    expect(html).toContain("Responsive Web Design");
+    expect(html).toContain("freeCodeCamp");
   });
 
   it("tidak merender section sertifikasi bila datanya kosong", () => {

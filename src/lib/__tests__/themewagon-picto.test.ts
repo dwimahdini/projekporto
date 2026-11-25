@@ -100,13 +100,12 @@ describe("Render Picto dengan data contoh", () => {
   const html = renderToString(createElement(PictoTemplate, { data }));
 
   it("menampilkan nama, headline, dan bio dari data", () => {
-    expect(html).toContain("Dwi Mahdini");
+    expect(html).toContain("John Alex");
     expect(html).toContain("Fullstack Web Developer");
-    expect(html).toContain("Lulusan S1 Teknik Informatika");
+    expect(html).toContain("Lulusan S1 Ilmu Komputer");
   });
 
-  it("statistik hero hanya angka nyata dari data (4 proyek, 2 pengalaman, 7 skill)", () => {
-    expect(html).toContain(">4<");
+  it("statistik hero hanya angka nyata dari data (2 proyek, 2 pengalaman, 7 skill)", () => {
     expect(html).toContain(">2<");
     expect(html).toContain(">7<");
     expect(html).not.toContain("250+");
@@ -114,7 +113,7 @@ describe("Render Picto dengan data contoh", () => {
 
   it("menampilkan section tambahan: pendidikan, pencapaian, bahasa", () => {
     expect(html).toContain("Education");
-    expect(html).toContain("UIN Suska Riau");
+    expect(html).toContain("Universitas XYZ");
     expect(html).toContain("Pencapaian");
     expect(html).toContain("Juara 1 Hackathon");
     expect(html).toContain("Bahasa");
@@ -122,7 +121,7 @@ describe("Render Picto dengan data contoh", () => {
   });
 
   it("menampilkan proyek dan skill dari data, tanpa gambar karangan", () => {
-    expect(html).toContain("Toko Digital Lynk.id");
+    expect(html).toContain("Website Toko Online Contoh");
     expect(html).toContain("Laravel");
     expect(html).not.toContain("Unsplash");
   });
@@ -134,34 +133,34 @@ describe("Render Picto dengan data contoh", () => {
     expect(html).toContain('id="experience"');
     expect(html).toContain("Experience");
     expect(html).toContain("Freelance");
-    expect(html).toContain("Lab Inkubator Bisnis TI UIN Suska Riau");
-    expect(html).toContain("Des 2024 – Sekarang");
-    expect(html).toContain("Feb 2025 – Jul 2025");
-    expect(html).toContain("Membangun website portofolio, toko digital, dan aplikasi gudang untuk klien.");
+    expect(html).toContain("PT Contoh Teknologi");
+    expect(html).toContain("Jan 2023 – Sekarang");
+    expect(html).toContain("Jan 2022 – Sekarang");
+    expect(html).toContain("Membangun website portofolio, toko online, dan aplikasi kasir untuk klien.");
     expect(html).toContain('href="#experience"');
   });
 
   it("judul pencapaian panjang tampil utuh (tidak terpotong)", () => {
-    // Judul 121 karakter dari laporan E2E — ekornya
-    // ("...asi Kepuasan Masyarakat") sempat hilang di Picto.
+    // Judul fiktif 101 karakter dari data demo — ekornya
+    // ("...di Kota Contoh") harus tampil utuh di Picto.
     const judulPanjang =
-      "Analisis Komparatif Jarak Euclidean, Manhattan, Canberra, Chebyshev, Cosine pada K-Means untuk Evaluasi Kepuasan Masyarakat";
+      "Juara 1 Lomba Membuat Website Toko Online untuk Pelaku Usaha Kecil dan Menengah di Kota Contoh";
     const dataPanjang = {
       ...demoPortfolio,
       achievements: [
         {
           title: judulPanjang,
-          issuer: "Jurnal Terapan Informatika Nusantara",
-          date: "2026-06",
-          description: "Publikasi skripsi.",
+          issuer: "Dinas Koperasi dan UKM Kota Contoh",
+          date: "2024-11",
+          description: "Lomba membuat website toko online.",
           document_url: "",
         },
       ],
     } as unknown as PortfolioData;
     const htmlPanjang = renderToString(createElement(PictoTemplate, { data: dataPanjang }));
     expect(htmlPanjang).toContain(judulPanjang);
-    expect(htmlPanjang).toContain("Kepuasan Masyarakat");
-    expect(htmlPanjang).toContain("Jurnal Terapan Informatika Nusantara");
+    expect(htmlPanjang).toContain("Kota Contoh");
+    expect(htmlPanjang).toContain("Dinas Koperasi dan UKM Kota Contoh");
   });
 
   it("tidak menampilkan section yang dibuang", () => {

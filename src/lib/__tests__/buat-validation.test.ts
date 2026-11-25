@@ -111,7 +111,7 @@ describe("MASTER_SKILLS", () => {
     expect(new Set(nama).size).toBe(nama.length);
   });
 
-  it("memuat skill dari data contoh Dwi & Fakhri", () => {
+  it("memuat skill dari daftar master", () => {
     const nama = new Set(MASTER_SKILLS.map((s) => s.name));
     for (const wajib of [
       "Laravel",
@@ -144,12 +144,12 @@ describe("createShareCode", () => {
 
 describe("slugifyName", () => {
   it("spasi jadi strip, huruf besar jadi kecil", () => {
-    expect(slugifyName("Dwi Mahdini")).toBe("dwi-mahdini");
+    expect(slugifyName("John Alex")).toBe("john-alex");
     expect(slugifyName("Fakhri Aja")).toBe("fakhri-aja");
   });
 
   it("karakter aneh dibuang", () => {
-    expect(slugifyName("Dwi @ Mahdini! #1")).toBe("dwi-mahdini-1");
+    expect(slugifyName("John @ Alex! #1")).toBe("john-alex-1");
     expect(slugifyName("  Budi   Santoso  ")).toBe("budi-santoso");
   });
 
@@ -222,14 +222,14 @@ describe("buatDraftSchema", () => {
   it("menerima URL tanpa protokol dengan menambahkan https://", () => {
     const parsed = buatDraftSchema.safeParse({
       ...emptyBuatDraft(),
-      fullName: "Dwi Mahdini",
-      websiteUrl: "porto.mahdini.my.id",
-      linkedinUrl: "linkedin.com/in/dwimahdini",
+      fullName: "John Alex",
+      websiteUrl: "johnalex.example.com",
+      linkedinUrl: "linkedin.com/in/johnalex",
     });
     expect(parsed.success).toBe(true);
     if (parsed.success) {
-      expect(parsed.data.websiteUrl).toBe("https://porto.mahdini.my.id");
-      expect(parsed.data.linkedinUrl).toBe("https://linkedin.com/in/dwimahdini");
+      expect(parsed.data.websiteUrl).toBe("https://johnalex.example.com");
+      expect(parsed.data.linkedinUrl).toBe("https://linkedin.com/in/johnalex");
     }
   });
 

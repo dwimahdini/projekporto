@@ -62,10 +62,10 @@ describe("Komponen Astrowind tidak membawa data contoh", () => {
 describe("Render AstrowindTemplate", () => {
   it("merender data demo tanpa kata terlarang", () => {
     const html = renderToString(createElement(AstrowindTemplate, { data: demoPortfolio }));
-    expect(html).toContain("Dwi Mahdini");
+    expect(html).toContain("John Alex");
     expect(html).toContain("Fullstack Web Developer");
     expect(html).toContain('id="portfolio"');
-    expect(html).toContain("IPK 3.58");
+    expect(html).toContain("IPK 3.5");
     for (const word of forbidden) {
       expect(html).not.toContain(word);
     }
@@ -97,7 +97,7 @@ describe("Render AstrowindTemplate", () => {
 
   it("tidak merender section pencapaian/bahasa bila datanya kosong", () => {
     // Data kosong dibuat eksplisit — data demo kini berisi
-    // 1 pencapaian contoh, jadi tidak bisa lagi dipakai
+    // 2 pencapaian contoh, jadi tidak bisa lagi dipakai
     // untuk kasus "kosong".
     const data = { ...demoPortfolio, achievements: [], languages: [] } as unknown as PortfolioData;
     const html = renderToString(createElement(AstrowindTemplate, { data }));
@@ -110,20 +110,20 @@ describe("Render AstrowindTemplate", () => {
       ...demoPortfolio,
       certifications: [
         {
-          name: "Meta Intro to Front-End Development",
-          issuer: "Meta",
-          issue_date: "2026-08-18",
+          name: "Contoh Sertifikat Web Development",
+          issuer: "Contoh Academy",
+          issue_date: "2024-01-20",
           expiry_date: null,
-          credential_id: "DXIP03SSFWK2",
-          credential_url: "https://coursera.org/verify/DXIP03SSFWK2",
+          credential_id: "CONTOH-2024-001",
+          credential_url: "https://example.com/verify/CONTOH-2024-001",
         },
       ],
     } as unknown as PortfolioData;
     const html = renderToString(createElement(AstrowindTemplate, { data }));
     expect(html).toContain('id="certifications"');
-    expect(html).toContain("Meta Intro to Front-End Development");
-    expect(html).toContain("DXIP03SSFWK2");
-    expect(html).toContain("https://coursera.org/verify/DXIP03SSFWK2");
+    expect(html).toContain("Contoh Sertifikat Web Development");
+    expect(html).toContain("CONTOH-2024-001");
+    expect(html).toContain("https://example.com/verify/CONTOH-2024-001");
   });
 
   it("tidak merender section sertifikasi bila datanya kosong", () => {

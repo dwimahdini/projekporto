@@ -81,7 +81,7 @@ describe("subdomain published tampil tanpa watermark", () => {
     const meta = getTemplate("minimalis");
     expect(meta).toBeDefined();
     const html = renderToString(createElement(meta!.Component, { data: demoPortfolioData }));
-    expect(html).toContain("Dwi Mahdini");
+    expect(html).toContain("John Alex");
     expect(html).not.toContain("PRATINJAU");
   });
 });
@@ -99,7 +99,7 @@ describe("data privat yang tidak dicentang tidak muncul di HTML publik", () => {
     const html = renderToString(createElement(meta!.Component, { data: filtered }));
     expect(html).not.toContain("rahasia@contoh.id");
     expect(html).not.toContain("0812000111222");
-    expect(html).toContain("Dwi Mahdini");
+    expect(html).toContain("John Alex");
   });
   it("email/telepon yang dicentang BOLEH muncul", () => {
     const data = {

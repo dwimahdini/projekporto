@@ -31,7 +31,7 @@ describe("draftToPortfolioData: phone & whatsapp", () => {
     const data = draftToPortfolioData(
       {
         ...emptyBuatDraft(),
-        fullName: "Dwi Mahdini",
+        fullName: "John Alex",
         phone: "081234567890",
         whatsapp: "6281234567890",
       },
@@ -54,9 +54,9 @@ describe("draftToPortfolioData: phone & whatsapp", () => {
 
 describe("normalizeBuatDraft", () => {
   it("menerima draft valid dan melengkapi field yang hilang", () => {
-    const hasil = normalizeBuatDraft({ fullName: "Dwi Mahdini" });
+    const hasil = normalizeBuatDraft({ fullName: "John Alex" });
     expect(hasil).not.toBeNull();
-    expect(hasil?.fullName).toBe("Dwi Mahdini");
+    expect(hasil?.fullName).toBe("John Alex");
     expect(hasil?.education).toEqual([]);
     expect(hasil?.templateId).toBeNull();
   });
@@ -71,9 +71,9 @@ describe("normalizeBuatDraft", () => {
   it("menormalisasi URL tanpa protokol (menambah https://)", () => {
     const hasil = normalizeBuatDraft({
       ...emptyBuatDraft(),
-      fullName: "Dwi Mahdini",
-      websiteUrl: "porto.mahdini.my.id",
+      fullName: "John Alex",
+      websiteUrl: "johnalex.example.com",
     });
-    expect(hasil?.websiteUrl).toBe("https://porto.mahdini.my.id");
+    expect(hasil?.websiteUrl).toBe("https://johnalex.example.com");
   });
 });

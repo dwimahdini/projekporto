@@ -4,7 +4,7 @@ import { getTemplate, TEMPLATE_LIST } from "@/lib/templates/registry";
 import { demoPortfolio } from "@/lib/templates/demo-data";
 
 // /demo/[template] — bandingkan kelima template dengan
-// data contoh yang SAMA (CV Dwi Mahdini). Bukan data asli
+// data contoh yang SAMA (persona fiktif John Alex). Bukan data asli
 // klien, dan tidak butuh login.
 export default function DemoPage({ params }: { params: { template: string } }) {
   const meta = getTemplate(params.template);
@@ -31,7 +31,7 @@ export default function DemoPage({ params }: { params: { template: string } }) {
             ← Pesan template ini
           </Link>
         </div>
-        <p className="mx-auto mt-2 max-w-5xl text-xs text-muted">{meta.description} Data contoh: Dwi Mahdini, Fullstack Web Developer.</p>
+        <p className="mx-auto mt-2 max-w-5xl text-xs text-muted">{meta.description} Data contoh: John Alex, Fullstack Web Developer.</p>
       </nav>
       <Component data={data} />
     </div>

@@ -147,7 +147,7 @@ export function emptyBuatDraft(): BuatDraft {
   };
 }
 
-// "Dwi Mahdini" -> "dwi-mahdini". Hanya a-z, 0-9, strip.
+// "John Alex" -> "john-alex". Hanya a-z, 0-9, strip.
 // Kosong / tanpa karakter valid -> "portofolio".
 export function slugifyName(name: string): string {
   const slug = name

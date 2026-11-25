@@ -28,9 +28,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-paper font-sans text-ink antialiased">
         {children}
         <footer className="border-t border-line px-4 py-6 text-center text-sm text-muted">
-          <a href="/kebijakan-privasi" className="text-brand-500 underline underline-offset-4 hover:text-brand-600">Kebijakan Privasi</a>
-          {" · "}
-          <a href="/syarat-layanan" className="text-brand-500 underline underline-offset-4 hover:text-brand-600">Syarat Layanan</a>
+          <p>© {new Date().getFullYear()} Portofolio Murah</p>
+          <p className="mt-2">
+            <a href="/kebijakan-privasi" className="text-brand-500 underline underline-offset-4 hover:text-brand-600">Kebijakan Privasi</a>
+            {" · "}
+            <a href="/syarat-layanan" className="text-brand-500 underline underline-offset-4 hover:text-brand-600">Syarat Layanan</a>
+          </p>
         </footer>
       </body>
     </html>
