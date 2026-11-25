@@ -19,23 +19,8 @@ import { safeHttpUrl } from "@/lib/sanitize";
 import { Reveal, Avatar, ContactLinks, formatRange, formatDate } from "./shared";
 import { CSS_ASTROWIND } from "./themewagon/astrowind.css";
 
-// Field achievements/languages belum ada di PortfolioData
-// (agen lain sedang menambahkannya) — didefinisikan lokal di sini.
-interface Achievement {
-  title: string;
-  issuer: string | null;
-  date: string | null;
-  description: string | null;
-  document_url: string | null;
-}
-interface LanguageItem {
-  language: string;
-  level: string;
-}
-type Data = PortfolioData & {
-  achievements?: Achievement[];
-  languages?: LanguageItem[];
-};
+// achievements/languages adalah field resmi PortfolioData
+// (src/lib/types.ts) — dipakai langsung, tanpa tipe lokal.
 
 // Ikon Tabler (astro-icon) diganti inline SVG sederhana.
 function IconBriefcase() {
@@ -95,8 +80,10 @@ export default function AstrowindTemplate({ data }: { data: PortfolioData }) {
   const [dark, setDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const achievements = (data as Data).achievements ?? [];
-  const languages = (data as Data).languages ?? [];
+  // Fallback [] menjaga kalau data datang dari view lama
+  // yang belum mengembalikan kedua field itu.
+  const achievements = data.achievements ?? [];
+  const languages = data.languages ?? [];
   const displayName = data.full_name ?? data.subdomain;
   const firstName = displayName.split(" ")[0];
 
@@ -120,6 +107,7 @@ export default function AstrowindTemplate({ data }: { data: PortfolioData }) {
     { text: "Resume", href: "#resume" },
   ];
   if (data.projects.length > 0) navLinks.push({ text: "Portfolio", href: "#portfolio" });
+  if (data.certifications.length > 0) navLinks.push({ text: "Sertifikasi", href: "#certifications" });
   if (achievements.length > 0) navLinks.push({ text: "Pencapaian", href: "#achievements" });
   if (github) navLinks.push({ text: "Github", href: github });
 
@@ -382,6 +370,38 @@ export default function AstrowindTemplate({ data }: { data: PortfolioData }) {
                     ) : null}
                   </article>
                 ))}
+              </Reveal>
+            </div>
+          </section>
+        ) : null}
+
+        {data.certifications.length > 0 ? (
+          <section id="certifications" aria-labelledby="cert-h">
+            <div className="wrap">
+              <Reveal>
+                <div className="sec-head">
+                  <h2 id="cert-h">Sertifikasi</h2>
+                </div>
+                <div className="cards">
+                  {data.certifications.map((c, i) => {
+                    const meta = [c.issuer, c.issue_date ? formatDate(c.issue_date) : ""]
+                      .filter(Boolean)
+                      .join(" · ");
+                    const credUrl = safeHttpUrl(c.credential_url);
+                    return (
+                      <article className="card" key={i}>
+                        <h3>{c.name}</h3>
+                        {meta ? <p className="issuer">{meta}</p> : null}
+                        {c.credential_id ? <p>ID Kredensial: {c.credential_id}</p> : null}
+                        {credUrl ? (
+                          <a href={credUrl} target="_blank" rel="noreferrer">
+                            Lihat kredensial
+                          </a>
+                        ) : null}
+                      </article>
+                    );
+                  })}
+                </div>
               </Reveal>
             </div>
           </section>

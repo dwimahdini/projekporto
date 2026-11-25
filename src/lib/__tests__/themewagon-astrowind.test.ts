@@ -100,4 +100,31 @@ describe("Render AstrowindTemplate", () => {
     expect(html).not.toContain('id="achievements"');
     expect(html).not.toContain('id="languages"');
   });
+
+  it("merender sertifikasi bila datanya ada", () => {
+    const data = {
+      ...demoPortfolio,
+      certifications: [
+        {
+          name: "Meta Intro to Front-End Development",
+          issuer: "Meta",
+          issue_date: "2026-08-18",
+          expiry_date: null,
+          credential_id: "DXIP03SSFWK2",
+          credential_url: "https://coursera.org/verify/DXIP03SSFWK2",
+        },
+      ],
+    } as unknown as PortfolioData;
+    const html = renderToString(createElement(AstrowindTemplate, { data }));
+    expect(html).toContain('id="certifications"');
+    expect(html).toContain("Meta Intro to Front-End Development");
+    expect(html).toContain("DXIP03SSFWK2");
+    expect(html).toContain("https://coursera.org/verify/DXIP03SSFWK2");
+  });
+
+  it("tidak merender section sertifikasi bila datanya kosong", () => {
+    const data = { ...demoPortfolio, certifications: [] } as unknown as PortfolioData;
+    const html = renderToString(createElement(AstrowindTemplate, { data }));
+    expect(html).not.toContain('id="certifications"');
+  });
 });

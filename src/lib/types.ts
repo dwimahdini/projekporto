@@ -133,7 +133,10 @@ export type TemplateId =
   | "visual"
   | "developer"
   | "desainer"
-  | "resume-cv";
+  | "resume-cv"
+  | "logsfolio"
+  | "picto"
+  | "astrowind";
 
 export const TEMPLATE_IDS: TemplateId[] = [
   "minimalis",
@@ -144,6 +147,9 @@ export const TEMPLATE_IDS: TemplateId[] = [
   "developer",
   "desainer",
   "resume-cv",
+  "logsfolio",
+  "picto",
+  "astrowind",
 ];
 
 export const FORBIDDEN_SUBDOMAINS = [

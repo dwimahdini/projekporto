@@ -5,8 +5,13 @@
 // jadi tes ini memakai string CSS + isi file komponen
 // (fs.readFileSync), bukan render.
 import { describe, it, expect } from "vitest";
+import { renderToString } from "react-dom/server";
+import { createElement } from "react";
 import fs from "fs";
 import path from "path";
+import type { PortfolioData } from "@/lib/types";
+import { demoPortfolio } from "@/lib/templates/demo-data";
+import LogsfolioTemplate from "@/components/templates/LogsfolioTemplate";
 import { CSS_LOGSFOLIO } from "@/components/templates/themewagon/logsfolio.css";
 
 const componentSrc = fs.readFileSync(
@@ -81,6 +86,7 @@ describe("Komponen Logsfolio tidak membawa data contoh", () => {
       "Work Experience",
       "My Projects",
       "Education",
+      "Sertifikasi",
       "Pencapaian",
       "Bahasa",
     ]) {
@@ -89,5 +95,20 @@ describe("Komponen Logsfolio tidak membawa data contoh", () => {
     // Bagian tanpa field di form sengaja dibuang.
     expect(componentSrc).not.toContain("Testimonials");
     expect(componentSrc).not.toContain("Blogs");
+  });
+});
+
+describe("Render LogsfolioTemplate", () => {
+  it("merender sertifikasi dari data demo", () => {
+    const html = renderToString(createElement(LogsfolioTemplate, { data: demoPortfolio }));
+    expect(html).toContain('id="certifications"');
+    expect(html).toContain("Intro to Front-End Development");
+    expect(html).toContain("DXIP03SSFWK2");
+  });
+
+  it("tidak merender section sertifikasi bila datanya kosong", () => {
+    const data = { ...demoPortfolio, certifications: [] } as unknown as PortfolioData;
+    const html = renderToString(createElement(LogsfolioTemplate, { data }));
+    expect(html).not.toContain('id="certifications"');
   });
 });

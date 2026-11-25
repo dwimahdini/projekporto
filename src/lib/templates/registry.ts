@@ -13,6 +13,9 @@ import VisualTemplate from "@/components/templates/VisualTemplate";
 import DeveloperTemplate from "@/components/templates/DeveloperTemplate";
 import DesignerTemplate from "@/components/templates/DesignerTemplate";
 import ResumeCvTemplate from "@/components/templates/ResumeCvTemplate";
+import LogsfolioTemplate from "@/components/templates/LogsfolioTemplate";
+import PictoTemplate from "@/components/templates/PictoTemplate";
+import AstrowindTemplate from "@/components/templates/AstrowindTemplate";
 
 export interface TemplateMeta {
   id: TemplateId;
@@ -73,9 +76,45 @@ export const TEMPLATE_REGISTRY: Record<TemplateId, TemplateMeta> = {
       "CV dua kolom navy-putih yang rapi, bisa di-print jadi PDF.",
     Component: ResumeCvTemplate,
   },
+  logsfolio: {
+    id: "logsfolio",
+    name: "Logsfolio",
+    description:
+      "Foto bulat, timeline pengalaman, kartu proyek, mode gelap/terang.",
+    Component: LogsfolioTemplate,
+  },
+  picto: {
+    id: "picto",
+    name: "Picto",
+    description:
+      "Kreatif dan berwarna, hero statistik, proses kerja 4 langkah, grid portofolio.",
+    Component: PictoTemplate,
+  },
+  astrowind: {
+    id: "astrowind",
+    name: "Astrowind",
+    description:
+      "Modern dan bersih, pengalaman dan pendidikan gaya Steps, mode gelap/terang.",
+    Component: AstrowindTemplate,
+  },
 };
 
 export const TEMPLATE_LIST: TemplateMeta[] = Object.values(TEMPLATE_REGISTRY);
+
+// Template yang dipakai pemilih template alur baru (/buat/template).
+// Hanya 3 template ThemeWagon: 8 template lama tidak me-render
+// seksi Pencapaian/Bahasa, jadi tidak dipakai di alur baru.
+// Template lama tetap ada di TEMPLATE_LIST untuk alur lama
+// (/demo, /s, /preview) — jangan hapus.
+export const BUAT_TEMPLATE_IDS: TemplateId[] = [
+  "logsfolio",
+  "picto",
+  "astrowind",
+];
+
+export const BUAT_TEMPLATE_LIST: TemplateMeta[] = BUAT_TEMPLATE_IDS.map(
+  (id) => TEMPLATE_REGISTRY[id],
+);
 
 export function getTemplate(id: string): TemplateMeta | null {
   return (TEMPLATE_REGISTRY as Record<string, TemplateMeta>)[id] ?? null;

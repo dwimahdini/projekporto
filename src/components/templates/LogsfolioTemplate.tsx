@@ -14,31 +14,17 @@ import { safeHttpUrl } from "@/lib/sanitize";
 import { Reveal, Avatar, ContactLinks, formatRange, formatDate } from "./shared";
 import { CSS_LOGSFOLIO } from "./themewagon/logsfolio.css";
 
-// Field achievements/languages belum ada di PortfolioData
-// (ditambahkan agen lain) — didefinisikan lokal di sini.
-interface Achievement {
-  title: string;
-  issuer: string | null;
-  date: string | null;
-  description: string | null;
-  document_url: string | null;
-}
-interface LanguageItem {
-  language: string;
-  level: string;
-}
-type Data = PortfolioData & {
-  achievements?: Achievement[];
-  languages?: LanguageItem[];
-};
+// achievements/languages adalah field resmi PortfolioData
+// (src/lib/types.ts) — dipakai langsung, tanpa tipe lokal.
 
 export default function LogsfolioTemplate({ data }: { data: PortfolioData }) {
   const [dark, setDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const ext = data as Data;
-  const achievements = ext.achievements ?? [];
-  const languages = ext.languages ?? [];
+  // Fallback [] menjaga kalau data datang dari view lama
+  // yang belum mengembalikan kedua field itu.
+  const achievements = data.achievements ?? [];
+  const languages = data.languages ?? [];
 
   const firstName = (data.full_name ?? data.subdomain).split(" ")[0];
   const displayName = data.full_name ?? data.subdomain;
@@ -57,6 +43,7 @@ export default function LogsfolioTemplate({ data }: { data: PortfolioData }) {
   if (data.experiences.length > 0) nav.push({ href: "#experience", label: "Experience" });
   if (data.projects.length > 0) nav.push({ href: "#projects", label: "Projects" });
   if (data.education.length > 0) nav.push({ href: "#education", label: "Education" });
+  if (data.certifications.length > 0) nav.push({ href: "#certifications", label: "Certifications" });
   if (achievements.length > 0) nav.push({ href: "#achievements", label: "Achievements" });
   if (languages.length > 0) nav.push({ href: "#languages", label: "Languages" });
 
@@ -247,6 +234,39 @@ export default function LogsfolioTemplate({ data }: { data: PortfolioData }) {
                     {e.description ? <p className="lg-tl-body">{e.description}</p> : null}
                   </div>
                 ))}
+              </div>
+            </Reveal>
+          </section>
+        ) : null}
+
+        {data.certifications.length > 0 ? (
+          <section id="certifications" className="lg-wrap lg-section" aria-labelledby="c1">
+            <Reveal>
+              <h2 className="lg-h2" id="c1">
+                Sertifikasi
+              </h2>
+              <div className="lg-ach">
+                {data.certifications.map((c, i) => {
+                  const credUrl = safeHttpUrl(c.credential_url);
+                  const meta = [c.issuer, formatDate(c.issue_date)].filter(Boolean).join(" · ");
+                  return (
+                    <article className="lg-card lg-ach-card" key={i}>
+                      <h3>{c.name}</h3>
+                      {meta ? <p className="lg-ach-meta">{meta}</p> : null}
+                      {c.credential_id ? <p className="lg-ach-desc">ID Kredensial: {c.credential_id}</p> : null}
+                      {credUrl ? (
+                        <a
+                          className="lg-ach-link"
+                          href={credUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Lihat kredensial →
+                        </a>
+                      ) : null}
+                    </article>
+                  );
+                })}
               </div>
             </Reveal>
           </section>

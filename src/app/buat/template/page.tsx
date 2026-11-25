@@ -5,14 +5,15 @@
 // draft) dan pratinjau langsung tampil di bawah grid dengan
 // data draft. Template bisa diganti berkali-kali, data
 // tetap utuh — draft tidak berubah selain templateId.
-// Daftar kartu diambil dari TEMPLATE_LIST (satu registry),
-// jadi template baru muncul otomatis begitu di-registry.
+// Daftar kartu diambil dari BUAT_TEMPLATE_LIST (3 template
+// ThemeWagon saja): 8 template lama tidak me-render seksi
+// Pencapaian/Bahasa, jadi tidak dipakai di alur baru.
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { TEMPLATE_LIST, getTemplate } from "@/lib/templates/registry";
+import { BUAT_TEMPLATE_LIST, getTemplate } from "@/lib/templates/registry";
 import {
   draftToPortfolioData,
   loadValidatedBuatDraft,
@@ -71,7 +72,7 @@ export default function PilihTemplatePage() {
       </div>
 
       <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {TEMPLATE_LIST.map((t) => {
+        {BUAT_TEMPLATE_LIST.map((t) => {
           const aktif = draft.templateId === t.id;
           return (
             <button

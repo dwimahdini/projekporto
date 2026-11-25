@@ -20,23 +20,8 @@ import type { PortfolioData } from "@/lib/types";
 import { Reveal, Avatar, ContactLinks, formatRange, formatDate } from "./shared";
 import { CSS_PICTO } from "./themewagon/picto.css";
 
-// Field achievements/languages belum ada di PortfolioData saat file
-// ini ditulis (agen lain sedang menambahkannya) — didefinisikan lokal.
-interface Achievement {
-  title: string;
-  issuer: string | null;
-  date: string | null;
-  description: string | null;
-  document_url: string | null;
-}
-interface LanguageItem {
-  language: string;
-  level: string;
-}
-type Data = PortfolioData & {
-  achievements?: Achievement[];
-  languages?: LanguageItem[];
-};
+// achievements/languages adalah field resmi PortfolioData
+// (src/lib/types.ts) — dipakai langsung, tanpa tipe lokal.
 
 // 4 langkah cara kerja — label metode generik dari template asli,
 // bukan riwayat orang, jadi dipertahankan apa adanya.
@@ -74,9 +59,10 @@ export default function PictoTemplate({ data }: { data: PortfolioData }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const ext = data as Data;
-  const achievements = ext.achievements ?? [];
-  const languages = ext.languages ?? [];
+  // Fallback [] menjaga kalau data datang dari view lama
+  // yang belum mengembalikan kedua field itu.
+  const achievements = data.achievements ?? [];
+  const languages = data.languages ?? [];
 
   const firstName = (data.full_name ?? data.subdomain).split(" ")[0];
   const headlineWords = (data.headline ?? "").split(" ").filter(Boolean);

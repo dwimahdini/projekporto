@@ -10,9 +10,26 @@ import { CSS_DESIGNER } from "@/components/templates/mit/designer.css";
 import { CSS_RESUME } from "@/components/templates/mit/resume.css";
 
 describe("registry template MIT", () => {
-  it("memuat 8 template (5 lama + 3 MIT)", () => {
-    expect(TEMPLATE_IDS).toHaveLength(8);
-    expect(new Set(TEMPLATE_IDS).size).toBe(8); // tanpa duplikat
+  it("memuat 11 template (8 lama + 3 ThemeWagon)", () => {
+    expect(TEMPLATE_IDS).toHaveLength(11);
+    expect(new Set(TEMPLATE_IDS).size).toBe(11); // tanpa duplikat
+  });
+
+  it("ketiga id ThemeWagon terdaftar dan punya komponen", () => {
+    for (const id of ["logsfolio", "picto", "astrowind"] as const) {
+      const meta = getTemplate(id);
+      expect(meta).not.toBeNull();
+      expect(meta!.id).toBe(id);
+      expect(typeof meta!.Component).toBe("function");
+    }
+  });
+
+  it("pemilih template alur baru hanya 3 template ThemeWagon", async () => {
+    const { BUAT_TEMPLATE_IDS, BUAT_TEMPLATE_LIST } = await import(
+      "@/lib/templates/registry"
+    );
+    expect(BUAT_TEMPLATE_IDS).toEqual(["logsfolio", "picto", "astrowind"]);
+    expect(BUAT_TEMPLATE_LIST.map((t) => t.id)).toEqual(BUAT_TEMPLATE_IDS);
   });
 
   it("ketiga id MIT terdaftar dan punya komponen", () => {
