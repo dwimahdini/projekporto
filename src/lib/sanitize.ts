@@ -38,6 +38,19 @@ export function validateImageMagicBytes(bytes: Uint8Array, mime: string): string
   return "Isi file tidak cocok dengan tipe gambar yang dinyatakan";
 }
 
+// Validasi isi PDF berdasarkan magic bytes: file PDF asli
+// selalu diawali "%PDF" (25 50 44 46) di 4 byte pertama.
+export function validatePdfMagicBytes(bytes: Uint8Array): string | null {
+  const isPdf =
+    bytes.length >= 4 &&
+    bytes[0] === 0x25 &&
+    bytes[1] === 0x50 &&
+    bytes[2] === 0x44 &&
+    bytes[3] === 0x46;
+  if (isPdf) return null;
+  return "Isi file bukan PDF yang valid";
+}
+
 // Otorisasi cron — fungsi murni supaya bisa dites.
 // Aturan: kalau CRON_SECRET diisi, header harus sama persis.
 // Kalau belum diisi, hanya diizinkan di development

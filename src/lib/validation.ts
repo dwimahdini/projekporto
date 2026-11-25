@@ -117,6 +117,109 @@ export const publicationItemSchema = z.object({
   isVisible: z.boolean().default(true),
 });
 
+// --- Alur baru (/buat): pencapaian & bahasa ---
+// Tanggal pencapaian format "YYYY-MM", dari pilihan
+// Bulan+Tahun di form (bukan tanggal lengkap).
+export const achievementItemSchema = z.object({
+  title: z.string().trim().min(1, "Judul pencapaian wajib diisi").max(200),
+  issuer: z.string().trim().max(120).optional().or(z.literal("")),
+  date: z
+    .string()
+    .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "Bulan tidak valid")
+    .optional()
+    .or(z.literal("")),
+  description: z.string().trim().max(500).optional().or(z.literal("")),
+  documentUrl: z.string().url("URL dokumen tidak valid").optional().or(z.literal("")),
+});
+
+// Nilainya SAMA dengan LanguageLevel di types.ts —
+// kalau menambah tingkat, ubah di kedua tempat.
+export const languageLevelSchema = z.enum([
+  "Tingkat Dasar",
+  "Tingkat Menengah",
+  "Tingkat Profesional",
+  "Tingkat Profesional Mahir",
+  "Tingkat Fasih atau Bahasa Ahli",
+]);
+
+export const languageItemSchema = z.object({
+  language: z.string().trim().min(1, "Bahasa wajib diisi").max(60),
+  level: languageLevelSchema,
+});
+
+// URL opsional yang boleh ditulis tanpa protokol:
+// "linkedin.com/in/nama" diterima apa adanya, lalu
+// transform menambahkan "https://" supaya lolos .url().
+// String kosong tetap kosong (field boleh dikosongkan).
+const optionalUrlSchema = (pesan: string) =>
+  z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => {
+      if (!v) return "";
+      return /^https?:\/\//i.test(v) ? v : `https://${v}`;
+    })
+    .pipe(z.string().url(pesan).or(z.literal("")));
+
+// Bentuk baris form alur baru: sama seperti schema lama,
+// tapi tanpa toggle tampil (isVisible) — alur baru tidak
+// memakai toggle per baris. Proyek tanpa techStack.
+export const buatEducationItemSchema = educationItemSchema.omit({ isVisible: true });
+export const buatExperienceItemSchema = experienceItemSchema.omit({ isVisible: true });
+export const buatProjectItemSchema = projectItemSchema.omit({ techStack: true });
+export const buatSkillItemSchema = skillItemSchema.omit({ isVisible: true });
+export const buatCertificationItemSchema = certificationItemSchema.omit({ isVisible: true });
+
+// Validasi keseluruhan draft alur baru (/buat).
+// Dipakai saat konfirmasi sebelum memilih template.
+export const buatDraftSchema = z.object({
+  fullName: z.string().trim().min(2, "Nama minimal 2 karakter").max(100),
+  headline: z.string().trim().max(120).optional().or(z.literal("")),
+  bio: z.string().trim().max(1000).optional().or(z.literal("")),
+  photoUrl: optionalUrlSchema("URL foto tidak valid").nullable(),
+  phone: phoneSchema.optional().or(z.literal("")),
+  whatsapp: phoneSchema.optional().or(z.literal("")),
+  city: z.string().trim().max(80).optional().or(z.literal("")),
+  province: z.string().trim().max(80).optional().or(z.literal("")),
+  websiteUrl: optionalUrlSchema("URL website tidak valid"),
+  linkedinUrl: optionalUrlSchema("URL LinkedIn tidak valid"),
+  githubUrl: optionalUrlSchema("URL GitHub tidak valid"),
+  instagramUrl: optionalUrlSchema("URL Instagram tidak valid"),
+  education: z.array(buatEducationItemSchema),
+  experiences: z.array(buatExperienceItemSchema),
+  projects: z.array(buatProjectItemSchema),
+  skills: z.array(buatSkillItemSchema),
+  certifications: z.array(buatCertificationItemSchema),
+  achievements: z.array(achievementItemSchema),
+  languages: z.array(languageItemSchema),
+  templateId: z.string().nullable(),
+});
+
+// Validasi file upload di form. Kembalikan pesan error
+// (Indonesia) atau null kalau file boleh dipakai.
+export function validateImageFile(file: File): string | null {
+  const boleh = ["image/jpeg", "image/png", "image/webp"];
+  if (!boleh.includes(file.type)) {
+    return "File harus berupa gambar JPG, PNG, atau WebP";
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    return "Ukuran gambar maksimal 2 MB";
+  }
+  return null;
+}
+
+export function validatePdfFile(file: File): string | null {
+  if (file.type !== "application/pdf") {
+    return "File harus berupa PDF";
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    return "Ukuran PDF maksimal 5 MB";
+  }
+  return null;
+}
+
 // Langkah 7: preferensi tampil. Kunci = nama field di
 // profile_visibility. Nilai true = tampil di portofolio.
 export const visibilitySchema = z.record(z.string(), z.boolean());

@@ -126,6 +126,9 @@ export async function buildPreviewPortfolio(orderId: string): Promise<PortfolioD
         url: r.url as string | null,
         description: r.description as string | null,
       })),
+    // Alur lama tidak punya tabel pencapaian/bahasa.
+    achievements: [],
+    languages: [],
     published_at: new Date().toISOString(),
   };
 }

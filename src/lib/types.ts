@@ -53,6 +53,29 @@ export interface PortfolioPublication {
   description: string | null;
 }
 
+// Tingkat kemampuan bahasa, dipakai di form alur baru
+// dan di PortfolioLanguage. Urutan = dari paling dasar.
+export type LanguageLevel =
+  | "Tingkat Dasar"
+  | "Tingkat Menengah"
+  | "Tingkat Profesional"
+  | "Tingkat Profesional Mahir"
+  | "Tingkat Fasih atau Bahasa Ahli";
+
+export interface PortfolioAchievement {
+  title: string;
+  issuer: string | null;
+  // Format "YYYY-MM", dari pilihan Bulan+Tahun di form.
+  date: string | null;
+  description: string | null;
+  document_url: string | null;
+}
+
+export interface PortfolioLanguage {
+  language: string;
+  level: LanguageLevel;
+}
+
 // PortfolioData: SATU bentuk props untuk SEMUA template.
 // Kelima template di src/components/templates/ menerima
 // props { data: PortfolioData } — tidak ada bentuk lain.
@@ -80,11 +103,22 @@ export interface PortfolioData {
   skills: PortfolioSkill[];
   certifications: PortfolioCertification[];
   publications: PortfolioPublication[];
+  achievements: PortfolioAchievement[];
+  languages: PortfolioLanguage[];
   published_at: string;
 }
 
 // Nama lama, dipertahankan supaya kode Tahap 1-2 tidak rusak.
 export type PublicPortfolio = PortfolioData;
+
+// Label tingkat skill 1-5, dipakai form dan template.
+export const SKILL_LEVEL_LABELS: Record<number, string> = {
+  1: "Pemula",
+  2: "Dasar",
+  3: "Menengah",
+  4: "Mahir",
+  5: "Sangat Baik",
+};
 
 export type OrderStatus =
   | "draft" | "preview" | "pending_payment" | "paid"

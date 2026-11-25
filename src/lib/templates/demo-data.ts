@@ -105,5 +105,7 @@ export const demoPortfolio: PortfolioData = {
       description: "Skripsi: perancangan chatbot Hybrid RAG untuk rekomendasi jurusan.",
     },
   ],
+  achievements: [],
+  languages: [],
   published_at: "2026-11-21T00:00:00.000Z",
 };

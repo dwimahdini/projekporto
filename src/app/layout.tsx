@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Portofolio Murah — group.portofolio.my.id",
-  description: "Jasa pembuatan website portofolio murah. Isi biodata, pilih template, bayar, lalu aktif di subdomain sendiri.",
+  description: "Buat website portofolio dari biodata kamu. Isi biodata, konfirmasi, pilih template, lalu bagikan — gratis, tanpa daftar dan tanpa bayar.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
