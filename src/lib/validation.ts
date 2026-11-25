@@ -120,9 +120,24 @@ export const publicationItemSchema = z.object({
 // --- Alur baru (/buat): pencapaian & bahasa ---
 // Tanggal pencapaian format "YYYY-MM", dari pilihan
 // Bulan+Tahun di form (bukan tanggal lengkap).
+// Bulan & tahun disimpan TERPISAH (bulan/tahun) supaya
+// pilihan tidak hilang saat baru salah satu yang dipilih:
+// dulu keduanya hanya diturunkan dari `date`, dan memilih
+// bulan saja langsung mengosongkan `date` sehingga pilihan
+// bulan ikut terhapus — dropdown selalu kembali ke placeholder.
 export const achievementItemSchema = z.object({
   title: z.string().trim().min(1, "Judul pencapaian wajib diisi").max(200),
   issuer: z.string().trim().max(120).optional().or(z.literal("")),
+  bulan: z
+    .string()
+    .regex(/^(0[1-9]|1[0-2])$/, "Bulan tidak valid")
+    .optional()
+    .or(z.literal("")),
+  tahun: z
+    .string()
+    .regex(/^\d{4}$/, "Tahun tidak valid")
+    .optional()
+    .or(z.literal("")),
   date: z
     .string()
     .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "Bulan tidak valid")

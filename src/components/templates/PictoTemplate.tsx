@@ -110,6 +110,11 @@ export default function PictoTemplate({ data }: { data: PortfolioData }) {
             <li>
               <a href="#profile" onClick={() => setMenuOpen(false)}>About</a>
             </li>
+            {data.experiences.length > 0 ? (
+              <li>
+                <a href="#experience" onClick={() => setMenuOpen(false)}>Experience</a>
+              </li>
+            ) : null}
             <li>
               <a href="#work-process" onClick={() => setMenuOpen(false)}>Process</a>
             </li>
@@ -224,6 +229,38 @@ export default function PictoTemplate({ data }: { data: PortfolioData }) {
             </section>
           </div>
         </div>
+
+        {/* Pengalaman kerja — dulu tidak ada di Picto sama
+            sekali (hanya angka di statistik hero), padahal
+            data.experiences ada. Pola tampilannya mengikuti
+            section Education di bawah (timeline kiri tanggal,
+            kanan posisi + perusahaan + deskripsi). */}
+        {data.experiences.length > 0 ? (
+          <div className="wrap">
+            <section id="experience" aria-labelledby="exp-h">
+              <Reveal>
+                <div className="sec-head left">
+                  <h2 id="exp-h">Experience</h2>
+                  <p>Riwayat pekerjaan.</p>
+                </div>
+                <ol className="exp-list">
+                  {data.experiences.map((x, i) => (
+                    <li key={i}>
+                      <time>{formatRange(x.start_date, x.end_date, x.is_current)}</time>
+                      <div>
+                        <h3>
+                          {x.position ? <>{x.position} · </> : null}
+                          <b>{x.company}</b>
+                        </h3>
+                        {x.description ? <p>{x.description}</p> : null}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </Reveal>
+            </section>
+          </div>
+        ) : null}
 
         <div className="proc-sec">
           <div className="wrap">
@@ -558,6 +595,7 @@ export default function PictoTemplate({ data }: { data: PortfolioData }) {
           <nav aria-label="Footer">
             <a href="#introduction">Home</a>
             <a href="#profile">About</a>
+            {data.experiences.length > 0 ? <a href="#experience">Experience</a> : null}
             <a href="#work-process">Process</a>
             <a href="#portfolio">Portfolio</a>
             <a href="#services">Services</a>

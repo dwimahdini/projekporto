@@ -96,7 +96,11 @@ describe("Render AstrowindTemplate", () => {
   });
 
   it("tidak merender section pencapaian/bahasa bila datanya kosong", () => {
-    const html = renderToString(createElement(AstrowindTemplate, { data: demoPortfolio }));
+    // Data kosong dibuat eksplisit — data demo kini berisi
+    // 1 pencapaian contoh, jadi tidak bisa lagi dipakai
+    // untuk kasus "kosong".
+    const data = { ...demoPortfolio, achievements: [], languages: [] } as unknown as PortfolioData;
+    const html = renderToString(createElement(AstrowindTemplate, { data }));
     expect(html).not.toContain('id="achievements"');
     expect(html).not.toContain('id="languages"');
   });

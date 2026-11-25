@@ -105,7 +105,17 @@ export const demoPortfolio: PortfolioData = {
       description: "Skripsi: perancangan chatbot Hybrid RAG untuk rekomendasi jurusan.",
     },
   ],
-  achievements: [],
+  achievements: [
+    {
+      // Judul panjang (90 karakter) — sengaja dipakai untuk
+      // memastikan kartu pencapaian tidak memotong judul.
+      title: "Chatbot Generative AI Berbasis Hybrid RAG dengan Integrasi RIASEC untuk Rekomendasi Jurusan",
+      issuer: "JUPTIK",
+      date: "2026-06",
+      description: "Publikasi skripsi di jurnal JUPTIK.",
+      document_url: "https://ejournal.ummuba.ac.id/index.php/JUPTIK/en/article/view/4373",
+    },
+  ],
   languages: [],
   published_at: "2026-11-21T00:00:00.000Z",
 };

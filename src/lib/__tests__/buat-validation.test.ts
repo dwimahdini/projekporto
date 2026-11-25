@@ -15,6 +15,7 @@ import {
   draftToPortfolioData,
   emptyBuatDraft,
   loadBuatDraft,
+  normalizeBuatDraft,
   slugifyName,
 } from "../buat";
 
@@ -28,6 +29,28 @@ describe("achievementItemSchema", () => {
       documentUrl: "https://contoh.id/sertifikat.pdf",
     });
     expect(parsed.success).toBe(true);
+  });
+
+  it("menerima bulan & tahun sebagai field terpisah", () => {
+    const parsed = achievementItemSchema.safeParse({
+      title: "Lomba Desain",
+      bulan: "06",
+      tahun: "2026",
+      date: "2026-06",
+    });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.bulan).toBe("06");
+      expect(parsed.data.tahun).toBe("2026");
+    }
+  });
+
+  it("menolak bulan 13 dan tahun bukan 4 digit", () => {
+    const dasar = { title: "Lomba" };
+    expect(achievementItemSchema.safeParse({ ...dasar, bulan: "13" }).success).toBe(false);
+    expect(achievementItemSchema.safeParse({ ...dasar, bulan: "00" }).success).toBe(false);
+    expect(achievementItemSchema.safeParse({ ...dasar, tahun: "26" }).success).toBe(false);
+    expect(achievementItemSchema.safeParse({ ...dasar, bulan: "06", tahun: "2026" }).success).toBe(true);
   });
 
   it("menerima pencapaian hanya dengan judul", () => {
@@ -213,6 +236,82 @@ describe("buatDraftSchema", () => {
   it("menolak nama kurang dari 2 karakter", () => {
     const parsed = buatDraftSchema.safeParse({ ...emptyBuatDraft(), fullName: "D" });
     expect(parsed.success).toBe(false);
+  });
+});
+
+describe("normalizeBuatDraft: bulan/tahun pencapaian & IPK", () => {
+  // Regresi cacat dropdown Bulan/Tahun: dulu memilih bulan
+  // saja langsung mengosongkan `date` sehingga pilihan bulan
+  // ikut hilang. Sekarang bulan/tahun disimpan terpisah dan
+  // pilihan sebagian harus bertahan setelah normalisasi.
+  const pencapaianSebagian = {
+    title: "Juara 1 Hackathon",
+    issuer: "",
+    bulan: "06",
+    tahun: "",
+    date: "",
+    description: "",
+    documentUrl: "",
+  };
+
+  it("pilihan bulan saja bertahan (tidak terhapus)", () => {
+    const data = normalizeBuatDraft({
+      ...emptyBuatDraft(),
+      fullName: "Budi Santoso",
+      achievements: [pencapaianSebagian],
+    });
+    expect(data).not.toBeNull();
+    expect(data!.achievements[0].bulan).toBe("06");
+    expect(data!.achievements[0].date).toBe("");
+  });
+
+  it("bulan + tahun membentuk date YYYY-MM", () => {
+    const data = normalizeBuatDraft({
+      ...emptyBuatDraft(),
+      fullName: "Budi Santoso",
+      achievements: [{ ...pencapaianSebagian, tahun: "2026" }],
+    });
+    expect(data).not.toBeNull();
+    expect(data!.achievements[0].bulan).toBe("06");
+    expect(data!.achievements[0].tahun).toBe("2026");
+    expect(data!.achievements[0].date).toBe("2026-06");
+  });
+
+  it("draft lama yang hanya punya date dilengkapi bulan/tahun", () => {
+    const data = normalizeBuatDraft({
+      ...emptyBuatDraft(),
+      fullName: "Budi Santoso",
+      achievements: [
+        { title: "Lomba", issuer: "", date: "2026-06", description: "", documentUrl: "" },
+      ],
+    });
+    expect(data).not.toBeNull();
+    expect(data!.achievements[0].bulan).toBe("06");
+    expect(data!.achievements[0].tahun).toBe("2026");
+    expect(data!.achievements[0].date).toBe("2026-06");
+  });
+
+  it("IPK kotor float dibulatkan ke 2 desimal", () => {
+    const data = normalizeBuatDraft({
+      ...emptyBuatDraft(),
+      fullName: "Budi Santoso",
+      education: [
+        {
+          institution: "UIN Suska Riau",
+          degree: "S1",
+          fieldOfStudy: "Teknik Informatika",
+          startDate: "2022-08-01",
+          endDate: "2026-06-01",
+          gpa: 3.4600000381469727,
+          description: "",
+        },
+      ],
+    });
+    expect(data).not.toBeNull();
+    expect(data!.education[0].gpa).toBe(3.46);
+    // draftToPortfolioData juga membulatkan.
+    const portfolio = draftToPortfolioData(data!, "minimalis");
+    expect(portfolio.education[0].gpa).toBe(3.46);
   });
 });
 

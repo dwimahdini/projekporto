@@ -92,6 +92,13 @@ export const CSS_PICTO = `.tpl-picto{--pri:#9929fb;--pri-d:#650fa0;--soft:#f0f1f
 .tpl-picto .edu-list h3{font-size:19px}
 .tpl-picto .edu-list h3 b{font-weight:700}
 .tpl-picto .edu-list p{color:var(--mu);font-size:15px;margin-top:4px}
+.tpl-picto .exp-list{list-style:none;margin:0;padding:0;max-width:800px}
+.tpl-picto .exp-list li{display:grid;grid-template-columns:180px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--ln)}
+.tpl-picto .exp-list li:last-child{border-bottom:0}
+.tpl-picto .exp-list time{color:var(--mu);font-size:15px}
+.tpl-picto .exp-list h3{font-size:19px}
+.tpl-picto .exp-list h3 b{font-weight:700}
+.tpl-picto .exp-list p{color:var(--mu);font-size:15px;margin-top:4px}
 .tpl-picto .svc-sec{background:var(--soft)}
 .tpl-picto .svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
 .tpl-picto .svc-intro h2{font-size:clamp(32px,3.6vw,48px)}
@@ -104,8 +111,8 @@ export const CSS_PICTO = `.tpl-picto{--pri:#9929fb;--pri-d:#650fa0;--soft:#f0f1f
 .tpl-picto .role .chips{display:flex;gap:8px;flex-wrap:wrap}
 .tpl-picto .role .chips span{background:var(--soft);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
 .tpl-picto .ach-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.tpl-picto .ach{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:24px}
-.tpl-picto .ach h3{font-size:19px}
+.tpl-picto .ach{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:24px;min-width:0}
+.tpl-picto .ach h3{font-size:19px;overflow-wrap:break-word}
 .tpl-picto .ach .meta{color:var(--mu);font-size:14px;margin-top:6px}
 .tpl-picto .ach p{color:#4b5563;font-size:15px;margin-top:10px}
 .tpl-picto .ach .doc{display:inline-block;margin-top:12px;color:var(--pri);font-weight:600;text-decoration:none}
@@ -156,6 +163,7 @@ export const CSS_PICTO = `.tpl-picto{--pri:#9929fb;--pri-d:#650fa0;--soft:#f0f1f
 .tpl-picto .burger{display:block}
 .tpl-picto .menu.open{display:flex;flex-direction:column;position:absolute;top:64px;left:16px;right:16px;background:#fff;padding:16px;border:1px solid var(--ln);border-radius:16px;gap:4px;z-index:30;box-shadow:0 20px 40px -12px rgba(0,0,0,.2)}
 .tpl-picto .edu-list li{grid-template-columns:1fr;gap:4px}
+.tpl-picto .exp-list li{grid-template-columns:1fr;gap:4px}
 }
 @media(max-width:560px){
 .tpl-picto section{padding:48px 0}

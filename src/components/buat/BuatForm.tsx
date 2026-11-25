@@ -104,6 +104,8 @@ const barisSertifikasiBaru = (): BuatCertificationItem => ({
 const barisPencapaianBaru = (): BuatAchievementItem => ({
   title: "",
   issuer: "",
+  bulan: "",
+  tahun: "",
   date: "",
   description: "",
   documentUrl: "",
@@ -262,10 +264,14 @@ export default function BuatForm() {
   const daftarTahun: number[] = [];
   for (let t = tahunBerjalan; t >= 1990; t--) daftarTahun.push(t);
 
-  // Bulan+Tahun pencapaian digabung jadi "YYYY-MM".
-  // Kalau salah satu belum dipilih, tanggal dikosongkan.
+  // Bulan & tahun disimpan TERPISAH di baris pencapaian.
+  // Dulu keduanya hanya diturunkan dari `date`, dan memilih
+  // satu saja langsung mengosongkan `date` — pilihan ikut
+  // hilang dan dropdown kembali ke placeholder. Sekarang
+  // pilihan bertahan; `date` ("YYYY-MM") baru dibentuk
+  // kalau bulan DAN tahun sudah terpilih.
   function ubahBulanTahunPencapaian(i: number, bulan: string, tahun: string) {
-    ubahPencapaian(i, { date: bulan && tahun ? `${tahun}-${bulan}` : "" });
+    ubahPencapaian(i, { bulan, tahun, date: bulan && tahun ? `${tahun}-${bulan}` : "" });
   }
 
   // Nama keahlian: kalau cocok dengan daftar master
@@ -554,7 +560,10 @@ export default function BuatForm() {
                       step={0.01}
                       inputMode="decimal"
                       value={item.gpa ?? ""}
-                      onChange={(e) => ubahPendidikan(i, { gpa: e.target.value === "" ? undefined : Number(e.target.value) })}
+                      // IPK langsung dibulatkan ke 2 desimal saat
+                      // mengetik — nilai mentah input angka kadang
+                      // tersimpan sebagai float kotor (3.4600000381469727).
+                      onChange={(e) => ubahPendidikan(i, { gpa: e.target.value === "" ? undefined : Math.round(Number(e.target.value) * 100) / 100 })}
                       placeholder="0 – 4, boleh kosong"
                       className={inputCls + inputSalah(`education.${i}.gpa`)}
                     />
@@ -961,7 +970,13 @@ export default function BuatForm() {
         <p className="mt-1 text-sm text-muted">Penghargaan, lomba, atau pencapaian lainnya.</p>
         <div className="mt-6 space-y-5">
           {draft.achievements.map((item, i) => {
-            const [tahunPilih, bulanPilih] = (item.date ?? "").split("-");
+            // Bulan/tahun dibaca dari field-nya sendiri, bukan
+            // dari `date` — supaya pilihan sebagian (baru bulan
+            // saja / baru tahun saja) tetap tampil di select.
+            // Draft lama yang hanya punya `date` sudah
+            // dilengkapi bulan/tahun oleh normalizeBuatDraft.
+            const bulanPilih = item.bulan ?? "";
+            const tahunPilih = item.tahun ?? "";
             return (
               <div key={i} className="rounded-xl border border-line p-5">
                 <div className="flex items-center justify-between">

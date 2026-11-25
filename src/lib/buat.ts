@@ -89,6 +89,30 @@ export function normalizeBuatDraft(mentah: unknown): BuatDraft | null {
       (gabung as unknown as Record<string, unknown>)[kunci] = nilai;
     }
   }
+  // Pencapaian: jaga bulan/tahun dan `date` tetap sinkron.
+  // Draft lama (sebelum perbaikan dropdown) hanya punya
+  // `date` — turunkan bulan/tahun dari sana. Sebaliknya,
+  // kalau bulan+tahun ada tapi `date` kosong, bentuk
+  // `date` dari keduanya supaya tanggal tampil di
+  // konfirmasi/pratinjau/bagikan.
+  for (const item of gabung.achievements) {
+    const cocok = /^(\d{4})-(0[1-9]|1[0-2])$/.exec(item.date ?? "");
+    if (cocok && (!item.bulan || !item.tahun)) {
+      item.tahun = cocok[1];
+      item.bulan = cocok[2];
+    }
+    if ((!item.date || item.date === "") && item.bulan && item.tahun) {
+      item.date = `${item.tahun}-${item.bulan}`;
+    }
+  }
+  // IPK dibulatkan ke 2 desimal — nilai mentah dari input
+  // angka kadang tersimpan sebagai float 32-bit yang kotor
+  // (cth. 3.4600000381469727), padahal tampilannya 3.46.
+  for (const item of gabung.education) {
+    if (typeof item.gpa === "number") {
+      item.gpa = Math.round(item.gpa * 100) / 100;
+    }
+  }
   return gabung;
 }
 
@@ -191,7 +215,8 @@ export function draftToPortfolioData(
       field_of_study: kosongKeNull(item.fieldOfStudy),
       start_date: kosongKeNull(item.startDate),
       end_date: kosongKeNull(item.endDate),
-      gpa: item.gpa ?? null,
+      // IPK dibulatkan ke 2 desimal (lihat normalizeBuatDraft).
+      gpa: typeof item.gpa === "number" ? Math.round(item.gpa * 100) / 100 : null,
       description: kosongKeNull(item.description),
     })),
     experiences: draft.experiences.map((item) => ({
@@ -226,7 +251,10 @@ export function draftToPortfolioData(
     achievements: draft.achievements.map((item) => ({
       title: item.title,
       issuer: kosongKeNull(item.issuer),
-      date: kosongKeNull(item.date),
+      // Kalau `date` kosong tapi bulan+tahun terisi (misal
+      // draft lama / jalur yang tidak lewat normalize),
+      // bentuk tanggal dari keduanya.
+      date: kosongKeNull(item.date) ?? (item.bulan && item.tahun ? `${item.tahun}-${item.bulan}` : null),
       description: kosongKeNull(item.description),
       document_url: kosongKeNull(item.documentUrl),
     })),

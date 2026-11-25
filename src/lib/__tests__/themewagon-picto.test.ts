@@ -127,6 +127,43 @@ describe("Render Picto dengan data contoh", () => {
     expect(html).not.toContain("Unsplash");
   });
 
+  it("menampilkan seksi Pengalaman lengkap (bukan cuma angka statistik)", () => {
+    // Regresi: dulu data.experiences hanya dipakai untuk
+    // angka "2 Pengalaman Kerja" di hero — perusahaan,
+    // posisi, dan tanggal tidak pernah tampil.
+    expect(html).toContain('id="experience"');
+    expect(html).toContain("Experience");
+    expect(html).toContain("Freelance");
+    expect(html).toContain("Lab Inkubator Bisnis TI UIN Suska Riau");
+    expect(html).toContain("Des 2024 – Sekarang");
+    expect(html).toContain("Feb 2025 – Jul 2025");
+    expect(html).toContain("Membangun website portofolio, toko digital, dan aplikasi gudang untuk klien.");
+    expect(html).toContain('href="#experience"');
+  });
+
+  it("judul pencapaian panjang tampil utuh (tidak terpotong)", () => {
+    // Judul 121 karakter dari laporan E2E — ekornya
+    // ("...asi Kepuasan Masyarakat") sempat hilang di Picto.
+    const judulPanjang =
+      "Analisis Komparatif Jarak Euclidean, Manhattan, Canberra, Chebyshev, Cosine pada K-Means untuk Evaluasi Kepuasan Masyarakat";
+    const dataPanjang = {
+      ...demoPortfolio,
+      achievements: [
+        {
+          title: judulPanjang,
+          issuer: "Jurnal Terapan Informatika Nusantara",
+          date: "2026-06",
+          description: "Publikasi skripsi.",
+          document_url: "",
+        },
+      ],
+    } as unknown as PortfolioData;
+    const htmlPanjang = renderToString(createElement(PictoTemplate, { data: dataPanjang }));
+    expect(htmlPanjang).toContain(judulPanjang);
+    expect(htmlPanjang).toContain("Kepuasan Masyarakat");
+    expect(htmlPanjang).toContain("Jurnal Terapan Informatika Nusantara");
+  });
+
   it("tidak menampilkan section yang dibuang", () => {
     expect(html).not.toContain("Testimonial");
     expect(html).not.toContain("Happy Clients");
