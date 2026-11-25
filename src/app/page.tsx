@@ -1,7 +1,9 @@
 import DotGrid from "@/components/DotGrid";
-import { Reveal } from "@/components/templates/shared";
+import HeroPreview from "@/components/HeroPreview";
+import HowItWorks from "@/components/HowItWorks";
+import { Reveal, CountUp } from "@/components/templates/shared";
 import { createPublicClient } from "@/lib/supabase/server";
-import { BUAT_TEMPLATE_IDS } from "@/lib/templates/registry";
+import { BUAT_TEMPLATE_IDS, BUAT_TEMPLATE_LIST } from "@/lib/templates/registry";
 
 // Jangan di-prerender saat build: daftar template dibaca
 // dari Supabase saat request, supaya build tidak gagal
@@ -31,69 +33,17 @@ export const dynamic = "force-dynamic";
 // tanpa menunggu CSS/JS. Animasi hanya untuk seksi di
 // bawah lipatan (Reveal).
 
-// Ikon SVG inline per langkah cara kerja — tanpa
-// dependensi baru, tanpa emoji.
-function StepIcon({ kind }: { kind: "form" | "check" | "layout" | "share" }) {
-  const props = {
-    width: 24,
-    height: 24,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    className: "h-6 w-6 text-brand-500",
-    "aria-hidden": true,
-  };
-  if (kind === "form") {
-    return (
-      <svg {...props}>
-        <path d="M12 20h9" />
-        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-      </svg>
-    );
-  }
-  if (kind === "check") {
-    return (
-      <svg {...props}>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M8.5 12.5l2.5 2.5 4.5-5" />
-      </svg>
-    );
-  }
-  if (kind === "layout") {
-    return (
-      <svg {...props}>
-        <rect x="4" y="4" width="7" height="7" rx="1" />
-        <rect x="13" y="4" width="7" height="7" rx="1" />
-        <rect x="4" y="13" width="7" height="7" rx="1" />
-        <rect x="13" y="13" width="7" height="7" rx="1" />
-      </svg>
-    );
-  }
-  return (
-    <svg {...props}>
-      <circle cx="18" cy="5" r="3" />
-      <circle cx="6" cy="12" r="3" />
-      <circle cx="18" cy="19" r="3" />
-      <path d="M8.6 10.6l6.8-4.2" />
-      <path d="M8.6 13.4l6.8 4.2" />
-    </svg>
-  );
-}
+// ATURAN FIRST PAINT (pelajaran lama proyek ini): konten
+// hero TIDAK memakai animasi .fade-up maupun .reveal — judul,
+// subteks, dan tombol harus terlihat penuh begitu halaman
+// dicat, tanpa menunggu CSS/JS. Animasi hero hanya keyframes
+// CSS murni (.animate-float) yang mulai dari keadaan terlihat.
+// Reveal (scroll) hanya untuk seksi di bawah lipatan.
 
-const STEPS = [
-  { n: "01", icon: "form" as const, title: "Isi biodata", text: "Nama, pendidikan, pengalaman, proyek, keahlian, dan lainnya. Tanpa daftar, tanpa login." },
-  { n: "02", icon: "check" as const, title: "Konfirmasi data", text: "Periksa semua data yang kamu isi sebelum lanjut. Masih bisa diubah kapan saja." },
-  { n: "03", icon: "layout" as const, title: "Pilih template", text: "Pilih 1 template yang paling cocok, lalu lihat tampilannya dengan datamu sendiri." },
-  { n: "04", icon: "share" as const, title: "Buat portofolio", text: "Lihat pratinjau portofoliomu dan bagikan tautannya ke siapa saja." },
-];
-
-const STATS = [
-  { value: "3 template", label: "siap pakai" },
-  { value: "Gratis", label: "sampai pratinjau" },
-  { value: "Tanpa login", label: "tanpa email, tanpa akun" },
+const STATS: ({ num: number; suffix: string; label: string } | { text: string; label: string })[] = [
+  { num: 3, suffix: " template", label: "siap pakai" },
+  { text: "Gratis", label: "sampai pratinjau" },
+  { text: "Tanpa login", label: "tanpa email, tanpa akun" },
 ];
 
 export default async function HomePage() {
@@ -102,7 +52,7 @@ export default async function HomePage() {
   // template lama tetap ada di tabel untuk alur lama
   // (/demo, /s), tapi tidak ditampilkan di sini supaya
   // tidak menyesatkan.
-  let templates: { id: string; name: string }[] = [];
+  let templates: { id: string; name: string; description: string }[] = [];
   try {
     const supabase = createPublicClient();
     const { data } = await supabase
@@ -111,7 +61,11 @@ export default async function HomePage() {
       .eq("is_active", true)
       .in("id", BUAT_TEMPLATE_IDS)
       .order("id");
-    templates = (data ?? []).map((t) => ({ id: t.id as string, name: t.name as string }));
+    templates = (data ?? []).map((t) => {
+      const id = t.id as string;
+      const meta = BUAT_TEMPLATE_LIST.find((m) => m.id === id);
+      return { id, name: t.name as string, description: meta?.description ?? "" };
+    });
   } catch {
     templates = [];
   }
@@ -184,50 +138,25 @@ export default async function HomePage() {
               </p>
             </div>
 
-            {/* Visual produk: mockup bingkai browser berisi
-                tangkapan template demo + kartu kecil melayang.
-                Flat, border 1px — tanpa shadow (Genesis). */}
-            <div className="relative min-w-0">
-              <div className="card overflow-hidden">
-                <div className="flex items-center gap-2 border-b border-line bg-paper px-4 py-2.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" aria-hidden />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" aria-hidden />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#10B981]" aria-hidden />
-                  <span className="ml-1 min-w-0 flex-1 truncate rounded-md bg-white px-3 py-1 font-mono text-xs text-muted ring-1 ring-line">
-                    group-portofolio.vercel.app/demo/picto
-                  </span>
-                </div>
-                {/* eslint-disable-next-line @next/next/no-img-element -- tangkapan hero demo Picto (800x500), di atas lipatan jadi tidak lazy; next/image tidak menambah nilai di sini. */}
-                <img src="/templates/thumbs/picto.jpg" alt="Contoh tampilan template Picto" width={800} height={500} className="aspect-[8/5] w-full object-cover object-top" />
-                <div className="flex items-center justify-between gap-3 border-t border-line px-4 py-3">
-                  <p className="text-sm font-medium">Picto — contoh tampilan</p>
-                  <a href="/demo/picto" className="shrink-0 text-sm font-medium text-brand-500">
-                    Lihat demo →
-                  </a>
-                </div>
-              </div>
-              {/* Kartu kecil melayang: tanpa shadow, hanya
-                  border + latar putih (Genesis melarang shadow
-                  pada elemen statis). Posisi -bottom-5 masih
-                  di dalam padding section, tidak terpotong. */}
-              <div className="card absolute -bottom-5 left-4 px-4 py-3 sm:-left-4">
-                <p className="flex items-center gap-2 text-sm font-medium">
-                  <span className="h-2 w-2 rounded-full bg-[#20970B]" aria-hidden />
-                  Gratis sampai pratinjau
-                </p>
-                <p className="mt-1 text-xs text-muted">Tanpa login, tanpa email</p>
-              </div>
-            </div>
+            {/* Visual produk: mockup bingkai browser yang
+                BEROTASI otomatis di antara 3 template, dengan
+                animasi mengambang lembut (HeroPreview). */}
+            <HeroPreview />
           </div>
         </section>
 
-        {/* Strip statistik/fitur di bawah hero */}
+        {/* Strip statistik/fitur di bawah hero — angka
+            pertama menghitung naik (CountUp) saat terlihat. */}
         <section className="mt-12 grid gap-5 sm:grid-cols-3" aria-label="Keunggulan singkat">
           {STATS.map((s) => (
-            <div key={s.value} className="card p-5">
-              <p className="text-2xl tracking-[-0.03em]">{s.value}</p>
-              <p className="mt-1 text-sm text-muted">{s.label}</p>
-            </div>
+            <Reveal key={s.label}>
+              <div className="card anim-lift h-full p-5">
+                <p className="text-2xl tracking-[-0.03em]">
+                  {"num" in s ? <CountUp value={s.num} suffix={s.suffix} /> : s.text}
+                </p>
+                <p className="mt-1 text-sm text-muted">{s.label}</p>
+              </div>
+            </Reveal>
           ))}
         </section>
 
@@ -245,26 +174,16 @@ export default async function HomePage() {
           </Reveal>
         </section>
 
-        {/* Cara kerja — empat langkah alur baru */}
-        <section id="cara-kerja" className="mt-16">
+        {/* Cara kerja — stepper interaktif: klik langkah
+            untuk melihat detailnya, garis progres terisi
+            mengikuti langkah aktif (HowItWorks). */}
+        <section id="cara-kerja" className="mt-16 scroll-mt-20">
           <Reveal>
             <h2 className="text-3xl tracking-[-0.03em]">Cara kerja</h2>
+            <p className="mt-2 text-[15px] text-muted">Klik tiap langkah untuk melihat detailnya.</p>
           </Reveal>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map((s, i) => (
-              <Reveal key={s.n} delay={i * 0.08}>
-                <div className="card h-full p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-white ring-1 ring-line">
-                      <StepIcon kind={s.icon} />
-                    </span>
-                    <p className="font-mono text-sm font-medium text-brand-500">{s.n}</p>
-                  </div>
-                  <h3 className="mt-4 text-xl">{s.title}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-muted">{s.text}</p>
-                </div>
-              </Reveal>
-            ))}
+          <div className="mt-8">
+            <HowItWorks />
           </div>
         </section>
 
@@ -273,7 +192,7 @@ export default async function HomePage() {
             alur baru — judulnya memuat jumlah yang sama
             dengan badge hero, bukan 11. */}
         {templates.length > 0 ? (
-          <section id="template" className="mt-16 rounded-xl bg-ink px-6 py-10 text-white sm:px-10 sm:py-12">
+          <section id="template" className="mt-16 scroll-mt-20 rounded-xl bg-ink px-6 py-10 text-white sm:px-10 sm:py-12">
             <Reveal>
               <h2 className="text-3xl tracking-[-0.03em] text-white">{templates.length} template siap pakai</h2>
               <p className="mt-2 text-[15px] text-white/70">Klik untuk melihat demo langsung dengan data contoh.</p>
@@ -281,19 +200,23 @@ export default async function HomePage() {
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {templates.map((t, i) => (
                 <Reveal key={t.id} delay={i * 0.06}>
-                  {/* text-ink wajib: section ini text-white,
-                      tanpa ini nama template ikut putih dan
-                      hilang di atas kartu putih. Thumbnail
-                      adalah tangkapan hero demo (800x500,
-                      public/templates/thumbs/) — render ulang
-                      dengan skrip /tmp/gen-thumbs.cjs kalau
-                      tampilan demo berubah. */}
-                  <a href={`/demo/${t.id}`} className="card card-hover block h-full overflow-hidden text-ink">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- thumbnail statis 800x500 yang sudah dioptimasi (13-28 KB), lazy-loaded; next/image tidak menambah nilai di sini. */}
-                    <img src={`/templates/thumbs/${t.id}.jpg`} alt={`Pratinjau template ${t.name}`} width={800} height={500} loading="lazy" className="aspect-[8/5] w-full object-cover object-top" />
+                  {/* Kartu galeri interaktif: thumbnail membesar
+                      saat hover + overlay gelap dengan tombol
+                      "Lihat demo" yang muncul. Deskripsi karakter
+                      tiap template ditampilkan supaya galeri tidak
+                      terasa seperti 3 kartu yang sama. */}
+                  <a href={`/demo/${t.id}`} className="card card-hover group block h-full overflow-hidden text-ink">
+                    <span className="relative block overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- thumbnail statis 800x500 yang sudah dioptimasi (13-28 KB), lazy-loaded; next/image tidak menambah nilai di sini. */}
+                      <img src={`/templates/thumbs/${t.id}.jpg`} alt={`Pratinjau template ${t.name}`} width={800} height={500} loading="lazy" className="aspect-[8/5] w-full object-cover object-top transition duration-500 group-hover:scale-105" />
+                      <span className="absolute inset-0 flex items-end justify-center bg-ink/0 pb-5 opacity-0 transition duration-300 group-hover:bg-ink/45 group-hover:opacity-100">
+                        <span className="rounded-md bg-white px-4 py-2 text-sm font-medium text-ink shadow-lg">Lihat demo →</span>
+                      </span>
+                    </span>
                     <div className="p-5">
                       <p className="text-xs font-medium uppercase tracking-wide text-faint">Template</p>
                       <h3 className="mt-2 text-2xl">{t.name}</h3>
+                      {t.description ? <p className="mt-2 text-[15px] leading-relaxed text-muted">{t.description}</p> : null}
                       <p className="mt-3 text-sm">
                         <span className="font-medium text-brand-500">Lihat demo →</span>
                       </p>
@@ -309,15 +232,17 @@ export default async function HomePage() {
           </p>
         )}
 
-        {/* Ajakan akhir — satu tombol primary di seksi ini */}
-        <section className="mt-16 text-center">
+        {/* Ajakan akhir — panel indigo solid (bukan teks
+            polos di atas putih) supaya halaman punya penutup
+            yang tegas; tombolnya putih di atas indigo. */}
+        <section className="mt-16 rounded-xl bg-brand-500 px-6 py-12 text-center text-white sm:px-10">
           <Reveal>
-            <h2 className="text-3xl tracking-[-0.03em]">Siap punya portofolio sendiri?</h2>
-            <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
+            <h2 className="text-3xl tracking-[-0.03em] text-white">Siap punya portofolio sendiri?</h2>
+            <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-white/80">
               Mulai dari biodata — sisanya tinggal ikuti langkahnya sampai
               portofoliomu bisa dibagikan.
             </p>
-            <a href="/buat" className="btn-primary mt-6 inline-flex min-h-[52px] items-center px-6 py-3 text-base">
+            <a href="/buat" className="mt-6 inline-flex min-h-[52px] items-center rounded-md bg-white px-6 py-3 text-base font-medium text-brand-600 transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-[0_8px_24px_rgba(0,0,0,0.25)]">
               Buat website portofolio mu sendiri
             </a>
           </Reveal>

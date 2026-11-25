@@ -19,6 +19,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             Kalau font tidak termuat, fallback system-ui jalan. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Skrip kecil ini menandai <html> dengan class "js"
+            SEBELUM halaman dicat. Class itu yang mengaktifkan
+            penyembunyian awal .reveal di globals.css — tanpa
+            class ini (JS mati) semua konten tetap terlihat
+            penuh. Jangan hapus: tanpanya reveal tidak jalan,
+            dan tanpanya pun konten tidak pernah tersembunyi. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js');" }} />
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"

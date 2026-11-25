@@ -14,6 +14,7 @@
 // Mode gelap/terang: toggle sederhana dengan useState yang mengganti
 // class "dark" di wrapper (variabel CSS di .tpl-astrowind.dark).
 import { useState } from "react";
+import type { CSSProperties } from "react";
 import type { PortfolioData } from "@/lib/types";
 import { safeHttpUrl } from "@/lib/sanitize";
 import { Reveal, Avatar, ContactLinks, formatRange, formatDate } from "./shared";
@@ -236,7 +237,7 @@ export default function AstrowindTemplate({ data }: { data: PortfolioData }) {
                 </div>
                 <div className="steps">
                   {data.experiences.map((x, i) => (
-                    <div className="step" key={i}>
+                    <div className="step" key={i} style={{ "--i": i } as CSSProperties}>
                       <div className="step-rail">
                         <div className="step-icon">
                           <IconBriefcase />
@@ -267,7 +268,7 @@ export default function AstrowindTemplate({ data }: { data: PortfolioData }) {
                 </div>
                 <div className="steps">
                   {data.education.map((e, i) => (
-                    <div className="step" key={i}>
+                    <div className="step" key={i} style={{ "--i": i } as CSSProperties}>
                       <div className="step-rail">
                         <div className="step-icon">
                           <IconSchool />
@@ -309,7 +310,7 @@ export default function AstrowindTemplate({ data }: { data: PortfolioData }) {
                         {s.level ? (
                           <div className="lvl" aria-label={`Level ${s.level} dari 5`}>
                             {[1, 2, 3, 4, 5].map((n) => (
-                              <i key={n} className={n <= (s.level ?? 0) ? "on" : undefined} />
+                              <i key={n} className={n <= (s.level ?? 0) ? "on" : undefined} style={{ "--i": n - 1 } as CSSProperties} />
                             ))}
                           </div>
                         ) : null}

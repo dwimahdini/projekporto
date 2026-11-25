@@ -53,7 +53,7 @@ export default function ProfesionalTemplate({ data }: { data: PortfolioData }) {
           <main className="space-y-6">
             {data.bio ? (
               <Reveal>
-                <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+                <section className="anim-lift rounded-2xl bg-white p-6 shadow-sm sm:p-8">
                   <h2 className="text-lg font-bold text-[#12324f]">Tentang Saya</h2>
                   <p className="mt-3 leading-relaxed text-gray-700">{data.bio}</p>
                 </section>
@@ -62,7 +62,7 @@ export default function ProfesionalTemplate({ data }: { data: PortfolioData }) {
 
             {data.experiences.length > 0 ? (
               <Reveal>
-                <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+                <section className="anim-lift rounded-2xl bg-white p-6 shadow-sm sm:p-8">
                   <h2 className="text-lg font-bold text-[#12324f]">Pengalaman Kerja</h2>
                   <div className="mt-5 space-y-6">
                     {data.experiences.map((x, i) => (
@@ -82,7 +82,7 @@ export default function ProfesionalTemplate({ data }: { data: PortfolioData }) {
 
             {data.projects.length > 0 ? (
               <Reveal>
-                <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+                <section className="anim-lift rounded-2xl bg-white p-6 shadow-sm sm:p-8">
                   <h2 className="text-lg font-bold text-[#12324f]">Proyek</h2>
                   <div className="mt-5 space-y-5">
                     {data.projects.map((p, i) => (
@@ -99,7 +99,7 @@ export default function ProfesionalTemplate({ data }: { data: PortfolioData }) {
 
             {data.certifications.length > 0 ? (
               <Reveal>
-                <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+                <section className="anim-lift rounded-2xl bg-white p-6 shadow-sm sm:p-8">
                   <h2 className="text-lg font-bold text-[#12324f]">Sertifikasi</h2>
                   <ul className="mt-4 space-y-3">
                     {data.certifications.map((c, i) => (
@@ -115,7 +115,7 @@ export default function ProfesionalTemplate({ data }: { data: PortfolioData }) {
 
             {data.publications.length > 0 ? (
               <Reveal>
-                <section className="rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+                <section className="anim-lift rounded-2xl bg-white p-6 shadow-sm sm:p-8">
                   <h2 className="text-lg font-bold text-[#12324f]">Publikasi</h2>
                   <ul className="mt-4 space-y-3">
                     {data.publications.map((p, i) => (

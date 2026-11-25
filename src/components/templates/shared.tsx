@@ -33,23 +33,111 @@ export function initials(name: string | null): string {
     .join("");
 }
 
-// Animasi muncul — keyframes CSS (.fade-up), BUKAN framer-motion.
+// Animasi muncul saat di-scroll — IntersectionObserver +
+// class CSS (.reveal), BUKAN framer-motion.
 //
-// PENTING: dulu ini framer-motion (initial opacity 0, animate
-// saat mount). Itu mengirim konten dalam keadaan transparan dan
-// baru memunculkannya setelah JavaScript selesai diunduh — di
-// koneksi lambat, bagian halaman yang memakai Reveal (misalnya
-// "Cara kerja" dan galeri template di landing, atau isi template
-// portofolio) tampak kosong: ruang putih lebar dan band gelap
-// tanpa isi, padahal datanya sudah ada. Animasi CSS jalan begitu
-// CSS dimuat, tanpa menunggu JavaScript, jadi tidak bisa macet.
+// ATURAN KEAMANAN (pelajaran lama proyek ini): konten TIDAK
+// BOLEH dikirim dalam keadaan tersembunyi yang hanya dibuka
+// JavaScript. .reveal terlihat penuh secara default; baru
+// ketika <html> punya class "js" (skrip inline di layout)
+// CSS menyembunyikannya sampai .is-visible ditambahkan.
+// Kalau IntersectionObserver tidak ada, langsung terlihat.
+// Pengaman timeout 1,5 detik: kalau observer entah kenapa
+// tidak pernah memicu, konten tetap dimunculkan. Jadi tidak
+// ada jalan bagi konten untuk macet tak terlihat.
 // prefers-reduced-motion sudah ditangani aturan global di
-// globals.css (durasi animasi dipendekkan sampai tidak terasa).
+// globals.css (durasi transisi dipendekkan sampai tidak terasa).
+import { useEffect, useRef, useState } from "react";
+
 export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    io.observe(el);
+    // Pengaman: jangan pernah biarkan konten tersembunyi
+    // lebih dari 1,5 detik walau observer bermasalah.
+    const t = setTimeout(() => setVisible(true), 1500);
+    return () => {
+      io.disconnect();
+      clearTimeout(t);
+    };
+  }, []);
+  const cls = `reveal${visible ? " is-visible" : ""}${className ? ` ${className}` : ""}`;
   return (
-    <div className={className ? `fade-up ${className}` : "fade-up"} style={delay ? { animationDelay: `${delay * 1000}ms` } : undefined}>
+    <div ref={ref} className={cls} style={delay ? { transitionDelay: `${delay * 1000}ms` } : undefined}>
       {children}
     </div>
+  );
+}
+
+// Angka menghitung naik saat terlihat — dipakai statistik
+// (mis. Picto, strip statistik landing). Angka AKHIR dirender
+// dulu di server, jadi tanpa JS pun angkanya benar; JS hanya
+// menganimasikannya dari 0 saat elemen masuk layar. Kalau
+// pengguna meminta reduced-motion, angka langsung final.
+export function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [n, setN] = useState(value);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      const t0 = performance.now();
+      const dur = 900;
+      setN(0);
+      const tick = (t: number) => {
+        const p = Math.min(1, (t - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        setN(Math.round(value * eased));
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    };
+    if (typeof IntersectionObserver === "undefined") {
+      start();
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          start();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [value]);
+  return (
+    <span ref={ref}>
+      {n}
+      {suffix}
+    </span>
   );
 }
 

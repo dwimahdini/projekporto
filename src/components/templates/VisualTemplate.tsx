@@ -116,7 +116,7 @@ export default function VisualTemplate({ data }: { data: PortfolioData }) {
                     key={i}
                     type="button"
                     onClick={() => setLightbox(p)}
-                    className="group overflow-hidden rounded-2xl text-left shadow-sm transition hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    className="group overflow-hidden rounded-2xl text-left shadow-sm transition hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-pink-500"
                   >
                     {p.image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element

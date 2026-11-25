@@ -111,7 +111,7 @@ export default function GelapFuturistikTemplate({ data }: { data: PortfolioData 
               <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">Sertifikasi</h2>
               <ul className="mt-6 space-y-3">
                 {data.certifications.map((c, i) => (
-                  <li key={i} className="rounded-xl border border-white/10 p-4">
+                  <li key={i} className="anim-lift rounded-xl border border-white/10 p-4">
                     <p className="font-medium">{c.name}</p>
                     <p className="text-sm text-slate-400">{[c.issuer, formatDate(c.issue_date)].filter(Boolean).join(" · ")}</p>
                   </li>
@@ -125,7 +125,7 @@ export default function GelapFuturistikTemplate({ data }: { data: PortfolioData 
               <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">Publikasi</h2>
               <ul className="mt-6 space-y-3">
                 {data.publications.map((p, i) => (
-                  <li key={i} className="rounded-xl border border-white/10 p-4">
+                  <li key={i} className="anim-lift rounded-xl border border-white/10 p-4">
                     <p className="font-medium">{p.url ? <a href={p.url} target="_blank" rel="noreferrer" className="text-cyan-200 underline">{p.title}</a> : p.title}</p>
                     <p className="text-sm text-slate-400">{p.publisher ?? ""}</p>
                   </li>

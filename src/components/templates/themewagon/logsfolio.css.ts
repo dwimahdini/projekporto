@@ -4,6 +4,15 @@
 // latar putih / gelap hsl(224 71% 4.1%), teks abu-abu, radius 0.5rem,
 // kontainer max-w-5xl. Font memakai yang sudah dimuat layout
 // (DM Sans / General Sans) — tanpa unduhan font tambahan.
+//
+// GERAKAN (tambahan 25 Nov 2026, di akhir string): karakter
+// Logsfolio rapi dan tenang — titik skill muncul satu per satu,
+// item timeline masuk berurutan, kartu naik sedikit saat hover.
+// Animasi masuk digerakkan class .is-visible dari Reveal (tanpa
+// JS class itu tidak pernah ada, jadi semua tetap terlihat penuh);
+// reduced-motion menonaktifkannya lewat globals.css.
+// CATATAN TES: jangan taruh komentar /* */ di dalam string CSS —
+// tes scope mengharuskan tiap baris diawali .tpl-logsfolio/@/}.
 export const CSS_LOGSFOLIO = `.tpl-logsfolio{--bg:#ffffff;--fg:#09090b;--card:#ffffff;--card-fg:#09090b;--primary:#7c3aed;--primary-fg:#fafafa;--secondary:#f4f4f5;--secondary-fg:#18181b;--muted:#f4f4f5;--muted-fg:#71717a;--border:#e4e4e7;--ring:#7c3aed;--radius:0.5rem}
 .tpl-logsfolio.dark{--bg:#020817;--fg:#f8fafc;--card:#020817;--card-fg:#f8fafc;--primary:#6d28d9;--primary-fg:#f8fafc;--secondary:#1e293b;--secondary-fg:#f8fafc;--muted:#1e293b;--muted-fg:#94a3b8;--border:#1e293b;--ring:#6d28d9}
 .tpl-logsfolio{margin:0;font-family:"DM Sans",system-ui,sans-serif;font-size:17px;line-height:1.6;color:var(--fg);background:var(--bg);scroll-behavior:smooth}
@@ -99,4 +108,22 @@ export const CSS_LOGSFOLIO = `.tpl-logsfolio{--bg:#ffffff;--fg:#09090b;--card:#f
 .tpl-logsfolio .lg-menu.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg);padding:18px 24px;border-bottom:1px solid var(--border);gap:12px;align-items:flex-start}
 .tpl-logsfolio .lg-skills{grid-template-columns:1fr}
 .tpl-logsfolio .lg-ach{grid-template-columns:1fr}
-}`;
+}
+.tpl-logsfolio{transition:background-color .4s ease,color .4s ease}
+.tpl-logsfolio .lg-menu a{position:relative}
+.tpl-logsfolio .lg-menu a::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:0;background:var(--primary);transition:width .25s ease}
+.tpl-logsfolio .lg-menu a:hover::after{width:100%}
+.tpl-logsfolio .lg-photo{transition:transform .4s ease,box-shadow .4s ease}
+.tpl-logsfolio .lg-photo:hover{transform:scale(1.02);box-shadow:0 16px 40px rgba(0,0,0,.14)}
+.tpl-logsfolio .lg-tl-item h4{transition:color .2s ease}
+.tpl-logsfolio .lg-tl-item:hover h4{color:var(--primary)}
+.tpl-logsfolio .lg-proj,.tpl-logsfolio .lg-skill-card,.tpl-logsfolio .lg-ach-card,.tpl-logsfolio .lg-lang-card{transition:transform .25s ease,box-shadow .25s ease}
+.tpl-logsfolio .lg-proj:hover,.tpl-logsfolio .lg-skill-card:hover,.tpl-logsfolio .lg-ach-card:hover,.tpl-logsfolio .lg-lang-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.10)}
+.tpl-logsfolio .lg-proj-img img{transition:transform .45s ease}
+.tpl-logsfolio .lg-proj:hover .lg-proj-img img{transform:scale(1.05)}
+.tpl-logsfolio .lg-btn-primary{transition:transform .2s ease,box-shadow .2s ease,opacity .2s ease}
+.tpl-logsfolio .lg-btn-primary:hover{opacity:1;transform:translateY(-1px);box-shadow:0 6px 16px rgba(124,58,237,.4)}
+.tpl-logsfolio .lg-soc a{transition:transform .2s ease,background .2s ease}
+.tpl-logsfolio .lg-soc a:hover{transform:translateY(-2px)}
+.tpl-logsfolio .reveal.is-visible .lg-tl-item{animation:lg-fade-up .5s ease-out both;animation-delay:calc(var(--i,0)*90ms)}
+.tpl-logsfolio .reveal.is-visible .lg-dots i.on{animation:lg-dot-pop .35s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--i,0)*70ms)}`;

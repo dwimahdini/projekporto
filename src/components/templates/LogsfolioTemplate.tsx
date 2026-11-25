@@ -9,6 +9,7 @@
 // sengaja DIHAPUS: testimoni, blog, dan tombol
 // "Open Repository" (tidak ada field repo di form).
 import { useState } from "react";
+import type { CSSProperties } from "react";
 import type { PortfolioData } from "@/lib/types";
 import { safeHttpUrl } from "@/lib/sanitize";
 import { Reveal, Avatar, ContactLinks, formatRange, formatDate } from "./shared";
@@ -123,7 +124,7 @@ export default function LogsfolioTemplate({ data }: { data: PortfolioData }) {
                           {s.level ? (
                             <span className="lg-dots" aria-label={`Level ${s.level} dari 5`}>
                               {[1, 2, 3, 4, 5].map((n) => (
-                                <i key={n} className={n <= s.level! ? "on" : ""} />
+                                <i key={n} className={n <= s.level! ? "on" : ""} style={{ "--i": n - 1 } as CSSProperties} />
                               ))}
                             </span>
                           ) : null}
@@ -145,7 +146,7 @@ export default function LogsfolioTemplate({ data }: { data: PortfolioData }) {
               </h2>
               <div className="lg-timeline">
                 {data.experiences.map((x, i) => (
-                  <div className="lg-tl-item" key={i}>
+                  <div className="lg-tl-item" key={i} style={{ "--i": i } as CSSProperties}>
                     <h4>
                       {x.position} @<span> {x.company}</span>
                     </h4>
@@ -224,7 +225,7 @@ export default function LogsfolioTemplate({ data }: { data: PortfolioData }) {
               </h2>
               <div className="lg-timeline">
                 {data.education.map((e, i) => (
-                  <div className="lg-tl-item" key={i}>
+                  <div className="lg-tl-item" key={i} style={{ "--i": i } as CSSProperties}>
                     <h4>
                       {[e.degree, e.field_of_study].filter(Boolean).join(" ") || e.institution}
                     </h4>

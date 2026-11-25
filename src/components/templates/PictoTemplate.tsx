@@ -17,7 +17,7 @@
 // section khusus untuk keduanya).
 import { useEffect, useState } from "react";
 import type { PortfolioData } from "@/lib/types";
-import { Reveal, Avatar, ContactLinks, formatRange, formatDate } from "./shared";
+import { Reveal, Avatar, ContactLinks, CountUp, formatRange, formatDate } from "./shared";
 import { CSS_PICTO } from "./themewagon/picto.css";
 
 // achievements/languages adalah field resmi PortfolioData
@@ -173,7 +173,9 @@ export default function PictoTemplate({ data }: { data: PortfolioData }) {
                   <div className="stats" aria-label="Ringkasan portofolio">
                     {stats.map((s) => (
                       <div className="stat" key={s.label}>
-                        <b>{s.value}</b>
+                        <b>
+                          <CountUp value={s.value} />
+                        </b>
                         <span>{s.label}</span>
                       </div>
                     ))}

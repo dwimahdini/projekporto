@@ -5,6 +5,16 @@
 // halaman terang putih/teks rgb(16 16 16), halaman gelap rgb(3 6 32).
 // SEMUA selektor diawali .tpl-astrowind — tidak ada yang bocor ke global.
 // Font memakai yang sudah dimuat layout (DM Sans / General Sans).
+//
+// GERAKAN (tambahan 25 Nov 2026, di akhir string): karakter Astrowind
+// modern dan bersih — gerakannya presisi: baris pengalaman/pendidikan
+// masuk berurutan, titik skill muncul satu per satu, gambar proyek
+// membesar halus, dan pergantian tema gelap/terang bertransisi (bukan
+// berubah mendadak). Animasi masuk digerakkan class .is-visible dari
+// Reveal (tanpa JS class itu tidak pernah ada, jadi semua tetap
+// terlihat penuh).
+// CATATAN TES: jangan taruh komentar /* */ di dalam string CSS —
+// tes scope mengharuskan tiap baris diawali .tpl-astrowind/@/}.
 export const CSS_ASTROWIND = `.tpl-astrowind{--primary:#0161ef;--secondary:#0154cf;--accent:#6d28d9;--heading:#000000;--tx:#101010;--muted:rgba(16,16,16,.66);--bg:#ffffff;--bg-soft:#eff6ff;--line:#e5e7eb;--card:#ffffff;--card-line:#e5e7eb;--shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--sans:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
 .tpl-astrowind.dark{--heading:#f7f8f8;--tx:#e5ecf6;--muted:rgba(229,236,246,.66);--bg:#030620;--bg-soft:transparent;--line:rgba(148,163,184,.25);--card:#0a1030;--card-line:#1e293b;--shadow:none}
 .tpl-astrowind{margin:0;font-family:var(--sans);font-size:17px;line-height:1.65;color:var(--tx);background:var(--bg)}
@@ -133,4 +143,28 @@ export const CSS_ASTROWIND = `.tpl-astrowind{--primary:#0161ef;--secondary:#0154
 .tpl-astrowind .skills-grid{grid-template-columns:1fr}
 .tpl-astrowind .soc-cards{grid-template-columns:1fr}
 .tpl-astrowind .ft{flex-direction:column;align-items:flex-start}
-}`;
+}
+.tpl-astrowind{transition:background-color .4s ease,color .4s ease}
+.tpl-astrowind .card,.tpl-astrowind .soc-card,.tpl-astrowind .cta-card,.tpl-astrowind .lang{transition:background-color .4s ease,border-color .4s ease,color .4s ease}
+.tpl-astrowind .photo{transition:transform .4s ease,box-shadow .4s ease}
+.tpl-astrowind .photo:hover{transform:scale(1.02)}
+.tpl-astrowind .step-icon{transition:background .3s ease,color .3s ease,transform .3s ease}
+.tpl-astrowind .step:hover .step-icon{background:var(--primary);color:#fff;transform:scale(1.08)}
+.tpl-astrowind .soc-card{transition:transform .25s ease,border-color .25s ease,color .25s ease,background-color .4s ease}
+.tpl-astrowind .soc-card:hover{transform:translateY(-3px)}
+.tpl-astrowind .proj-img img{transition:transform .5s ease,box-shadow .5s ease}
+.tpl-astrowind .proj:hover .proj-img img{transform:scale(1.03)}
+.tpl-astrowind .proj-link svg{transition:transform .25s ease}
+.tpl-astrowind .proj-link:hover svg{transform:translateX(4px)}
+.tpl-astrowind .proj-tags span{transition:transform .25s ease,border-color .25s ease}
+.tpl-astrowind .proj-tags span:hover{transform:translateY(-2px);border-color:var(--primary)}
+.tpl-astrowind .card{transition:transform .25s ease,box-shadow .25s ease,background-color .4s ease,border-color .4s ease}
+.tpl-astrowind .card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.12)}
+.tpl-astrowind .lang{transition:transform .25s ease,border-color .25s ease}
+.tpl-astrowind .lang:hover{transform:translateY(-3px);border-color:var(--primary)}
+.tpl-astrowind .cta-card{transition:transform .3s ease,box-shadow .3s ease,background-color .4s ease,border-color .4s ease}
+.tpl-astrowind .cta-card:hover{transform:translateY(-3px)}
+.tpl-astrowind .btn-primary{transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+.tpl-astrowind .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(1,97,239,.4)}
+.tpl-astrowind .reveal.is-visible .step{animation:aw-fade-up .5s ease-out both;animation-delay:calc(var(--i,0)*100ms)}
+.tpl-astrowind .reveal.is-visible .skill .lvl i.on{animation:aw-dot-pop .35s cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(var(--i,0)*70ms)}`;

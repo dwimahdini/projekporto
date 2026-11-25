@@ -92,7 +92,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
             <h2 className="text-2xl font-black">Sertifikasi</h2>
             <ul className="mt-5 space-y-3">
               {data.certifications.map((c, i) => (
-                <li key={i} className="rounded-2xl bg-white p-4 shadow-sm">
+                <li key={i} className="anim-lift rounded-2xl bg-white p-4 shadow-sm">
                   <strong>{c.name}</strong>
                   <span className="block text-sm text-gray-600">{[c.issuer, formatDate(c.issue_date)].filter(Boolean).join(" · ")}</span>
                 </li>
@@ -106,7 +106,7 @@ export default function KreatifTemplate({ data }: { data: PortfolioData }) {
             <h2 className="text-2xl font-black">Publikasi</h2>
             <ul className="mt-5 space-y-3">
               {data.publications.map((p, i) => (
-                <li key={i} className="rounded-2xl bg-white p-4 shadow-sm">
+                <li key={i} className="anim-lift rounded-2xl bg-white p-4 shadow-sm">
                   <strong>{p.url ? <a href={p.url} target="_blank" rel="noreferrer" className="text-pink-600 underline">{p.title}</a> : p.title}</strong>
                   <span className="block text-sm text-gray-600">{p.publisher ?? ""}</span>
                 </li>

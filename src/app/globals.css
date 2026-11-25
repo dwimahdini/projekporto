@@ -10,6 +10,9 @@
    tracking rapat, DM Sans untuk isi. Tanpa gradasi dekoratif,
    tanpa shadow pada elemen statis. */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-paper text-ink;
   }
@@ -27,9 +30,10 @@
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
     border-color: #6366f1;
   }
-  /* Tombol utama: naik 1px + glow indigo saat hover. */
+  /* Tombol utama: naik + sedikit membesar + glow indigo saat
+     hover, supaya terasa hidup (bukan sekadar ganti warna). */
   .btn-primary {
-    @apply rounded-md bg-brand-500 font-medium text-white transition duration-200 hover:-translate-y-px hover:bg-brand-600 hover:shadow-[0_4px_12px_rgba(99,102,241,0.35)] disabled:translate-y-0 disabled:opacity-50;
+    @apply rounded-md bg-brand-500 font-medium text-white transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:bg-brand-600 hover:shadow-[0_8px_24px_rgba(99,102,241,0.45)] disabled:translate-y-0 disabled:scale-100 disabled:opacity-50;
   }
   /* Kartu: permukaan putih, border 1px, radius 12px,
      naik 2px + shadow halus saat hover. */
@@ -38,6 +42,129 @@
   }
   .card-hover:hover {
     @apply -translate-y-0.5 shadow-[0_8px_30px_rgba(0,0,0,0.08)];
+  }
+  /* Utilitas hover-lift bersama untuk kartu-kartu template
+     lama: naik 4px + bayangan saat hover. Dipakai dengan
+     menambah class "anim-lift" pada kartu. */
+  .anim-lift {
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .anim-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* === Sistem reveal saat scroll (aman tanpa JS) ===
+   .reveal terlihat penuh secara default. Baru ketika
+   <html> punya class "js" (ditambah skrip inline kecil di
+   layout, sebelum halaman dicat) elemen .reveal disembunyikan
+   sampai IntersectionObserver menambahkan .is-visible.
+   Jadi: JS mati = semua terlihat. Observer gagal = hook Reveal
+   tetap memunculkan semuanya lewat pengaman timeout 1,5 detik.
+   Jangan pernah sembunyikan konten hanya lewat JS. */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Mengambang lembut untuk mockup hero dan kartu melayang. */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+/* Titik skill muncul satu per satu (dipakai template). */
+@keyframes dot-pop {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Keyframes untuk animasi masuk template ThemeWagon — sengaja
+   ditaruh di sini (global), BUKAN di string CSS template:
+   tes scope template mengharuskan tiap selektor di string itu
+   diawali .tpl-*, dan langkah keyframe (from/to/0%/70%) tidak
+   memenuhi itu. Nama keyframe unik per template supaya tidak
+   bertabrakan. Aturannya sendiri tetap di CSS template
+   masing-masing dan hanya jalan saat .reveal.is-visible. */
+@keyframes lg-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes lg-dot-pop {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes aw-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes aw-dot-pop {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes pc-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }
 

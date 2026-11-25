@@ -87,4 +87,9 @@ export const CSS_DEVELOPER = `.tpl-developer{--ink:#0E0E10;--tx:#26262B;--mu:#6C
 .tpl-developer .xp li{grid-template-columns:1fr;gap:4px}
 .tpl-developer .ct{padding:30px 20px}
 .tpl-developer .mail{flex-direction:column}
-}`;
+}
+.tpl-developer .pj{transition:transform .25s ease,box-shadow .25s ease}
+.tpl-developer .pj:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.12)}
+.tpl-developer .pj img{transition:transform .5s ease}
+.tpl-developer .pj:hover img{transform:scale(1.04)}
+`;

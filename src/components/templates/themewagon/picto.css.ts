@@ -4,6 +4,14 @@
 // General Sans yang sudah dimuat layout — tidak ada unduhan font baru.
 // Warna asli dipertahankan: ungu #9929fb, ungu gelap #650fa0,
 // soft-white #f0f1f3, soft-dark #87909d, footer #2A374A.
+//
+// GERAKAN (tambahan 25 Nov 2026, di akhir string): karakter Picto
+// ceria dan berani — gerakannya paling ekspresif: foto hero
+// mengambang, angka statistik menghitung naik (CountUp di komponen),
+// kartu proyek membesar gambarnya saat hover, chip skill berubah
+// jadi ungu saat disentuh.
+// CATATAN TES: jangan taruh komentar /* */ di dalam string CSS —
+// tes scope mengharuskan tiap baris diawali .tpl-picto/@/}.
 export const CSS_PICTO = `.tpl-picto{--pri:#9929fb;--pri-d:#650fa0;--soft:#f0f1f3;--soft-d:#87909d;--ink:#132238;--mu:#697482;--tile:#edd8ff80;--stat:#f6ebfe;--ft:#2a374a;--ln:#e5e7eb}
 .tpl-picto{margin:0;font-family:"DM Sans","General Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.6;color:var(--ink);background:#fff}
 .tpl-picto img{max-width:100%;height:auto;display:block}
@@ -174,4 +182,26 @@ export const CSS_PICTO = `.tpl-picto{--pri:#9929fb;--pri-d:#650fa0;--soft:#f0f1f
 .tpl-picto .stat b{font-size:24px}
 .tpl-picto .contact-card{padding:28px 20px}
 .tpl-picto .profile-card{padding:28px 16px}
-}`;
+}
+.tpl-picto .hero-photo,.tpl-picto .hero-photo-fallback{animation:pc-float 7s ease-in-out infinite}
+.tpl-picto .stat{transition:transform .3s ease,box-shadow .3s ease}
+.tpl-picto .stat:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.10)}
+.tpl-picto .step{transition:box-shadow .3s ease,transform .3s ease}
+.tpl-picto .step:hover{transform:translateY(-4px)}
+.tpl-picto .pj{transition:box-shadow .3s ease,transform .3s ease}
+.tpl-picto .pj:hover{transform:translateY(-4px)}
+.tpl-picto .pj img{transition:transform .5s ease}
+.tpl-picto .pj:hover img{transform:scale(1.06)}
+.tpl-picto .pj .tags span{transition:background .25s ease,color .25s ease,transform .25s ease}
+.tpl-picto .pj .tags span:hover{background:var(--pri);color:#fff;transform:translateY(-2px)}
+.tpl-picto .role .chips span{transition:background .25s ease,color .25s ease,transform .25s ease;cursor:default}
+.tpl-picto .role .chips span:hover{background:var(--pri);color:#fff;transform:translateY(-2px)}
+.tpl-picto .ach{transition:transform .25s ease,box-shadow .25s ease}
+.tpl-picto .ach:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.12)}
+.tpl-picto .lang{transition:transform .25s ease,background .25s ease}
+.tpl-picto .lang:hover{transform:translateY(-3px);background:#fff}
+.tpl-picto .exp-list li,.tpl-picto .edu-list li{transition:transform .25s ease}
+.tpl-picto .exp-list li:hover,.tpl-picto .edu-list li:hover{transform:translateX(6px)}
+.tpl-picto .profile-card{transition:transform .3s ease}
+.tpl-picto .contact-card{transition:transform .3s ease,box-shadow .3s ease}
+.tpl-picto .contact-card:hover{transform:translateY(-3px)}`;

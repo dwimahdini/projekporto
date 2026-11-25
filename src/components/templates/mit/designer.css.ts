@@ -84,4 +84,7 @@ export const CSS_DESIGNER = `@import url("https://fonts.googleapis.com/css2?fami
 @media(max-width:520px){
 .tpl-designer .proc{grid-template-columns:1fr}
 .tpl-designer section{padding:54px 0}
-}`;
+}
+.tpl-designer .cs{transition:transform .25s ease,box-shadow .25s ease}
+.tpl-designer .cs:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.14)}
+`;

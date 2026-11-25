@@ -92,7 +92,7 @@ export default function MinimalisTemplate({ data }: { data: PortfolioData }) {
         <Section title="Skill">
           <ul className="flex flex-wrap gap-2">
             {data.skills.map((s, i) => (
-              <li key={i} className="rounded-full border px-4 py-2 text-sm">
+              <li key={i} className="rounded-full border px-4 py-2 text-sm transition hover:-translate-y-0.5 hover:border-brand-500 hover:text-brand-600">
                 {s.name}
                 {s.level ? <span className="ml-2 text-gray-500">{"●".repeat(s.level)}{"○".repeat(5 - s.level)}</span> : null}
               </li>
